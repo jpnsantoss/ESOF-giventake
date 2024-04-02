@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "601196658289",
+    "project_id": "giventake-54b96",
+    "storage_bucket": "giventake-54b96.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:601196658289:android:1a4489815930e00949e5d0",
+        "android_client_info": {
+          "package_name": "com.example.giventake"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDY4cfEmx58PuQJpEmxfjvkgrYskaFPmdA"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
