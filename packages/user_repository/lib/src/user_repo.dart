@@ -1,6 +1,9 @@
-// TODO: Put public facing types in this file.
+import 'package:user_repository/src/models/models.dart';
 
-/// Checks if you are awesome. Spoiler: you are.
-class Awesome {
-  bool get isAwesome => true;
+abstract class UserRepository {
+  Stream<MyUser?> get user;
+  Future<MyUser> signUp(MyUser myUser, String password);
+  Future<void> setUserData(MyUser user);
+  Future<void> signIn(String email, String password);
+  Future<void> signOut();
 }
