@@ -37,7 +37,7 @@ Sara Cortez (up202205636@fe.up.pt)
 
 ### Product Vision
 
-For anyone who has unnecessary things, GiveNTake is a marketplace that can take those things to where they are necessary, without the hassle of shipping or pricing.
+Get rid of your junk! GiveNTake can give your unused things a second life, without the hassle of shipping or pricing.
 
 
 ### Features and Assumptions
