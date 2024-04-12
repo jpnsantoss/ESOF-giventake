@@ -1,6 +1,5 @@
-// TODO: Put public facing types in this file.
+import 'package:product_repository/src/models/product.dart';
 
-/// Checks if you are awesome. Spoiler: you are.
-class Awesome {
-  bool get isAwesome => true;
+abstract class ProductRepo {
+  Future<List<Product>> getProducts();
 }
