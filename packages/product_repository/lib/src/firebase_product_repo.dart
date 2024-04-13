@@ -13,6 +13,7 @@ class FirebaseProductRepo implements ProductRepository {
       await productsCollection.add({
         'productId': product.productId,
         'title': product.title,
+        'location': product.location,
         'desription': product.description,
       });
     } catch (e) {

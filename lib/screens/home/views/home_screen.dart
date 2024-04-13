@@ -3,9 +3,14 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:giventake/screens/auth/blocs/sign_in_bloc/sign_in_bloc.dart';
 import 'package:giventake/screens/product/views/upload_product_screen.dart';
+import 'package:product_repository/product_repository.dart';
+import 'package:product_repository/src/firebase_product_repo.dart';
+import 'package:product_repository/src/product_repo.dart';
+import 'package:firebase_core/firebase_core.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 
 class HomeScreen extends StatelessWidget {
-  const HomeScreen({super.key});
+  const HomeScreen({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -19,19 +24,61 @@ class HomeScreen extends StatelessWidget {
             },
             icon: const Icon(CupertinoIcons.arrow_right_to_line),
           ),
-          
         ],
       ),
       body: Center(
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            
             const SizedBox(height: 20.0),
+            Expanded(
+              child: StreamBuilder<QuerySnapshot>(
+                stream: FirebaseFirestore.instance.collection('products').snapshots(),
+                builder: (context, snapshot) {
+                  if (snapshot.connectionState == ConnectionState.waiting) {
+                    return CircularProgressIndicator();
+                  }
+                  if (snapshot.hasError) {
+                    return Text('Erro ao carregar os produtos: ${snapshot.error}');
+                  }
+                  if (!snapshot.hasData || snapshot.data!.docs.isEmpty) {
+                    return Text('Nenhum produto à venda no momento.');
+                  }
+                  return ListView(
+                    children: snapshot.data!.docs.map((document) {
+                      final data = document.data() as Map<String, dynamic>;
+                      return ListTile(
+                        title: Text(
+                          data['title'],
+                          style: TextStyle(
+                            color: Colors.black,
+                            fontSize: 18,
+                            fontWeight: FontWeight.bold,
+                          ),
+                        ),
+                        
+                         subtitle: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Text(
+                                'Localização: ${data['location']}',
+                                style: TextStyle(
+                                  color: Colors.grey,
+                                  fontSize: 14,
+                                ),
+                              ),
+                              Text(data['description']),
+                            ],
+                          ),
+                      );
+                    }).toList(),
+                  );
+                },
+              ),
+            ),
             // Botão "Upload Product"
             TextButton(
               onPressed: () {
-                // Navegue para a tela de adicionar produto
                 Navigator.of(context).push(MaterialPageRoute(
                   builder: (context) => ProductUploadScreen(),
                 ));
