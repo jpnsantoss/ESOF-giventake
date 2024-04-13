@@ -11,7 +11,7 @@ dependencies:
   # path: ^1.8.0
   flutter:
     sdk: flutter
-  image_picker: ^0.8.4+4
+  image_picker: ^1.0.8
   equatable: ^2.0.5
   firebase_auth: ^4.10.0
   cloud_firestore: ^4.9.2

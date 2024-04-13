@@ -23,16 +23,13 @@ class ProductUploadScreen extends StatefulWidget {
 }
 
 class _ProductUploadScreenState extends State<ProductUploadScreen> {
-  // Defina os controladores de texto e outras variáveis necessárias
   final TextEditingController productTitleController = TextEditingController();
   final TextEditingController productDescriptionController = TextEditingController();
   final TextEditingController productLocationController = TextEditingController();
- // File? _imageFile;
-   final _formKey = GlobalKey<FormState>();
+  final _formKey = GlobalKey<FormState>();
 
 @override
   void dispose() {
-    // Dispose dos controladores de texto para liberar recursos
     productTitleController.dispose();
     productDescriptionController.dispose();
     productLocationController.dispose();
@@ -41,52 +38,30 @@ class _ProductUploadScreenState extends State<ProductUploadScreen> {
 
 
 void uploadProductToFirebase() {
-  // Recupere os valores dos controladores de texto
   String productTitle = productTitleController.text;
   String productDescription = productDescriptionController.text;
   String productLocation = productLocationController.text;
 
-  // Crie um mapa com os detalhes do produto
   Map<String, dynamic> productData = {
     'title': productTitle,
     'location': productLocation,
     'description': productDescription,
-  
-    // Adicione outros detalhes do produto, se necessário
   };
 
-  // Envie os dados do produto para o Firestore
-  // Por exemplo, você pode usar o método 'set' para adicionar um documento com os detalhes do produto
-  FirebaseFirestore.instance.collection('products').add(productData)
+   FirebaseFirestore.instance.collection('products').add(productData)
     .then((value) {
-      // Produto enviado com sucesso
       print('Produto enviado com sucesso!');
-      // Limpe os campos de entrada após o envio bem-sucedido
       productTitleController.clear();
       productDescriptionController.clear();
       productLocationController.clear();
       
     })
     .catchError((error) {
-      // Trate qualquer erro que ocorra durante o envio do produto
       print('Erro ao enviar produto: $error');
     });
 }
- late File _selectedImage = File('');
-Future<void> _selectImage() async {
-  final picker = ImagePicker();
-  final pickedImage = await picker.pickImage(source: ImageSource.gallery);
 
-  if (pickedImage != null) {
-    // A imagem foi selecionada com sucesso
-    setState(() {
-      _selectedImage = File(pickedImage.path);
-    });
-  } else {
-    // Nenhuma imagem foi selecionada
-  }
-}
-
+  XFile? photo;
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -94,25 +69,55 @@ Future<void> _selectImage() async {
         //title: Text('Add a new product'),
       ),
      body: Center(
+
       child: Padding(
         padding: EdgeInsets.all(16.0), // Espaçamento ao redor de todos os elementos
         child: Column(
           //crossAxisAlignment: CrossAxisAlignment.start, // Alinhamento à esquerda dos elementos
           children: [
-             GestureDetector(
-              onTap: _selectImage,
-              child: Container(
-                width: 200,
-                height: 200,
-                decoration: BoxDecoration(
-                  color: Colors.grey[200],
-                  borderRadius: BorderRadius.circular(10),
-                ),
-                child: _selectedImage == null
-                    ? Center(child: Text('Clique para selecionar uma imagem'))
-                    : Image.file(_selectedImage),
-              ),
+            Text('Add a new product',
+            style: TextStyle(
+                fontSize: 25.0,
+                fontWeight: FontWeight.bold,
+                color: Theme.of(context).primaryColor,
+              ),),
+              SizedBox(height: 30.0),
+              GestureDetector(
+          onTap: selectImage,
+          child: Container(
+            width: 200, // Largura do contêiner
+            height: 200, // Altura do contêiner
+            decoration: BoxDecoration(
+              color: Colors.grey[200], // Cor de fundo do contêiner
+              borderRadius: BorderRadius.circular(10), // Borda arredondada
             ),
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center, // Alinhamento do ícone e do texto ao centro
+              children: [
+                Icon(
+                  Icons.camera_alt, // Ícone da câmera
+                  size: 50, // Tamanho do ícone
+                  color: Colors.black, // Cor do ícone
+                ),
+                SizedBox(width: 20), // Espaçamento entre o ícone e o texto
+                Text(
+                  'Upload an Image', // Texto ao lado do ícone
+                  style: TextStyle(
+                    fontSize: 18, // Tamanho da fonte do texto
+                    color: Colors.black, // Cor do texto
+                  ),
+                ),
+                Text('Use any proper format: PNG, JPG, WEBP, JPEG up to 4MB',
+                textAlign: TextAlign.center,
+                style: TextStyle(
+                    fontSize: 12, // Tamanho da fonte do texto
+                    color: Colors.grey, // Cor do texto
+                  ),)
+              ],
+            ),
+          ),
+        ),
+        
             SizedBox(height: 16.0),
             TextFormField(
               controller: productTitleController,
@@ -155,4 +160,21 @@ Future<void> _selectImage() async {
     ),
     );
   }
+  
+  selectImage() async {
+  final ImagePicker picker = ImagePicker();
+
+  try {
+    XFile? file = await picker.pickImage(source: ImageSource.gallery);
+    print('File selected: $file');
+    if (file != null) {
+      setState(() {
+        photo = file;
+      });
+    }
+  } catch (e) {
+    print('Error selecting image: $e');
+  }
+}
+
 }
