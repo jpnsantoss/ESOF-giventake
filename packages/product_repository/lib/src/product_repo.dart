@@ -1,6 +1,9 @@
-// TODO: Put public facing types in this file.
 
-/// Checks if you are awesome. Spoiler: you are.
-class Awesome {
-  bool get isAwesome => true;
+import 'package:firebase_auth/firebase_auth.dart';
+import 'models/models.dart';
+
+abstract class ProductRepository {
+  //Stream<List<Product>> getProducts();
+
+  Future<void> addProduct(Product product); 
 }
