@@ -51,18 +51,37 @@ class HomeScreen extends StatelessWidget {
                       final data = document.data() as Map<String, dynamic>;
                       final imageUrl = data['image'];
                       return ListTile(
-                        title: Text(
-                          data['title'],
-                          style: TextStyle(
-                            color: Colors.black,
-                            fontSize: 18,
-                            fontWeight: FontWeight.bold,
+                        title: Container (
+                          width: double.infinity ,
+                          padding: EdgeInsets.all(16.0),
+                          decoration: BoxDecoration(
+                            border: Border.all(color: Colors.grey),
                           ),
-                        ),
-                        
-                         subtitle: Column(
+                          child: Column(
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
+                              Container(
+                                width: 350,
+                                height: 220,
+                                child: imageUrl != null && imageUrl.isNotEmpty
+                                  ? Image.network(
+                                      imageUrl,
+                                      width: double.infinity,
+                                      height: double.infinity,
+                                      fit: BoxFit.cover,
+                                    )
+                                  : Placeholder(),
+                              ),
+                              SizedBox(height: 10),
+                              Text(
+                                data['title'],
+                                style: TextStyle(
+                                  color: Colors.black,
+                                  fontSize: 18,
+                                  fontWeight: FontWeight.bold,
+                                ),
+                              ),
+                              SizedBox(height: 5),
                               Text(
                                 'Localização: ${data['location']}',
                                 style: TextStyle(
@@ -71,15 +90,10 @@ class HomeScreen extends StatelessWidget {
                                 ),
                               ),
                               Text(data['description']),
-                               if (imageUrl != null && imageUrl.isNotEmpty)
-                              Image.network(
-                                imageUrl,
-                                width: 100,
-                                height: 100,
-                                fit: BoxFit.cover,
-                              ),
+                               
                             ],
                           ),
+                        )
                       );
                     }
                   );
