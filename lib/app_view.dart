@@ -6,6 +6,7 @@ import 'package:giventake/screens/auth/views/welcome_screen.dart';
 import 'package:giventake/screens/home/blocs/bloc/get_product_bloc.dart';
 import 'package:giventake/screens/home/views/home_screen.dart';
 import 'package:product_repository/product_repository.dart';
+import 'package:user_repository/user_repository.dart';
 
 class MyAppView extends StatelessWidget {
   const MyAppView({super.key});
@@ -37,8 +38,10 @@ class MyAppView extends StatelessWidget {
                     context.read<AuthenticationBloc>().userRepository),
               ),
               BlocProvider(
-                create: (context) =>
-                    GetProductBloc(FirebaseProductRepo())..add(GetProduct()),
+                create: (context) => GetProductBloc(
+                  FirebaseProductRepo(),
+                  FirebaseUserRepo(),
+                )..add(GetProduct()),
               ),
             ], child: const HomeScreen());
           } else {
