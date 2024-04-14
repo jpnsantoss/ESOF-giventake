@@ -4,6 +4,9 @@ import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:giventake/blocs/authentication_bloc/authentication_bloc.dart';
+import 'package:giventake/screens/auth/blocs/sign_in_bloc/sign_in_bloc.dart';
+import 'package:giventake/screens/home/blocs/bloc/get_product_bloc.dart';
 import 'package:product_repository/product_repository.dart';
 import 'package:product_repository/src/firebase_product_repo.dart';
 import 'package:giventake/components/my_text_field.dart';
@@ -12,6 +15,10 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:giventake/screens/home/views/home_screen.dart';
 import 'package:giventake/app_view.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:user_repository/user_repository.dart';
+import 'package:uuid/uuid.dart';
+import 'package:firebase_auth/firebase_auth.dart';
+
 
 class ProductUploadScreen extends StatefulWidget {
   
@@ -120,9 +127,13 @@ class _ProductUploadScreenState extends State<ProductUploadScreen> {
             ElevatedButton(
               onPressed: () {
                 saveProduct();
-                Navigator.of(context).push(
-                  MaterialPageRoute(builder: (context) => HomeScreen()),
-                );                  
+                
+              Navigator.of(context).push(MaterialPageRoute(
+            builder: (context) => HomeScreen(),
+          ));
+              //Navigator.of(context).pop(true);
+            
+
               },
               style: ButtonStyle(
                 backgroundColor: MaterialStateProperty.all<Color>(Colors.black),
@@ -186,10 +197,16 @@ Future<String> uploadImageToStorage(String imagePath,Uint8List file) async {
 Future<String> saveProductToFirestore({required String title, required String location, required String description, required Uint8List file }) async{
     String res= "Some error occurred";
     try{
+      String userId = FirebaseAuth.instance.currentUser?.uid ?? '';
+
+      String id = Uuid().v4();
+
       if(title.isNotEmpty || location.isNotEmpty || description.isNotEmpty ||file.isNotEmpty){
 
       String imageUrl = await uploadImageToStorage('productImage', file);
       await _firestore.collection('products').add({
+        'id' : id,
+        'userId' :userId,
         'title' : title,
         'location' : location,
         'description' : description,

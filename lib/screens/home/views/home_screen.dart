@@ -11,8 +11,18 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:giventake/screens/home/blocs/bloc/get_product_bloc.dart';
 import 'package:giventake/screens/home/views/details_screen.dart';
 
-class HomeScreen extends StatelessWidget {
+class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
+@override
+  _HomeScreenState createState() => _HomeScreenState();}
+
+class _HomeScreenState extends State<HomeScreen> {
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    // Atualiza a lista de produtos sempre que a tela for exibida
+    context.read<GetProductBloc>().add(GetProduct());
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -61,6 +71,18 @@ class HomeScreen extends StatelessWidget {
             );
           }
         },
+      ),
+      floatingActionButton: FloatingActionButton(
+        onPressed: () async {
+          final result = await Navigator.of(context).push(MaterialPageRoute(
+            builder: (context) => ProductUploadScreen(),
+          ));
+          if (result == true) {
+      
+            context.read<GetProductBloc>().add(GetProduct());
+    }
+        },
+        child: Icon(Icons.add),
       ),
     );
   }

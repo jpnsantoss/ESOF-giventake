@@ -9,7 +9,7 @@ part 'upload_product_bloc_event.dart';
 part 'upload_product_bloc_state.dart';
 
 class ProductBloc extends Bloc<UploadProductBlocEvent, ProductState> {
-  final ProductRepository productRepository;
+  final ProductRepo productRepository;
 
   ProductBloc(this.productRepository) : super(ProductState(status: ProductStatus.loading, products: [])) {
     on<AddProduct>(_addProduct);

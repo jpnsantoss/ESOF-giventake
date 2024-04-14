@@ -11,8 +11,8 @@ class FirebaseProductRepo implements ProductRepo {
   @override
   Future<void> addProduct(Product product) async {
     try {
-      await productsCollection.add({
-        'productId': product.productId,
+      await productCollection.add({
+        'productId': product.id,
         'title': product.title,
         'location': product.location,
         'desription': product.description,
