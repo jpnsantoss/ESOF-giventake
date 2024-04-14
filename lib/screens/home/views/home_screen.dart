@@ -44,9 +44,12 @@ class HomeScreen extends StatelessWidget {
                   if (!snapshot.hasData || snapshot.data!.docs.isEmpty) {
                     return Text('Nenhum produto à venda no momento.');
                   }
-                  return ListView(
-                    children: snapshot.data!.docs.map((document) {
+                  return ListView.builder(
+                    itemCount: snapshot.data!.docs.length,
+                    itemBuilder: (context, index){
+                      final document = snapshot.data!.docs[index];
                       final data = document.data() as Map<String, dynamic>;
+                      final imageUrl = data['image'];
                       return ListTile(
                         title: Text(
                           data['title'],
@@ -68,10 +71,17 @@ class HomeScreen extends StatelessWidget {
                                 ),
                               ),
                               Text(data['description']),
+                               if (imageUrl != null && imageUrl.isNotEmpty)
+                              Image.network(
+                                imageUrl,
+                                width: 100,
+                                height: 100,
+                                fit: BoxFit.cover,
+                              ),
                             ],
                           ),
                       );
-                    }).toList(),
+                    }
                   );
                 },
               ),

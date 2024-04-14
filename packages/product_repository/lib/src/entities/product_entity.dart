@@ -7,10 +7,10 @@ class ProductEntity extends Equatable {
   final String title;
   final String location;
   final String description;
-  final Uint8List imageLink;
+  final String image;
 
   const ProductEntity(
-      {required this.productId, required this.title, required this.location, required this.description, required this.imageLink});
+      {required this.productId, required this.title, required this.location, required this.description, required this.image});
 
   Map<String, Object?> toDocument() {
     return {
@@ -18,15 +18,15 @@ class ProductEntity extends Equatable {
       'title': title,
       'location': location,
       'description': description,
-      'imageLink' : imageLink,
+      'image' : image,
     };
   }
 
   static ProductEntity fromDocument(Map<String, dynamic> doc) {
     return ProductEntity(
-        productId: doc['productId'], title: doc['title'], location: doc['location'], description: doc['description'], imageLink: doc['imageLink']);
+        productId: doc['productId'], title: doc['title'], location: doc['location'], description: doc['description'], image: doc['image']);
   }
 
   @override
-  List<Object?> get props => [productId, title, location, description, imageLink];
+  List<Object?> get props => [productId, title, location, description, image];
 }

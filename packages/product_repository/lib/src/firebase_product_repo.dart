@@ -15,7 +15,7 @@ class FirebaseProductRepo implements ProductRepository {
         'title': product.title,
         'location': product.location,
         'desription': product.description,
-        'imageLink' : product.imageLink,
+        'image' : product.image,
       });
     } catch (e) {
       // Trate os erros de forma adequada

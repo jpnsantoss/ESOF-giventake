@@ -8,30 +8,30 @@ class Product extends Equatable {
   final String title;
   final String location;
   final String description;
-  final Uint8List imageLink;
+  final String image;
 
-  const Product({required this.productId, required this.title, required this.location, required this.description, required this.imageLink});
+  const Product({required this.productId, required this.title, required this.location, required this.description, required this.image});
 
-  //static const empty = Product(productId: '', title: '', location: '',description: '');
+  static const empty = Product(productId: '', title: '', location: '',description: '', image: '');
 
-  Product copyWith({String? productId, String? title, String? description, Uint8List? imageLink}) {
+  Product copyWith({String? productId, String? title, String? description, String? image}) {
     return Product(
         productId: productId ?? this.productId,
         title: title ?? this.title,
         location: location ?? this.location,
         description: description ?? this.description,
-        imageLink: imageLink ?? this.imageLink);
+        image: image ?? this.image);
   }
 
   ProductEntity toEntity() {
-    return ProductEntity(productId: productId, title: title, location:location, description: description, imageLink: imageLink);
+    return ProductEntity(productId: productId, title: title, location:location, description: description, image: image);
   }
 
   static Product fromEntity(ProductEntity entity) {
     return Product(
-        productId: entity.productId, title: entity.title, location:entity.location, description: entity.description, imageLink: entity.imageLink);
+        productId: entity.productId, title: entity.title, location:entity.location, description: entity.description, image: entity.image);
   }
 
   @override
-  List<Object?> get props => [productId, title, location, description, imageLink];
+  List<Object?> get props => [productId, title, location, description, image];
 }
