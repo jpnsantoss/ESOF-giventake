@@ -13,9 +13,20 @@ class DetailsScreen extends StatelessWidget {
     return Scaffold(
       appBar: AppBar(),
       body: Column(
+        mainAxisAlignment: MainAxisAlignment.start,
+        crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Image.network(product.image),
-          Text(product.title),
+          const SizedBox(height: 16.0),
+          Text(
+            product.title,
+            style: const TextStyle(
+              fontWeight: FontWeight.bold,
+              fontSize: 24.0,
+            ),
+          ),
+          Text(product.user!.name),
+          Text(product.location),
           Text(product.description),
           Text(product.location),
         ],

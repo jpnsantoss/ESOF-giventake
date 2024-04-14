@@ -4,6 +4,7 @@ class ProductEntity {
   final String description;
   final String location;
   final String image;
+  final String userId;
 
   ProductEntity({
     required this.id,
@@ -11,6 +12,7 @@ class ProductEntity {
     required this.description,
     required this.location,
     required this.image,
+    required this.userId,
   });
 
   Map<String, Object?> toDocument() {
@@ -20,6 +22,7 @@ class ProductEntity {
       'description': description,
       'location': location,
       'image': image,
+      'userId': userId,
     };
   }
 
@@ -30,6 +33,7 @@ class ProductEntity {
       description: doc['description'] as String,
       location: doc['location'] as String,
       image: doc['image'] as String,
+      userId: doc['userId'] as String,
     );
   }
 }

@@ -3,6 +3,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:user_repository/src/models/user.dart';
 import 'package:user_repository/src/user_repo.dart';
+import 'package:user_repository/user_repository.dart';
 
 class FirebaseUserRepo implements UserRepository {
   final FirebaseAuth _firebaseAuth;
@@ -60,5 +61,16 @@ class FirebaseUserRepo implements UserRepository {
   @override
   Future<void> signOut() async {
     await _firebaseAuth.signOut();
+  }
+
+  @override
+  Future<MyUser> getUser(String userId) async {
+    try {
+      return await usersCollection.doc(userId).get().then((value) =>
+          MyUser.fromEntity(MyUserEntity.fromDocument(value.data()!)));
+    } catch (e) {
+      log(e.toString());
+      rethrow;
+    }
   }
 }
