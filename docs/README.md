@@ -79,7 +79,7 @@ In order to provide long-term maintenance of the code and allow easy understandi
 * **Blocs:** each bloc will encapsulate a set of related functionalities. Therefore, each bloc will take an event as input, process them and emits states. An event represents an action that happens in an app usually trigger by user iterations. A state represents the state of the app in each moment. Therefore, when the state changes, the corresponding UI components are rebuilt to reflect the updated state. 
 * **Components:** Components created by our team that will be use throughout the development of this project to maintain visual consistency and reducing code duplication.
 * **Screens:** Responsible for drawing the app and allowing interactions between the user and the program.
-Packages: Module that establishes the communications between the app and Firebase.
+* **Packages:** Module that establishes the communications between the app and Firebase.
 
 
 
