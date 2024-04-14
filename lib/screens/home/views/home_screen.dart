@@ -2,6 +2,12 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:giventake/screens/auth/blocs/sign_in_bloc/sign_in_bloc.dart';
+import 'package:giventake/screens/product/views/upload_product_screen.dart';
+import 'package:product_repository/product_repository.dart';
+import 'package:product_repository/src/firebase_product_repo.dart';
+import 'package:product_repository/src/product_repo.dart';
+import 'package:firebase_core/firebase_core.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:giventake/screens/home/blocs/bloc/get_product_bloc.dart';
 import 'package:giventake/screens/home/views/details_screen.dart';
 
@@ -22,6 +28,7 @@ class HomeScreen extends StatelessWidget {
           ),
         ],
       ),
+
       body: BlocBuilder<GetProductBloc, GetProductState>(
         builder: (context, state) {
           if (state is GetProductSuccess) {

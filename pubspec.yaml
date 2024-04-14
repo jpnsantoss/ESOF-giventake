@@ -10,10 +10,14 @@ environment:
 dependencies:
   flutter:
     sdk: flutter
+    
+  
+  image_picker: ^1.0.8
+  firebase_storage: ^11.6.9
 
   cupertino_icons: ^1.0.2
   font_awesome_flutter: ^10.7.0
-
+  cloud_firestore: ^4.15.8
   firebase_core: ^2.25.4
 
   bloc: ^8.1.3
