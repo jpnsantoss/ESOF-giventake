@@ -1,37 +1,48 @@
-import 'dart:typed_data';
+import 'package:product_repository/src/entities/product_entity.dart';
+import 'package:user_repository/user_repository.dart';
 
-import 'package:equatable/equatable.dart';
-import '../entities/entities.dart';
-
-class Product extends Equatable {
-  final String productId;
+class Product {
+  final String id;
   final String title;
-  final String location;
   final String description;
+  final String location;
   final String image;
+  final String userId;
+  MyUser? user;
 
-  const Product({required this.productId, required this.title, required this.location, required this.description, required this.image});
+  Product({
+    required this.id,
+    required this.title,
+    required this.description,
+    required this.location,
+    required this.image,
+    required this.userId,
+  });
 
-  static const empty = Product(productId: '', title: '', location: '',description: '', image: '');
-
-  Product copyWith({String? productId, String? title, String? description, String? image}) {
-    return Product(
-        productId: productId ?? this.productId,
-        title: title ?? this.title,
-        location: location ?? this.location,
-        description: description ?? this.description,
-        image: image ?? this.image);
+  Future<void> fetchUser(UserRepository userRepository) async {
+    user = await userRepository.getUser(userId);
   }
 
   ProductEntity toEntity() {
-    return ProductEntity(productId: productId, title: title, location:location, description: description, image: image);
+    return ProductEntity(
+      id: id,
+      title: title,
+      description: description,
+      location: location,
+      image: image,
+      userId: userId,
+    );
   }
 
   static Product fromEntity(ProductEntity entity) {
     return Product(
-        productId: entity.productId, title: entity.title, location:entity.location, description: entity.description, image: entity.image);
-  }
 
-  @override
-  List<Object?> get props => [productId, title, location, description, image];
+      id: entity.id,
+      title: entity.title,
+      description: entity.description,
+      location: entity.location,
+      image: entity.image,
+      userId: entity.userId,
+    );
+  }
 }

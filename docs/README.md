@@ -72,18 +72,16 @@ Image:
 
 
 ## Architecture and Design
-The architecture of a software system encompasses the set of key decisions about its overall organization. 
-
-A well written architecture document is brief but reduces the amount of time it takes new programmers to a project to understand the code to feel able to make modifications and enhancements.
-
-To document the architecture requires describing the decomposition of the system in their parts (high-level components) and the key behaviors and collaborations between them. 
-
-In this section you should start by briefly describing the overall components of the project and their interrelations. You should also describe how you solved typical problems you may have encountered, pointing to well-known architectural and design patterns, if applicable.
-
 ### Logical architecture
-The purpose of this subsection is to document the high-level logical structure of the code (Logical View), using a UML diagram with logical packages, without the worry of allocating to components, processes or machines.
 
-It can be beneficial to present the system in a horizontal decomposition, defining layers and implementation concepts, such as the user interface, business logic and concepts.
+In order to provide long-term maintenance of the code and allow easy understanding about, we will divide our project in different sections:
+
+* **Blocs:** each bloc will encapsulate a set of related functionalities. Therefore, each bloc will take an event as input, process them and emits states. An event represents an action that happens in an app usually trigger by user iterations. A state represents the state of the app in each moment. Therefore, when the state changes, the corresponding UI components are rebuilt to reflect the updated state. 
+* **Components:** Components created by our team that will be use throughout the development of this project to maintain visual consistency and reducing code duplication.
+* **Screens:** Responsible for drawing the app and allowing interactions between the user and the program.
+* **Packages:** Module that establishes the communications between the app and Firebase.
+
+
 
 Example of _UML package diagram_ showing a _logical view_ of the Eletronic Ticketing System (to be accompanied by a short description of each package):
 

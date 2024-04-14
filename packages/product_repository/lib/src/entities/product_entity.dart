@@ -1,32 +1,39 @@
-import 'dart:typed_data';
-
-import 'package:equatable/equatable.dart';
-
-class ProductEntity extends Equatable {
-  final String productId;
+class ProductEntity {
+  final String id;
   final String title;
-  final String location;
   final String description;
+  final String location;
   final String image;
+  final String userId;
 
-  const ProductEntity(
-      {required this.productId, required this.title, required this.location, required this.description, required this.image});
+  ProductEntity({
+    required this.id,
+    required this.title,
+    required this.description,
+    required this.location,
+    required this.image,
+    required this.userId,
+  });
 
   Map<String, Object?> toDocument() {
     return {
-      'productId': productId,
+      'id': id,
       'title': title,
-      'location': location,
       'description': description,
-      'image' : image,
+      'location': location,
+      'image': image,
+      'userId': userId,
     };
   }
 
   static ProductEntity fromDocument(Map<String, dynamic> doc) {
     return ProductEntity(
-        productId: doc['productId'], title: doc['title'], location: doc['location'], description: doc['description'], image: doc['image']);
+      id: doc['id'] as String,
+      title: doc['title'] as String,
+      description: doc['description'] as String,
+      location: doc['location'] as String,
+      image: doc['image'] as String,
+      userId: doc['userId'] as String,
+    );
   }
-
-  @override
-  List<Object?> get props => [productId, title, location, description, image];
 }

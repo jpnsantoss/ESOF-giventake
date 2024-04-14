@@ -1,13 +1,7 @@
+import 'package:product_repository/src/models/product.dart';
 
-import 'package:firebase_auth/firebase_auth.dart';
-import 'models/models.dart';
-
-class Awesome {
-  bool get isAwesome => true;
-}
-
-abstract class ProductRepository {
-  //Stream<List<Product>> getProducts();
-
+abstract class ProductRepo {
   Future<void> addProduct(Product product); 
+  Future<List<Product>> getProducts();
+
 }

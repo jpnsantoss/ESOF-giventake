@@ -1,13 +1,14 @@
 import 'dart:developer';
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:firebase_auth/firebase_auth.dart';
+import 'package:product_repository/src/entities/product_entity.dart';
 import 'package:product_repository/src/models/product.dart';
 import 'package:product_repository/src/product_repo.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 
-class FirebaseProductRepo implements ProductRepository {
-  final CollectionReference productsCollection =
-      FirebaseFirestore.instance.collection('products');
-@override
+class FirebaseProductRepo implements ProductRepo {
+  final productCollection = FirebaseFirestore.instance.collection('products');
+
+  @override
   Future<void> addProduct(Product product) async {
     try {
       await productsCollection.add({
@@ -23,10 +24,15 @@ class FirebaseProductRepo implements ProductRepository {
       rethrow;
     }
   }
-
-  /*@override
-  Stream<List<Product>> getProducts() {
-    // Implemente a lógica para obter os produtos, se necessário
-    throw UnimplementedError();
-  }*/
+  @override
+  Future<List<Product>> getProducts() async {
+    try {
+      return await productCollection.get().then((value) => value.docs
+          .map((e) => Product.fromEntity(ProductEntity.fromDocument(e.data())))
+          .toList());
+    } catch (e) {
+      log(e.toString());
+      rethrow;
+    }
+  }
 }
