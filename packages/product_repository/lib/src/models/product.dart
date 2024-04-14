@@ -4,12 +4,14 @@ class Product {
   final String id;
   final String title;
   final String description;
+  final String location;
   final String image;
 
   Product({
     required this.id,
     required this.title,
     required this.description,
+    required this.location,
     required this.image,
   });
 
@@ -18,6 +20,7 @@ class Product {
       id: id,
       title: title,
       description: description,
+      location: location,
       image: image,
     );
   }
@@ -27,6 +30,7 @@ class Product {
       id: entity.id,
       title: entity.title,
       description: entity.description,
+      location: entity.location,
       image: entity.image,
     );
   }

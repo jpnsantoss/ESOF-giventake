@@ -31,6 +31,7 @@ class HomeScreen extends StatelessWidget {
                 return ListTile(
                   title: Text(state.products[index].title),
                   subtitle: Text(state.products[index].description),
+                  leading: Image.network(state.products[index].image),
                   onTap: () {
                     Navigator.push(
                       context,

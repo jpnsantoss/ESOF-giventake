@@ -10,6 +10,16 @@ class DetailsScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return const Scaffold();
+    return Scaffold(
+      appBar: AppBar(),
+      body: Column(
+        children: [
+          Image.network(product.image),
+          Text(product.title),
+          Text(product.description),
+          Text(product.location),
+        ],
+      ),
+    );
   }
 }
