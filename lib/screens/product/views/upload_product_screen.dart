@@ -126,14 +126,16 @@ class _ProductUploadScreenState extends State<ProductUploadScreen> {
             SizedBox(height: 16.0),
             ElevatedButton(
               onPressed: () {
-                saveProduct();
+                saveProduct().then((result) {
+                  if(result == 'sucess'){
+                    Navigator.of(context).pop(true);
+                  }
+                });
                 
-              Navigator.of(context).push(MaterialPageRoute(
+              /*Navigator.of(context).push(MaterialPageRoute(
             builder: (context) => HomeScreen(),
-          ));
+          ));*/
               //Navigator.of(context).pop(true);
-            
-
               },
               style: ButtonStyle(
                 backgroundColor: MaterialStateProperty.all<Color>(Colors.black),
@@ -175,12 +177,13 @@ pickImage(ImageSource source) async{
     }
 }
 
-void saveProduct() async {
+Future<String> saveProduct() async {
   String title = productTitleController.text;
   String location = productLocationController.text;
   String description = productDescriptionController.text;
 
   String resp = await saveProductToFirestore(title: title, location: location, description: description, file: photo!);
+  return resp;
 }
 
 final FirebaseStorage _storage = FirebaseStorage.instance;
