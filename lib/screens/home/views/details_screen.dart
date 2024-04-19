@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:giventake/screens/home/views/profile_screen.dart';
 import 'package:product_repository/product_repository.dart';
+import 'package:user_repository/user_repository.dart';
 
 class DetailsScreen extends StatelessWidget {
   final Product product;
@@ -41,7 +43,30 @@ class DetailsScreen extends StatelessWidget {
                       ),
                     ),
                     const SizedBox(height: 24.0),
-                    Text(product.user!.name),
+                    Row( // Adicionando uma linha para organizar o nome do usuário e o botão
+            children: [
+              Text(product.user!.name),
+              const SizedBox(width: 8.0), // Adicionando um espaçamento entre o nome do usuário e o botão
+              ElevatedButton( // Botão para mudar de tela
+                onPressed: () {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute<void>(builder: (BuildContext context) => 
+                    ProfileScreen(user: MyUserEntity(userId: product.user!.userId, email: product.user!.email, name: product.user!.name, reviews: product.user!.reviews)),), // Substitua OtherScreen pela tela de destino
+                  );
+                },
+                style: ElevatedButton.styleFrom(
+                  backgroundColor: Colors.black,
+                  foregroundColor: Colors.white,
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(10),
+                  ),
+                ),
+                child: const Text("Change Screen"),
+              ),
+            ],
+          ),
+                    
                     const SizedBox(height: 24.0),
                     Text(
                       product.description,
