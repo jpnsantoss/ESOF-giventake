@@ -4,7 +4,7 @@ class MyUserEntity extends Equatable {
   final String userId;
   final String email;
   final String name;
-  final List<String> reviews;
+  final List<Map<String, String>> reviews;
 
   const MyUserEntity(
       {required this.userId, required this.email, required this.name, required this.reviews});
@@ -19,8 +19,11 @@ class MyUserEntity extends Equatable {
   }
 
   static MyUserEntity fromDocument(Map<String, dynamic> doc) {
+    final List<Map<String, String>> reviewsList = (doc['reviews'] as List).map((review) {
+      return Map<String, String>.from(review);
+    }).toList();
     return MyUserEntity(
-        userId: doc['userId'], email: doc['email'], name: doc['name'], reviews: (doc['reviews'] as List).cast<String>(),);
+        userId: doc['userId'], email: doc['email'], name: doc['name'], reviews: reviewsList,);
   }
 
   @override

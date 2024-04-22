@@ -62,7 +62,7 @@ class DetailsScreen extends StatelessWidget {
                     borderRadius: BorderRadius.circular(10),
                   ),
                 ),
-                child: const Text("Change Screen"),
+                child: const Text("Profile"),
               ),
             ],
           ),

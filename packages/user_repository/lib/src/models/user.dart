@@ -5,13 +5,13 @@
     final String userId;
     final String email;
     final String name;
-    final List<String> reviews;
+    final List<Map<String, String>> reviews;
 
     const MyUser({required this.userId, required this.email, required this.name, required this.reviews});
 
     static const empty = MyUser(userId: '', email: '', name: '', reviews: [] );
 
-    MyUser copyWith({String? userId, String? email, String? name, List<String>? reviews}) {
+    MyUser copyWith({String? userId, String? email, String? name, List<Map<String, String>>? reviews,}) {
       return MyUser(
           userId: userId ?? this.userId,
           email: email ?? this.email,
