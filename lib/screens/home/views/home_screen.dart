@@ -28,7 +28,20 @@ class _HomeScreenState extends State<HomeScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text("Home Screen"),
+        title: Card(
+          child:BlocBuilder<GetProductBloc, GetProductState> (
+            builder: (context, state) {
+              return TextField(
+                  onChanged: (value) {
+                context.read<GetProductBloc>().add(SearchProduct(value));
+              },
+              decoration: InputDecoration(
+              prefixIcon: Icon(CupertinoIcons.search),
+              hintText: 'Search Items..'),
+              );
+            }
+          )
+        ),
         actions: [
           IconButton(
             onPressed: () {
