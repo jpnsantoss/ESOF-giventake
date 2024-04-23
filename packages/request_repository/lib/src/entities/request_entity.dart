@@ -2,15 +2,17 @@ class RequestEntity {
   final String id;
   final String fromUserId;
   final String productId;
+  final String requesterId;
   bool accepted = false;
-  //if accepted is to be changed by state is this correct?
 
   RequestEntity({
-    required this.id,
+    this.id = '',
     required this.fromUserId,
     required this.productId,
-    bool accepted = false,
-  }) : accepted = accepted;
+    required this.requesterId,
+    this.accepted = false,
+  });
+
   void acceptEntity(bool newValue) {
     accepted = true;
   }
@@ -21,16 +23,17 @@ class RequestEntity {
 
   Map<String, Object?> toDocument() {
     return {
-      'id': id,
       'fromUserId': fromUserId,
       'productId': productId,
-      'accepted': accepted
+      'requesterId': requesterId,
+      'accepted': accepted,
     };
   }
 
-  static RequestEntity fromDocument(Map<String, dynamic> doc, String id){
+  static RequestEntity fromDocument(Map<String, dynamic> doc, String id) {
     return RequestEntity(
       id: id,
+      requesterId: doc['requesterId'] as String,
       fromUserId: doc['fromUserId'] as String,
       productId: doc['productId'] as String,
       accepted: doc['accepted'] as bool,

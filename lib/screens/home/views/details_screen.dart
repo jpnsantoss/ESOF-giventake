@@ -1,8 +1,6 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:giventake/screens/home/views/profile_screen.dart';
 import 'package:product_repository/product_repository.dart';
-import 'package:user_repository/user_repository.dart';
 import 'package:request_repository/request_repository.dart';
 
 class DetailsScreen extends StatelessWidget {
@@ -35,7 +33,7 @@ class DetailsScreen extends StatelessWidget {
               onPressed: () async {
                 String? userId = FirebaseAuth.instance.currentUser?.uid;
                 if (userId != null) {
-                  Request request = Request(fromUserId: userId, productId: product.id, id: );
+                  Request request = await Request.createWithRequesterId(userId, product.id);
                   await requestRepo.addRequest(request);
                 } else {
                   print(

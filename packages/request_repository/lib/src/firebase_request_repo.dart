@@ -3,7 +3,6 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:request_repository/src/entities/request_entity.dart';
 import 'package:request_repository/src/models/request.dart';
 import 'package:request_repository/src/request_repo.dart';
-import 'package:firebase_auth/firebase_auth.dart';
 
 class FirebaseRequestRepo implements RequestRepo {
 
@@ -15,7 +14,6 @@ class FirebaseRequestRepo implements RequestRepo {
       await requestCollection.add({
         'fromUserId': request.fromUserId,
         'productId': request.productId,
-        'requesterId': request.requesterId,
       });
     } catch (e) {
       print('Error adding request: $e');
@@ -25,9 +23,12 @@ class FirebaseRequestRepo implements RequestRepo {
   @override
   Future<List<Request>> getRequests() async {
     try {
-      return await requestCollection.get().then((value) => value.docs
-          .map((e) => Request.fromEntity(RequestEntity.fromDocument(e.data())))
-          .toList());
+      final querySnapshot = await requestCollection.get();
+      return querySnapshot.docs.map((doc) {
+        final requestData = doc.data();
+        final requestId = doc.id;
+        return Request.fromEntity(RequestEntity.fromDocument(requestData, requestId));
+      }).toList();
     } catch (e) {
       log(e.toString());
       rethrow;

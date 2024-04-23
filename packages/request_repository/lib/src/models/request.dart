@@ -3,42 +3,40 @@ import 'package:user_repository/user_repository.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import '../entities/entities.dart';
 
-
 class Request {
-
   final String id;
   final String fromUserId;
   final String productId;
+  final String requesterId;
+
   bool accepted = false;
   MyUser? user;
 
   Request({
     required this.fromUserId,
+    this.id = '',
     required this.productId,
-    required this.id,
-    bool accepted = false,
-  }) : accepted = accepted;
-
+    required this.requesterId,
+    this.accepted = false,
+  });
 
   Future<void> fetchFromUser(UserRepository userRepository) async {
     user = await userRepository.getUser(fromUserId);
   }
 
-/*
+  /*
   Future<void> fetchReceiver(UserRepository userRepository) async {
     user = await userRepository.getUser(requesterId);
   }*/
-/* !!DO NOT DELETE!!
-
-  important query for user retrieval
 
   factory Request.fromQuery(String fromUserId, String productId) {
     return Request(
       fromUserId: fromUserId,
       productId: productId,
-      requesterId: '', // Initialize with an empty string or provide a default value
+      requesterId: '',
     );
   }
+
   static Future<Request> createWithRequesterId(String fromUserId, String productId) async {
     String? requesterId = await fetchRequesterId(productId);
     if (requesterId != null) {
@@ -46,12 +44,12 @@ class Request {
         fromUserId: fromUserId,
         productId: productId,
         requesterId: requesterId,
+        accepted: false,
       );
     } else {
       throw Exception('RequesterId not found for productId: $productId');
     }
   }
-
   static Future<String?> fetchRequesterId(String productId) async {
     try {
       final productCollection = FirebaseFirestore.instance.collection('products');
@@ -74,19 +72,20 @@ class Request {
       return null;
     }
   }
-*/
-RequestEntity toEntity() {
+
+  RequestEntity toEntity() {
     return RequestEntity(
       id: id,
+      requesterId: requesterId,
       fromUserId: fromUserId,
       productId: productId,
       accepted: accepted,
     );
   }
-
   static Request fromEntity(RequestEntity entity) {
     return Request(
       id: entity.id,
+      requesterId: entity.requesterId,
       fromUserId: entity.fromUserId,
       productId: entity.productId,
       accepted: entity.accepted,
