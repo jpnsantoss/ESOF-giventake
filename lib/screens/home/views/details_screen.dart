@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:giventake/screens/home/views/profile_screen.dart';
 import 'package:product_repository/product_repository.dart';
 import 'package:user_repository/user_repository.dart';
-import 'package:product_repository/src/firebase_product_repo.dart';
 
 class DetailsScreen extends StatelessWidget {
   final Product product;
@@ -44,40 +43,38 @@ class DetailsScreen extends StatelessWidget {
                       ),
                     ),
                     const SizedBox(height: 24.0),
-                    Row( 
-            children: [
-              
-              const SizedBox(width: 8.0), 
-              TextButton(
-              onPressed: () {
-                Navigator.push(
-                  context,
-                  MaterialPageRoute<void>(
-                    builder: (BuildContext context) => ProfileScreen(
-                      user: MyUserEntity(
-                        userId: product.user!.userId,
-                        email: product.user!.email,
-                        name: product.user!.name,
-                        reviews: product.user!.reviews,
-                        bio: product.user!.bio,
-                      ),
-                      productRepo: FirebaseProductRepo(),
+                    Row(
+                      children: [
+                        const SizedBox(width: 8.0),
+                        TextButton(
+                          onPressed: () {
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute<void>(
+                                builder: (BuildContext context) =>
+                                    ProfileScreen(
+                                  user: MyUserEntity(
+                                    userId: product.user!.userId,
+                                    email: product.user!.email,
+                                    name: product.user!.name,
+                                    reviews: product.user!.reviews,
+                                    bio: product.user!.bio,
+                                  ),
+                                  productRepo: FirebaseProductRepo(),
+                                ),
+                              ),
+                            );
+                          },
+                          child: Text(
+                            product.user!.name,
+                            style: const TextStyle(
+                              color: Colors.black, // Cor do texto
+                              fontSize: 16, // Tamanho do texto
+                            ),
+                          ),
+                        )
+                      ],
                     ),
-                  ),
-                );
-              },
-              child: Text(
-                product.user!.name,
-                style: TextStyle(
-                  color: Colors.black, // Cor do texto
-                  fontSize: 16, // Tamanho do texto
-                ),
-              ),
-            )
-
-            ],
-          ),
-                    
                     const SizedBox(height: 24.0),
                     Text(
                       product.description,

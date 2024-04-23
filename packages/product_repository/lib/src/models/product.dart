@@ -1,8 +1,6 @@
 import 'package:product_repository/src/entities/product_entity.dart';
 import 'package:user_repository/user_repository.dart';
-import 'dart:typed_data';
 
-import 'package:equatable/equatable.dart';
 import '../entities/entities.dart';
 
 class Product {
@@ -40,7 +38,6 @@ class Product {
 
   static Product fromEntity(ProductEntity entity) {
     return Product(
-
       id: entity.id,
       title: entity.title,
       description: entity.description,
