@@ -19,7 +19,7 @@ class ProductBloc extends Bloc<UploadProductBlocEvent, ProductState> {
     // Lógica para adicionar o produto
     // Por exemplo, chamar uma função no repositório para adicionar o produto
     try {
-      final newProductList = List.from(state.products)..add(event.product);
+      final newProductList = List<Product>.from(state.products)..add(event.product);
       emit(ProductState(status: ProductStatus.loaded, products: newProductList));
     } catch (e) {
       emit(ProductState(status: ProductStatus.error, products: state.products, errorMessage: 'Failed to add product.'));

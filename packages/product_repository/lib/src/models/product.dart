@@ -40,7 +40,6 @@ class Product {
 
   static Product fromEntity(ProductEntity entity) {
     return Product(
-
       id: entity.id,
       title: entity.title,
       description: entity.description,

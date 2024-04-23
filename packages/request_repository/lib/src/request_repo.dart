@@ -1,6 +1,7 @@
-// TODO: Put public facing types in this file.
+import 'package:request_repository/src/models/request.dart';
 
-/// Checks if you are awesome. Spoiler: you are.
-class Awesome {
-  bool get isAwesome => true;
+abstract class RequestRepo {
+  Future<void> addRequest(Request request);
+  Future<List<Request>> getRequests();
+
 }

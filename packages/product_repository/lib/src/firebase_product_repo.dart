@@ -15,11 +15,10 @@ class FirebaseProductRepo implements ProductRepo {
         'productId': product.id,
         'title': product.title,
         'location': product.location,
-        'desription': product.description,
+        'description': product.description,
         'image' : product.image,
       });
     } catch (e) {
-      // Trate os erros de forma adequada
       print('Erro ao adicionar produto: $e');
       rethrow;
     }
