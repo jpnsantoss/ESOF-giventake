@@ -14,6 +14,8 @@ class FirebaseRequestRepo implements RequestRepo {
       await requestCollection.add({
         'fromUserId': request.fromUserId,
         'productId': request.productId,
+        'accepted':request.accepted,
+        'requesterId': request.requesterId,
       });
     } catch (e) {
       print('Error adding request: $e');

@@ -7,7 +7,7 @@ class Request {
   final String id;
   final String fromUserId;
   final String productId;
-  final String requesterId;
+  String requesterId;
 
   bool accepted = false;
   MyUser? user;
@@ -47,7 +47,7 @@ class Request {
         accepted: false,
       );
     } else {
-      throw Exception('RequesterId not found for productId: $productId');
+      throw Exception('Owner not found: $productId');
     }
   }
   static Future<String?> fetchRequesterId(String productId) async {

@@ -2,7 +2,7 @@ class RequestEntity {
   final String id;
   final String fromUserId;
   final String productId;
-  final String requesterId;
+  String requesterId;
   bool accepted = false;
 
   RequestEntity({
