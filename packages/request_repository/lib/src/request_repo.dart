@@ -1,7 +1,6 @@
-import 'package:request_repository/src/models/request.dart';
+library request_repository;
 
-abstract class RequestRepo {
-  Future<void> addRequest(Request request);
-  Future<List<Request>> getRequests();
-
-}
+export 'src/request_repo.dart';
+export 'src/entities/entities.dart';
+export 'src/models/models.dart';
+export 'src/firebase_request_repo.dart';

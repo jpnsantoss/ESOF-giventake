@@ -1,38 +1,36 @@
 import 'dart:developer';
+
+import 'package:request_repository/request_repository.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:request_repository/src/entities/request_entity.dart';
-import 'package:request_repository/src/models/request.dart';
-import 'package:request_repository/src/request_repo.dart';
 
 class FirebaseRequestRepo implements RequestRepo {
-
   final requestCollection = FirebaseFirestore.instance.collection('requests');
+
+  @override
+  Future<List<Request>> getRequests() async {
+    try {
+      return await requestCollection
+          .get()
+          .then((value) => value.docs.map((e) =>
+          Request.fromEntity(RequestEntity.fromDocument(e.data()))).toList());
+    } catch (e) {
+      log(e.toString());
+      rethrow;
+    }
+  }
 
   @override
   Future<void> addRequest(Request request) async {
     try {
-      await requestCollection.add({
+      await requestCollection.add( {
+        'id': request.id,
         'fromUserId': request.fromUserId,
         'productId': request.productId,
-        'accepted':request.accepted,
-        'requesterId': request.requesterId,
+        'accepted': request.accepted,
       });
-    } catch (e) {
-      print('Error adding request: $e');
-      rethrow;
     }
-  }
-  @override
-  Future<List<Request>> getRequests() async {
-    try {
-      final querySnapshot = await requestCollection.get();
-      return querySnapshot.docs.map((doc) {
-        final requestData = doc.data();
-        final requestId = doc.id;
-        return Request.fromEntity(RequestEntity.fromDocument(requestData, requestId));
-      }).toList();
-    } catch (e) {
-      log(e.toString());
+    catch (e) {
+      print("Erro ao adicionar request: $e");
       rethrow;
     }
   }

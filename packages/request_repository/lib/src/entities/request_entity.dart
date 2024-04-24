@@ -1,42 +1,31 @@
 class RequestEntity {
-  final String id;
-  final String fromUserId;
-  final String productId;
-  String requesterId;
-  bool accepted = false;
+  String id;
+  String fromUserId;
+  String productId;
+  bool accepted;
 
   RequestEntity({
-    this.id = '',
+    required this.id,
     required this.fromUserId,
     required this.productId,
-    required this.requesterId,
-    this.accepted = false,
+    required this.accepted,
   });
-
-  void acceptEntity(bool newValue) {
-    accepted = true;
-  }
-
-  void undoAcceptEntity(bool newValue) {
-    accepted = false;
-  }
 
   Map<String, Object?> toDocument() {
     return {
+      'id': id,
       'fromUserId': fromUserId,
       'productId': productId,
-      'requesterId': requesterId,
       'accepted': accepted,
     };
   }
 
-  static RequestEntity fromDocument(Map<String, dynamic> doc, String id) {
+  static RequestEntity fromDocument(Map<String, dynamic> doc) {
     return RequestEntity(
-      id: id,
-      requesterId: doc['requesterId'] as String,
-      fromUserId: doc['fromUserId'] as String,
-      productId: doc['productId'] as String,
-      accepted: doc['accepted'] as bool,
+      id: doc['id'],
+      fromUserId: doc['fromUserId'],
+      productId: doc['productId'],
+      accepted: doc['accepted'],
     );
   }
 }
