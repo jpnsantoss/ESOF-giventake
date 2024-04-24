@@ -32,8 +32,9 @@ class _ProfileScreenState extends State<ProfileScreen>
   Future<void> filterUserProducts() async {
     try {
       final productList = await widget.productRepo.getProducts();
+      final filteredProducts = productList.where((product) => product.userId == widget.user.userId).toList();
       setState(() {
-        userProducts = productList; // Atualizar a lista de produtos no estado
+        userProducts = filteredProducts; // Atualizar a lista de produtos no estado
       });
     } catch (e) {
       // Trate os erros conforme necessário
