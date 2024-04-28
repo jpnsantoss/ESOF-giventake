@@ -1,4 +1,3 @@
-
 part of 'upload_product_bloc_bloc.dart';
 
 sealed class UploadProductBlocEvent extends Equatable {

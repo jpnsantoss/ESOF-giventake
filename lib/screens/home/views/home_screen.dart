@@ -2,19 +2,16 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:giventake/screens/auth/blocs/sign_in_bloc/sign_in_bloc.dart';
-import 'package:giventake/screens/product/views/upload_product_screen.dart';
-import 'package:product_repository/product_repository.dart';
-import 'package:product_repository/src/firebase_product_repo.dart';
-import 'package:product_repository/src/product_repo.dart';
-import 'package:firebase_core/firebase_core.dart';
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:giventake/screens/home/blocs/bloc/get_product_bloc.dart';
 import 'package:giventake/screens/home/views/details_screen.dart';
+import 'package:giventake/screens/product/views/upload_product_screen.dart';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
-@override
-  _HomeScreenState createState() => _HomeScreenState();}
+
+  @override
+  State<HomeScreen> createState() => _HomeScreenState();
+}
 
 class _HomeScreenState extends State<HomeScreen> {
   @override
@@ -28,7 +25,20 @@ class _HomeScreenState extends State<HomeScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text("Home Screen"),
+        title: Card(
+          child:BlocBuilder<GetProductBloc, GetProductState> (
+            builder: (context, state) {
+              return TextField(
+                  onChanged: (value) {
+                context.read<GetProductBloc>().add(SearchProduct(value));
+              },
+              decoration: InputDecoration(
+              prefixIcon: Icon(CupertinoIcons.search),
+              hintText: 'Search Items..'),
+              );
+            }
+          )
+        ),
         actions: [
           IconButton(
             onPressed: () {
@@ -38,7 +48,6 @@ class _HomeScreenState extends State<HomeScreen> {
           ),
         ],
       ),
-
       body: BlocBuilder<GetProductBloc, GetProductState>(
         builder: (context, state) {
           if (state is GetProductSuccess) {
@@ -75,14 +84,13 @@ class _HomeScreenState extends State<HomeScreen> {
       floatingActionButton: FloatingActionButton(
         onPressed: () async {
           final result = await Navigator.of(context).push(MaterialPageRoute(
-            builder: (context) => ProductUploadScreen(),
+            builder: (context) => const ProductUploadScreen(),
           ));
           if (result == true) {
-      
             context.read<GetProductBloc>().add(GetProduct());
-    }
+          }
         },
-        child: Icon(Icons.add),
+        child: const Icon(Icons.add),
       ),
     );
   }
