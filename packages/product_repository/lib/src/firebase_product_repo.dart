@@ -3,7 +3,6 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:product_repository/src/entities/product_entity.dart';
 import 'package:product_repository/src/models/product.dart';
 import 'package:product_repository/src/product_repo.dart';
-import 'package:firebase_auth/firebase_auth.dart';
 
 class FirebaseProductRepo implements ProductRepo {
   final productCollection = FirebaseFirestore.instance.collection('products');
@@ -16,7 +15,7 @@ class FirebaseProductRepo implements ProductRepo {
         'title': product.title,
         'location': product.location,
         'desription': product.description,
-        'image' : product.image,
+        'image': product.image,
       });
     } catch (e) {
       // Trate os erros de forma adequada
@@ -24,6 +23,7 @@ class FirebaseProductRepo implements ProductRepo {
       rethrow;
     }
   }
+
   @override
   Future<List<Product>> getProducts() async {
     try {

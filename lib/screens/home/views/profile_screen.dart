@@ -73,9 +73,11 @@ class _ProfileScreenState extends State<ProfileScreen>
                       const SizedBox(height: 8),
 
                       Align(
-                        alignment: Alignment.centerLeft,
+                        alignment:
+                            Alignment.centerLeft, // Alinha o texto à esquerda
+
                         child: Container(
-                          margin: EdgeInsets.only(left: 10),
+                          margin: const EdgeInsets.only(left: 10),
                           child: Text(
                             widget.user.rating == 0.0
                                 ? 'No ratings yet'
@@ -103,7 +105,6 @@ class _ProfileScreenState extends State<ProfileScreen>
                           ),
                         ),
                       ),
-
                       const SizedBox(
                           height: 15), // Espaçamento entre o nome e a biografia
                       Container(
