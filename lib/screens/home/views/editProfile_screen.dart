@@ -6,11 +6,14 @@ import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:user_repository/user_repository.dart';
+import 'package:user_repository/src/firebase_user_repo.dart';
+import 'package:user_repository/src/user_repo.dart';
 import 'package:uuid/uuid.dart';
 
 
 class EditProfileScreen extends StatefulWidget {
-  const EditProfileScreen({super.key});
+  final String userId;
+  const EditProfileScreen({Key? key, required this.userId}) : super(key: key);
 
   @override
   _EditProfileScreenState createState() => _EditProfileScreenState();
@@ -18,6 +21,7 @@ class EditProfileScreen extends StatefulWidget {
 
 
 class _EditProfileScreenState extends State<EditProfileScreen> {
+  late String userId;
 
   final TextEditingController userNameController = TextEditingController();
   final TextEditingController userEmailController =
@@ -28,6 +32,11 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
   final TextEditingController passwordController =
       TextEditingController();
   
+  @override
+  void initState() {
+    super.initState();
+    userId = widget.userId;
+  }
 
   @override
   void dispose() {
@@ -40,179 +49,168 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
 
   Uint8List? photo;
   @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: Text('Your Profile'),
-      ),
-      body: StreamBuilder<User?>(
-        stream: FirebaseUserRepo().user,
-        builder: (context, snapshot) {
-          if (snapshot.connectionState == ConnectionState.waiting) {
-            // Se estiver esperando dados, você pode exibir um indicador de carregamento
-            return Center(
-              child: CircularProgressIndicator(),
-            );
-          } else {
-            if (snapshot.hasError) {
-              // Se ocorrer um erro, você pode exibir uma mensagem de erro
-              return Center(
-                child: Text('Erro ao carregar dados do usuário'),
-              );
-            } else {
-              // Se não houver erro, verifique se o usuário está logado
-              final user = snapshot.data;
-              if (user != null) {
-                
-                return Column(
-            children: [
-              Text('Usuário logado: ${user.email}'),
-              Text(
-                'Add a new product',
-                style: TextStyle(
-                  fontSize: 25.0,
-                  fontWeight: FontWeight.bold,
-                  color: Theme.of(context).primaryColor,
-                ),
-              ),
-              const SizedBox(height: 30.0),
-              GestureDetector(
-                onTap: selectImage,
-                child: Container(
-                  width: 200,
-                  height: 200,
-                  decoration: BoxDecoration(
-                    color: Colors.grey[200],
-                    borderRadius: BorderRadius.circular(10),
+Widget build(BuildContext context) {
+  return Scaffold(
+    appBar: AppBar(
+      title: Text('Your Profile'),
+    ),
+    body: FutureBuilder<MyUser>(
+      future: FirebaseUserRepo().getUser(userId),
+      builder: (context, snapshot) {
+        if (snapshot.connectionState == ConnectionState.waiting) {
+          return Center(child: CircularProgressIndicator());
+        } else if (snapshot.hasError) {
+          return Center(child: Text('Erro ao carregar usuário'));
+        } else {
+          final user = snapshot.data!;
+          // Agora você pode usar os dados do usuário (user) para construir a UI
+          return Center(
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Text('Nome: ${user.name}'),
+                Text('Email: ${user.email}'),
+                // Adicione outros widgets para exibir outras informações do usuário, se houver
+                Text('Biografia: ${user.bio}'),
+                Text(
+                  'Add a new product',
+                  style: TextStyle(
+                    fontSize: 25.0,
+                    fontWeight: FontWeight.bold,
+                    color: Theme.of(context).primaryColor,
                   ),
-                  child: photo != null
-                      ? Image.memory(
-                          photo!,
-                          fit: BoxFit.cover,
-                        )
-                      : const Column(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: [
-                            Icon(
-                              Icons.camera_alt,
-                              size: 50,
-                              color: Colors.black,
-                            ),
-                            SizedBox(width: 20),
-                            Text(
-                              'Upload an Image',
-                              style: TextStyle(
-                                fontSize: 18,
-                                color: Colors.black,
-                              ),
-                            ),
-                            Text(
-                              'Use any proper format: PNG, JPG, WEBP, JPEG up to 4MB',
-                              textAlign: TextAlign.center,
-                              style: TextStyle(
-                                fontSize: 12,
-                                color: Colors.grey,
-                              ),
-                            )
-                          ],
+                ),
+                const SizedBox(height: 30.0),
+                GestureDetector(
+                  onTap: selectImage,
+                  child: Container(
+                    width: 200,
+                    height: 200,
+                    decoration: BoxDecoration(
+                      color: Colors.grey[200],
+                      borderRadius: BorderRadius.circular(10),
+                    ),
+                    child: photo != null
+                        ? Image.memory(
+                      photo!,
+                      fit: BoxFit.cover,
+                    )
+                        : const Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        Icon(
+                          Icons.camera_alt,
+                          size: 50,
+                          color: Colors.black,
                         ),
-                ),
-              ),
-              const SizedBox(height: 16.0),
-              TextFormField(
-                controller: userNameController,
-                decoration: const InputDecoration(
-                  labelText: 'Edit name',
-                  hintText: 'Name',
-                  contentPadding: EdgeInsets.all(10),
-                  border: OutlineInputBorder(),
-                ),
-              ),
-              const SizedBox(height: 16.0),
-              TextFormField(
-                controller: userEmailController,
-                decoration: const InputDecoration(
-                  labelText: 'Edit email',
-                  hintText: 'Email',
-                  contentPadding: EdgeInsets.all(10),
-                  border: OutlineInputBorder(),
-                ),
-              ),
-              const SizedBox(height: 16.0),
-              TextFormField(
-                controller: passwordController,
-                decoration: const InputDecoration(
-                  labelText: 'Edit password',
-                  hintText: 'Password',
-                  contentPadding: EdgeInsets.all(10),
-                  border: OutlineInputBorder(),
-                ),
-              ),
-              
-              const SizedBox(height: 16.0),
-              TextFormField(
-                controller: userBioController,
-                decoration: const InputDecoration(
-                  labelText: 'Edit bio',
-                  hintText: 'Bio',
-                  contentPadding: EdgeInsets.all(10),
-                  border: OutlineInputBorder(),
-                ),
-              ),
-              const SizedBox(height: 16.0),
-              ElevatedButton(
-                onPressed: () {
-                  updateUserInfo().then((result) {
-                    if (result == 'success') {
-                    // Atualize os controladores dos campos de texto com as novas informações do usuário
-                    setState(() {
-                      String updatedName = userNameController.text;
-                      String updatedEmail = userEmailController.text;
-                      String updatedBio = userBioController.text;
-                      
-                      // Atualize os controladores com as novas informações
-                      userNameController.text = updatedName;
-                      userEmailController.text = updatedEmail;
-                      userBioController.text = updatedBio;
-                    });
-                    // Feche a tela de edição do perfil
-                    Navigator.of(context).pop(true);
-                  } else {
-                    ScaffoldMessenger.of(context).showSnackBar(
-                      SnackBar(content: Text("Erro ao atualizar o perfil")),
-                    );
-                  }
-                  });
-
-                },
-                style: ButtonStyle(
-                  backgroundColor:
-                      MaterialStateProperty.all<Color>(Colors.black),
-                ),
-                child: const Padding(
-                  padding: EdgeInsets.symmetric(vertical: 16.0),
-                  child: Text(
-                    'Upload Product',
-                    style: TextStyle(
-                      color: Colors.white,
+                        SizedBox(width: 20),
+                        Text(
+                          'Upload an Image',
+                          style: TextStyle(
+                            fontSize: 18,
+                            color: Colors.black,
+                          ),
+                        ),
+                        Text(
+                          'Use any proper format: PNG, JPG, WEBP, JPEG up to 4MB',
+                          textAlign: TextAlign.center,
+                          style: TextStyle(
+                            fontSize: 12,
+                            color: Colors.grey,
+                          ),
+                        )
+                      ],
                     ),
                   ),
                 ),
-              ),
-            ],
+                const SizedBox(height: 16.0),
+                TextFormField(
+                  controller: userNameController,
+                  decoration: const InputDecoration(
+                    labelText: 'Edit name',
+                    hintText: 'Name',
+                    contentPadding: EdgeInsets.all(10),
+                    border: OutlineInputBorder(),
+                  ),
+                ),
+                const SizedBox(height: 16.0),
+                TextFormField(
+                  controller: userEmailController,
+                  decoration: const InputDecoration(
+                    labelText: 'Edit email',
+                    hintText: 'Email',
+                    contentPadding: EdgeInsets.all(10),
+                    border: OutlineInputBorder(),
+                  ),
+                ),
+                const SizedBox(height: 16.0),
+                TextFormField(
+                  controller: passwordController,
+                  decoration: const InputDecoration(
+                    labelText: 'Edit password',
+                    hintText: 'Password',
+                    contentPadding: EdgeInsets.all(10),
+                    border: OutlineInputBorder(),
+                  ),
+                ),
+                const SizedBox(height: 16.0),
+                TextFormField(
+                  controller: userBioController,
+                  decoration: const InputDecoration(
+                    labelText: 'Edit bio',
+                    hintText: 'Bio',
+                    contentPadding: EdgeInsets.all(10),
+                    border: OutlineInputBorder(),
+                  ),
+                ),
+                const SizedBox(height: 16.0),
+                ElevatedButton(
+                  onPressed: () {
+                    updateUserInfo().then((result) {
+                      if (result == 'success') {
+                        // Atualize os controladores dos campos de texto com as novas informações do usuário
+                        setState(() {
+                          String updatedName = userNameController.text;
+                          String updatedEmail = userEmailController.text;
+                          String updatedBio = userBioController.text;
+
+                          // Atualize os controladores com as novas informações
+                          userNameController.text = updatedName;
+                          userEmailController.text = updatedEmail;
+                          userBioController.text = updatedBio;
+                        });
+                        // Feche a tela de edição do perfil
+                        Navigator.of(context).pop(true);
+                      } else {
+                        ScaffoldMessenger.of(context).showSnackBar(
+                          SnackBar(content: Text("Erro ao atualizar o perfil")),
+                        );
+                      }
+                    });
+                  },
+                  style: ButtonStyle(
+                    backgroundColor: MaterialStateProperty.all<Color>(Colors.black),
+                  ),
+                  child: const Padding(
+                    padding: EdgeInsets.symmetric(vertical: 16.0),
+                    child: Text(
+                      'Upload Product',
+                      style: TextStyle(
+                        color: Colors.white,
+                      ),
+                    ),
+                  ),
+                ),
+              ],
+            ),
           );
-              } else {
-                
-                return Center(
-                  child: Text('Nenhum usuário logado'),
-                );
-              }
-            }
-          }
-        },
-      ),
-    );
-  }
+        }
+      },
+    ),
+  );
+}
+
+
 
  pickImage(ImageSource source) async {
     final ImagePicker picker = ImagePicker();
@@ -372,4 +370,5 @@ void updatePassword(String newPassword) async {
     }
     return res;
   }*/
+
 }

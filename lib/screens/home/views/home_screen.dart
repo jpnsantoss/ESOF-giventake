@@ -1,3 +1,4 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -5,8 +6,10 @@ import 'package:giventake/screens/auth/blocs/sign_in_bloc/sign_in_bloc.dart';
 import 'package:giventake/screens/home/blocs/bloc/get_product_bloc.dart';
 import 'package:giventake/screens/home/views/details_screen.dart';
 import 'package:giventake/screens/home/views/editProfile_screen.dart';
-import 'package:giventake/screens/home/views/profile_screen.dart';
 import 'package:giventake/screens/product/views/upload_product_screen.dart';
+import 'package:user_repository/user_repository.dart';
+import 'dart:developer';
+
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
@@ -91,9 +94,13 @@ class _HomeScreenState extends State<HomeScreen> {
       children: [
         FloatingActionButton(
           onPressed: () 
-            {
+            async {
+              final FirebaseAuth _auth = FirebaseAuth.instance;
+              final user = _auth.currentUser;
+              String userId =user!.uid;
+              
           Navigator.of(context).push(MaterialPageRoute(
-            builder: (context) => EditProfileScreen(),
+            builder: (context) => EditProfileScreen(userId: userId),
           ));
           
         },
@@ -119,4 +126,6 @@ class _HomeScreenState extends State<HomeScreen> {
   );
       
   }
+  
+
 }
