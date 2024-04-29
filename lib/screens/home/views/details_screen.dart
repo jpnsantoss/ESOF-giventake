@@ -59,6 +59,7 @@ class DetailsScreen extends StatelessWidget {
                         reviews: product.user!.reviews,
                         bio: product.user!.bio,
                         rating: product.user!.rating,
+                        image: product.user!.image,
                       ),
                       productRepo: FirebaseProductRepo(),
                                 ),

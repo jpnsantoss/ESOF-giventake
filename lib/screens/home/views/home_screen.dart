@@ -4,6 +4,8 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:giventake/screens/auth/blocs/sign_in_bloc/sign_in_bloc.dart';
 import 'package:giventake/screens/home/blocs/bloc/get_product_bloc.dart';
 import 'package:giventake/screens/home/views/details_screen.dart';
+import 'package:giventake/screens/home/views/editProfile_screen.dart';
+import 'package:giventake/screens/home/views/profile_screen.dart';
 import 'package:giventake/screens/product/views/upload_product_screen.dart';
 
 class HomeScreen extends StatefulWidget {
@@ -81,8 +83,26 @@ class _HomeScreenState extends State<HomeScreen> {
           }
         },
       ),
-      floatingActionButton: FloatingActionButton(
-        onPressed: () async {
+      floatingActionButton: 
+      Padding(
+    padding: const EdgeInsets.only(left: 30.0, bottom: 16.0, right: 0.0),
+      child:Row(
+       mainAxisAlignment: MainAxisAlignment.spaceBetween,  // Alinha o botão à direita
+      children: [
+        FloatingActionButton(
+          onPressed: () 
+            {
+          Navigator.of(context).push(MaterialPageRoute(
+            builder: (context) => EditProfileScreen(),
+          ));
+          
+        },
+          child: Icon(Icons.person),
+        ),
+        Spacer(), // Espaçamento entre os botões
+        FloatingActionButton(
+          onPressed: () 
+           async {
           final result = await Navigator.of(context).push(MaterialPageRoute(
             builder: (context) => const ProductUploadScreen(),
           ));
@@ -90,8 +110,13 @@ class _HomeScreenState extends State<HomeScreen> {
             context.read<GetProductBloc>().add(GetProduct());
           }
         },
-        child: const Icon(Icons.add),
-      ),
-    );
+          
+          child: Icon(Icons.add),
+        ),
+      ],
+    ),
+      )
+  );
+      
   }
 }
