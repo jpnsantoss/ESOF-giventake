@@ -6,7 +6,7 @@ class MyUserEntity extends Equatable {
   final String name;
   final List<Map<String, String>> reviews;
   final String bio;
-  final double rating;
+  final num rating;
 
   const MyUserEntity(
       {required this.userId, required this.email, required this.name, required this.reviews, required this.bio, required this.rating,});
