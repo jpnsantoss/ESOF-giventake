@@ -1,7 +1,11 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:giventake/screens/home/views/profile_screen.dart';
 import 'package:product_repository/product_repository.dart';
 import 'package:user_repository/user_repository.dart';
+import 'package:uuid/uuid.dart';
 
 class DetailsScreen extends StatelessWidget {
   final Product product;
@@ -105,7 +109,10 @@ class DetailsScreen extends StatelessWidget {
           Padding(
             padding: const EdgeInsets.all(20.0),
             child: ElevatedButton(
-              onPressed: () {},
+              onPressed: () {
+                saveRequestToFirestore(productId: product.id, requesterId: product.userId);
+                print("REQUEST SAVED\n");
+              },
               style: ElevatedButton.styleFrom(
                 backgroundColor: Colors.black,
                 foregroundColor: Colors.white,
@@ -123,5 +130,37 @@ class DetailsScreen extends StatelessWidget {
         ],
       ),
     );
+  }
+
+  final FirebaseStorage _storage = FirebaseStorage.instance;
+  final FirebaseFirestore _firestore = FirebaseFirestore.instance;
+
+  Future<String> saveRequestToFirestore(
+      {required String productId,
+       required String requesterId}) async {
+    String res = "Some error occurred";
+    try {
+      String userId = FirebaseAuth.instance.currentUser?.uid ?? '';
+      String fromUserId = userId;
+      bool accepted = false;
+
+      String id = const Uuid().v4();
+
+      if (productId.isNotEmpty ||
+          requesterId.isNotEmpty) {
+        await _firestore.collection('requests').add({
+          'id': id,
+          'accepted': accepted,
+          'fromUserId': fromUserId,
+          'productId': productId,
+          'requesterId': requesterId,
+        });
+
+        res = 'sucess';
+      }
+    } catch (err) {
+      res = err.toString();
+    }
+    return res;
   }
 }
