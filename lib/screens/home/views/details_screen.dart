@@ -9,7 +9,7 @@ import 'package:uuid/uuid.dart';
 
 class DetailsScreen extends StatelessWidget {
   final Product product;
-  const DetailsScreen({
+  DetailsScreen({
     super.key,
     required this.product,
   });
@@ -48,24 +48,24 @@ class DetailsScreen extends StatelessWidget {
                       ),
                     ),
                     const SizedBox(height: 24.0),
-                    Row(
+                    Row( 
                       children: [
                         const SizedBox(width: 8.0),
                         TextButton(
-                          onPressed: () {
-                            Navigator.push(
-                              context,
-                              MaterialPageRoute<void>(
-                                builder: (BuildContext context) =>
-                                  ProfileScreen(
-                                  user: MyUserEntity(
-                                    userId: product.user!.userId,
-                                    email: product.user!.email,
-                                    name: product.user!.name,
-                                    reviews: product.user!.reviews,
-                                    bio: product.user!.bio,
-                                  ),
-                                  productRepo: FirebaseProductRepo(),
+                        onPressed: () {
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute<void>(
+                              builder: (BuildContext context) => ProfileScreen(
+                                user: MyUserEntity(
+                                  userId: product.user!.userId,
+                                  email: product.user!.email,
+                                  name: product.user!.name,
+                                  reviews: product.user!.reviews,
+                                  bio: product.user!.bio,
+                                  rating: product.user!.rating,
+                      ),
+                      productRepo: FirebaseProductRepo(),
                                 ),
                               ),
                             );

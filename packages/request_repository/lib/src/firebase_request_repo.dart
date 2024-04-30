@@ -34,4 +34,24 @@ class FirebaseRequestRepo implements RequestRepo {
       rethrow;
     }
   }
+
+  @override
+  Future<void> acceptRequest(String requestId) async {
+    try {
+      await requestCollection.doc(requestId).update({
+        'accepted': true,
+      });
+    } catch (e) {
+      throw 'Failed to accept request: $e';
+    }
+  }
+
+  @override
+  Future<void> rejectRequest(String requestId) async {
+    try {
+      await requestCollection.doc(requestId).delete();
+    } catch (e) {
+      throw Exception('Failed to reject request: $e');
+    }
+  }
 }
