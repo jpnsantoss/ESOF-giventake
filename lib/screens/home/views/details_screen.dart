@@ -131,10 +131,6 @@ class DetailsScreen extends StatelessWidget {
               child: const Text("Request Product"),
             ),
           ),
-          Text(product.user!.name),
-          Text(product.location),
-          Text(product.description),
-          Text(product.location),
         ],
       ),
     );
