@@ -1,5 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:giventake/screens/home/blocs/bloc/get_product_bloc.dart';
 import 'package:giventake/screens/home/views/details_screen.dart';
+import 'package:giventake/screens/profile/blocs/get_user_products/get_user_products_bloc.dart';
+import 'package:giventake/screens/profile/views/products_screen.dart';
 import 'package:product_repository/product_repository.dart';
 import 'package:user_repository/user_repository.dart';
 
@@ -32,9 +36,12 @@ class _ProfileScreenState extends State<ProfileScreen>
   Future<void> filterUserProducts() async {
     try {
       final productList = await widget.productRepo.getProducts();
-      final filteredProducts = productList.where((product) => product.userId == widget.user.userId).toList();
+      final filteredProducts = productList
+          .where((product) => product.userId == widget.user.userId)
+          .toList();
       setState(() {
-        userProducts = filteredProducts; // Atualizar a lista de produtos no estado
+        userProducts =
+            filteredProducts; // Atualizar a lista de produtos no estado
       });
     } catch (e) {
       // Trate os erros conforme necessário
@@ -82,7 +89,7 @@ class _ProfileScreenState extends State<ProfileScreen>
                             widget.user.rating == 0.0
                                 ? 'No ratings yet'
                                 : 'Rating: ${widget.user.rating}',
-                            style: TextStyle(
+                            style: const TextStyle(
                               fontSize: 16,
                               fontWeight: FontWeight.bold,
                             ),
@@ -164,35 +171,12 @@ class _ProfileScreenState extends State<ProfileScreen>
                           child: TabBarView(
                         controller: tabController,
                         children: [
-                          SizedBox(
-                              height: MediaQuery.of(context).size.height,
-                              child: ListView.builder(
-                                shrinkWrap: true,
-                                itemCount: userProducts.length,
-                                itemBuilder: (context, index) {
-                                  final product = userProducts[index];
-                                  return ListTile(
-                                    title: Text(product.title),
-                                    subtitle: Column(
-                                      crossAxisAlignment:
-                                          CrossAxisAlignment.start,
-                                      children: [
-                                        Text(product.description),
-                                      ],
-                                    ),
-                                    leading: Image.network(product.image),
-                                    onTap: () {
-                                      Navigator.push(
-                                        context,
-                                        MaterialPageRoute<void>(
-                                          builder: (BuildContext context) =>
-                                              DetailsScreen(product: product),
-                                        ),
-                                      );
-                                    },
-                                  );
-                                },
-                              )),
+                          BlocProvider(
+                            create: (context) => GetUserProductsBloc(
+                              FirebaseProductRepo(),
+                            )..add(GetUserProducts(widget.user.userId)),
+                            child: const ProductsScreen(),
+                          ),
                           Column(
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [

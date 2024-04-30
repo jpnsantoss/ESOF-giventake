@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:giventake/screens/home/views/profile_screen.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:giventake/screens/profile/blocs/get_user_products/get_user_products_bloc.dart';
+import 'package:giventake/screens/profile/views/profile_screen.dart';
 import 'package:product_repository/product_repository.dart';
 import 'package:user_repository/user_repository.dart';
 
@@ -43,24 +45,28 @@ class DetailsScreen extends StatelessWidget {
                       ),
                     ),
                     const SizedBox(height: 24.0),
-                    Row( 
-            children: [
-              const SizedBox(width: 8.0), 
-              TextButton(
-              onPressed: () {
-                Navigator.push(
-                  context,
-                  MaterialPageRoute<void>(
-                    builder: (BuildContext context) => ProfileScreen(
-                      user: MyUserEntity(
-                        userId: product.user!.userId,
-                        email: product.user!.email,
-                        name: product.user!.name,
-                        reviews: product.user!.reviews,
-                        bio: product.user!.bio,
-                        rating: product.user!.rating,
-                      ),
-                      productRepo: FirebaseProductRepo(),
+                    Row(
+                      children: [
+                        const SizedBox(width: 8.0),
+                        TextButton(
+                          onPressed: () {
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute<void>(
+                                builder: (BuildContext context) => BlocProvider(
+                                  create: (context) => GetUserProductsBloc(
+                                      FirebaseProductRepo()),
+                                  child: ProfileScreen(
+                                    user: MyUserEntity(
+                                      userId: product.user!.userId,
+                                      email: product.user!.email,
+                                      name: product.user!.name,
+                                      reviews: product.user!.reviews,
+                                      bio: product.user!.bio,
+                                      rating: product.user!.rating,
+                                    ),
+                                    productRepo: FirebaseProductRepo(),
+                                  ),
                                 ),
                               ),
                             );
