@@ -7,8 +7,6 @@ import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:user_repository/user_repository.dart';
 import 'package:user_repository/src/firebase_user_repo.dart';
-import 'package:user_repository/src/user_repo.dart';
-import 'package:uuid/uuid.dart';
 
 
 class EditProfileScreen extends StatefulWidget {
@@ -63,68 +61,112 @@ Widget build(BuildContext context) {
           return Center(child: Text('Erro ao carregar usuário'));
         } else {
           final user = snapshot.data!;
-          // Agora você pode usar os dados do usuário (user) para construir a UI
-          return Center(
+          
+          return SingleChildScrollView(
+          child: Center(
+            
             child: Column(
               mainAxisAlignment: MainAxisAlignment.center,
+              
               children: [
-                Text('Nome: ${user.name}'),
-                Text('Email: ${user.email}'),
-                // Adicione outros widgets para exibir outras informações do usuário, se houver
-                Text('Biografia: ${user.bio}'),
+
+                Container(
+                height: 200,
+                width: 200,
+                child: Image.network(user.image,
+                fit: BoxFit.cover),
+                
+                ),     
+
+
+                const SizedBox(height: 10.0),
+                GestureDetector(
+                  onTap: selectImage,
+                  child: Text(
+                    'Change Photo',
+                    style: TextStyle(
+                    color: Colors.blue, // Define a cor do texto como azul
+                    decoration: TextDecoration.underline, // Adiciona uma linha por baixo do texto
+                  ),
+                  ),
+                ),
+                const SizedBox(height: 10.0),
+                Container(
+                  margin: const EdgeInsets.symmetric(vertical: 5.0),  
+                  padding: const EdgeInsets.all(20.0),
+                  width: 350,
+                  decoration: BoxDecoration(
+                    color: Colors.white,
+                    boxShadow: [
+                    BoxShadow(
+                      color: Colors.grey.withOpacity( 0.5), 
+                      spreadRadius: 3,
+                      blurRadius:7,
+                     offset: const Offset(0, 3),       
+                    ),
+              ],
+                                        border: Border.all(color: Colors.grey),
+                                        borderRadius:
+                                            BorderRadius.circular(10.0),
+                                      ),
+                                      child: Column(
+                                        crossAxisAlignment:
+                                            CrossAxisAlignment.start,
+                                        children: [                                      
+                                          Text('Nome: ${user.name}',
+                                              style: TextStyle(
+                                              fontSize: 16.0,
+                                              fontWeight: FontWeight.bold,
+                                              color: Colors.black,
+                                            ),
+                                            textAlign: TextAlign.left,),
+                                             const SizedBox(height: 4),
+                                             Text('Email: ${user.email}',
+                                             style: TextStyle(
+                                              fontSize: 16.0,
+                                              fontWeight: FontWeight.bold,
+                                              color: Colors.black,
+                                            ),
+                                            textAlign: TextAlign.left,),
+                                            const SizedBox(height: 4),
+                                             Text('Biografia: ${user.bio}',
+                                             style: TextStyle(
+                                              fontSize: 16.0,
+                                              fontWeight: FontWeight.bold,
+                                              color: Colors.black,
+                                            ),
+                                            textAlign: TextAlign.left,),
+                                            const SizedBox(height: 4),
+                                            Text(
+                                                  user.rating == 0.0
+                                                  ? 'No ratings yet'
+                                                  : 'Rating: ${user.rating}',
+                                                  style: TextStyle(
+                                                    fontSize: 16,
+                                                    fontWeight: FontWeight.bold,
+                                                    ),
+                                                  ),
+                                        ],
+                                      ),
+                                    ),
+
+                const SizedBox(height: 16.0),
                 Text(
-                  'Add a new product',
+                  'Edit your profile',
                   style: TextStyle(
                     fontSize: 25.0,
                     fontWeight: FontWeight.bold,
                     color: Theme.of(context).primaryColor,
                   ),
-                ),
-                const SizedBox(height: 30.0),
-                GestureDetector(
-                  onTap: selectImage,
-                  child: Container(
-                    width: 200,
-                    height: 200,
-                    decoration: BoxDecoration(
-                      color: Colors.grey[200],
-                      borderRadius: BorderRadius.circular(10),
-                    ),
-                    child: photo != null
-                        ? Image.memory(
-                      photo!,
-                      fit: BoxFit.cover,
-                    )
-                        : const Column(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        Icon(
-                          Icons.camera_alt,
-                          size: 50,
-                          color: Colors.black,
-                        ),
-                        SizedBox(width: 20),
-                        Text(
-                          'Upload an Image',
-                          style: TextStyle(
-                            fontSize: 18,
-                            color: Colors.black,
-                          ),
-                        ),
-                        Text(
-                          'Use any proper format: PNG, JPG, WEBP, JPEG up to 4MB',
-                          textAlign: TextAlign.center,
-                          style: TextStyle(
-                            fontSize: 12,
-                            color: Colors.grey,
-                          ),
-                        )
-                      ],
-                    ),
-                  ),
-                ),
-                const SizedBox(height: 16.0),
-                TextFormField(
+                  textAlign: TextAlign.left,
+                ),              
+                const SizedBox(height: 5.0),
+                Padding(
+                  padding: const EdgeInsets.all(16.0),
+
+                
+                child: Column(
+                  children: [TextFormField(
                   controller: userNameController,
                   decoration: const InputDecoration(
                     labelText: 'Edit name',
@@ -134,7 +176,7 @@ Widget build(BuildContext context) {
                   ),
                 ),
                 const SizedBox(height: 16.0),
-                TextFormField(
+                /*TextFormField(
                   controller: userEmailController,
                   decoration: const InputDecoration(
                     labelText: 'Edit email',
@@ -143,8 +185,8 @@ Widget build(BuildContext context) {
                     border: OutlineInputBorder(),
                   ),
                 ),
-                const SizedBox(height: 16.0),
-                TextFormField(
+                const SizedBox(height: 16.0),*/
+                /*TextFormField(
                   controller: passwordController,
                   decoration: const InputDecoration(
                     labelText: 'Edit password',
@@ -153,7 +195,7 @@ Widget build(BuildContext context) {
                     border: OutlineInputBorder(),
                   ),
                 ),
-                const SizedBox(height: 16.0),
+                const SizedBox(height: 16.0),*/
                 TextFormField(
                   controller: userBioController,
                   decoration: const InputDecoration(
@@ -166,7 +208,9 @@ Widget build(BuildContext context) {
                 const SizedBox(height: 16.0),
                 ElevatedButton(
                   onPressed: () {
-                    updateUserInfo().then((result) {
+                    updateEmail(userEmailController.text);
+                    updatePassword(passwordController.text);
+                    updateUserInfo(user).then((result) {
                       if (result == 'success') {
                         // Atualize os controladores dos campos de texto com as novas informações do usuário
                         setState(() {
@@ -194,15 +238,19 @@ Widget build(BuildContext context) {
                   child: const Padding(
                     padding: EdgeInsets.symmetric(vertical: 16.0),
                     child: Text(
-                      'Upload Product',
+                      'Save Changes',
                       style: TextStyle(
                         color: Colors.white,
                       ),
                     ),
                   ),
                 ),
+                ],
+                ),
+                ),
               ],
             ),
+          ),
           );
         }
       },
@@ -222,7 +270,6 @@ Widget build(BuildContext context) {
   }
   void selectImage() async {
     Uint8List file = await pickImage(ImageSource.gallery);
-    print('File selected: $file');
     setState(() {
       photo = file;
     });
@@ -285,17 +332,20 @@ void updatePassword(String newPassword) async {
 }
 
 
-  Future<String> updateUserInfo() async {
+  Future<String> updateUserInfo(MyUser user) async {
   try {
     String userId = FirebaseAuth.instance.currentUser?.uid ?? '';
-    String name = userNameController.text;
-    String email = userEmailController.text;
-    String bio = userBioController.text;
+    String name = user.name;
+    String email = user.email;
+    String bio = user.bio;
     String password = passwordController.text;
   
+    if(userNameController.text.isNotEmpty) name=userNameController.text;
+    if(userEmailController.text.isNotEmpty) name=userEmailController.text;
+    if(userBioController.text.isNotEmpty) name=userBioController.text;
 
     if (userId.isNotEmpty && (name.isNotEmpty || email.isNotEmpty || bio.isNotEmpty || photo != null)) {
-      String imageUrl = '';
+      String imageUrl = user.image;
       if (photo != null) {
         // Se uma nova foto for selecionada, faça o upload dela para o Firebase Storage
         imageUrl = await uploadImageToStorage('userImage_$userId', photo!);
@@ -308,9 +358,6 @@ void updatePassword(String newPassword) async {
         'bio': bio,
         'image': imageUrl, 
       });
-
-    updateEmail(email);
-    updatePassword(password);
 
     reauthenticateUser(email, password);
 
@@ -338,37 +385,5 @@ void updatePassword(String newPassword) async {
     return downloadUrl;
   }
 
-  /*Future<String> saveProductToFirestore(
-      {required String name,
-      required String email,
-      required String bio,
-      required Uint8List file}) async {
-    String res = "Some error occurred";
-    try {
-      String userId = FirebaseAuth.instance.currentUser?.uid ?? '';
-
-      String id = const Uuid().v4();
-
-      if (name.isNotEmpty ||
-          email.isNotEmpty ||
-          bio.isNotEmpty ||
-          file.isNotEmpty) {
-        String imageUrl = await uploadImageToStorage('productImage', file);
-        await _firestore.collection('products').add({
-          'id': id,
-          'userId': userId,
-          'name': name,
-          'email': email,
-          'bio': bio,
-          'image': imageUrl,
-        });
-
-        res = 'sucess';
-      }
-    } catch (err) {
-      res = err.toString();
-    }
-    return res;
-  }*/
 
 }

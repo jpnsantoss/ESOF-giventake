@@ -7,8 +7,6 @@ import 'package:giventake/screens/home/blocs/bloc/get_product_bloc.dart';
 import 'package:giventake/screens/home/views/details_screen.dart';
 import 'package:giventake/screens/home/views/editProfile_screen.dart';
 import 'package:giventake/screens/product/views/upload_product_screen.dart';
-import 'package:user_repository/user_repository.dart';
-import 'dart:developer';
 
 
 class HomeScreen extends StatefulWidget {

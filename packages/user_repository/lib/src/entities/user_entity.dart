@@ -29,7 +29,7 @@ class MyUserEntity extends Equatable {
       return Map<String, String>.from(review);
     }).toList();
     return MyUserEntity(
-        userId: doc['userId'], email: doc['email'], name: doc['name'], reviews: reviewsList, bio: doc['bio'], rating: doc['rating'] ?? 0.0, image: doc['image'],);
+        userId: doc['userId'], email: doc['email'], name: doc['name'], reviews: reviewsList, bio: doc['bio'], rating: doc['rating'] ?? 0.0, image: doc['image'] ?? 'https://upload.wikimedia.org/wikipedia/commons/thumb/2/2c/Default_pfp.svg/2048px-Default_pfp.svg.png',);
   }
 
   @override
