@@ -142,6 +142,7 @@ class DetailsScreen extends StatelessWidget {
     try {
       String userId = FirebaseAuth.instance.currentUser?.uid ?? '';
       String fromUserId = userId;
+
       bool accepted = false;
 
       String id = const Uuid().v4();
@@ -162,5 +163,15 @@ class DetailsScreen extends StatelessWidget {
       res = err.toString();
     }
     return res;
+  }
+
+  Future<bool> canRequest(String userId) async {
+    final currUserRequests = _firestore.collection('requests').where("fromUserId", isEqualTo: userId).where("productId", isEqualTo: product.id);
+    AggregateQuerySnapshot query = await currUserRequests.count().get();
+
+    if (query.count! > 0) {
+      return false;
+    }
+    return true;
   }
 }
