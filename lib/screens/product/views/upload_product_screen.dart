@@ -209,12 +209,13 @@ class _ProductUploadScreenState extends State<ProductUploadScreen> {
       String userId = FirebaseAuth.instance.currentUser?.uid ?? '';
 
       String id = const Uuid().v4();
+      String imageName = 'productImage_$id';
 
       if (title.isNotEmpty ||
           location.isNotEmpty ||
           description.isNotEmpty ||
           file.isNotEmpty) {
-        String imageUrl = await uploadImageToStorage('productImage', file);
+        String imageUrl = await uploadImageToStorage(imageName, file);
         await _firestore.collection('products').add({
           'id': id,
           'userId': userId,
