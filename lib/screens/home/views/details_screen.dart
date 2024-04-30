@@ -109,9 +109,16 @@ class DetailsScreen extends StatelessWidget {
           Padding(
             padding: const EdgeInsets.all(20.0),
             child: ElevatedButton(
-              onPressed: () {
-                saveRequestToFirestore(productId: product.id, requesterId: product.userId);
+              onPressed: () async {
+                String result = await saveRequestToFirestore(productId: product.id, requesterId: product.userId);
                 print("REQUEST SAVED\n");
+                ScaffoldMessenger.of(context).showSnackBar(
+                  SnackBar(
+                    content: Text(result == 'success'
+                        ? 'Request saved successfully!'
+                        : 'You have already requested this product!'),
+                  ),
+                );
               },
               style: ElevatedButton.styleFrom(
                 backgroundColor: Colors.black,
@@ -135,13 +142,18 @@ class DetailsScreen extends StatelessWidget {
   final FirebaseStorage _storage = FirebaseStorage.instance;
   final FirebaseFirestore _firestore = FirebaseFirestore.instance;
 
-  Future<String> saveRequestToFirestore(
+  Future<String> saveRequestToFirestore (
       {required String productId,
        required String requesterId}) async {
     String res = "Some error occurred";
     try {
       String userId = FirebaseAuth.instance.currentUser?.uid ?? '';
       String fromUserId = userId;
+
+      if (!await canRequest(fromUserId)) {
+        print("user has already requested this product");
+        return 'fail';
+      }
 
       bool accepted = false;
 
