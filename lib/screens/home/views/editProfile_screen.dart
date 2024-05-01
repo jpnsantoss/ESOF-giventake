@@ -21,7 +21,7 @@ class EditProfileScreen extends StatefulWidget {
 class _EditProfileScreenState extends State<EditProfileScreen> {
 
   late String userId;
-  late List<String> requests = [];
+  late List<DocumentSnapshot> requestDocs = [];
   bool isLoadingRequests = true;
 
   @override
@@ -221,8 +221,16 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                           // Display the list of requests
                           if (isLoadingRequests)
                             CircularProgressIndicator()
-                          else if (requests.isEmpty)
-                            Center(child: Text('No pending requests'))
+                          else if (requestDocs.isEmpty)
+                            Center(child: Text(
+                              'No Pending Requests',
+                              style: TextStyle(
+                                fontSize: 25.0,
+                                fontWeight: FontWeight.bold,
+                                color: Theme.of(context).primaryColor,
+                              ),
+                              textAlign: TextAlign.left,
+                            ),)
                           else
                             Column(
                               crossAxisAlignment: CrossAxisAlignment.start,
@@ -236,23 +244,23 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                                   ),
                                   textAlign: TextAlign.left,
                                 ),
-                                ...requests.map(
-                                  (requestId) => ListTile(
+                                ...requestDocs.map(
+                                  (request) => ListTile(
                                     leading: CircleAvatar(
                                       // Display user image
                                       backgroundImage: AssetImage('assets/user_image.png'),
                                     ),
-                                    title: Text('User Name'), // Display user name
+                                    title: Text('UserName'), // Display user name
                                     trailing: Row(
                                       mainAxisSize: MainAxisSize.min,
                                       children: [
                                         IconButton(
                                           icon: Icon(Icons.check),
-                                          onPressed: () => FirebaseRequestRepo().acceptRequest(requestId),
+                                          onPressed: () => FirebaseRequestRepo().acceptRequest(request.id),
                                         ),
                                         IconButton(
                                           icon: Icon(Icons.close),
-                                          onPressed: () => FirebaseRequestRepo().rejectRequest(requestId),
+                                          onPressed: () => FirebaseRequestRepo().rejectRequest(request.id),
                                         ),
                                       ],
                                     ),
@@ -275,29 +283,8 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
 
 
   Future<void> fetchUserRequests(String userId) async {
-    try {
-      List<String> userRequestIds = [];
-
-      List<Request> requestsData = await FirebaseRequestRepo().getRequests();
-
-      for (Request request in requestsData) {
-        if (request.toEntity().toDocument()['requesterId'] == userId) {
-          userRequestIds.add(request.id);
-        }
-      }
-
-      setState(() {
-        requests = userRequestIds;
-        isLoadingRequests = false;
-      });
-    } catch (e) {
-      print("Error fetching user requests: $e");
-      setState(() {
-        isLoadingRequests = false;
-      });
-    }
+    /////doesnt work with query snapshots
   }
-
 
  pickImage(ImageSource source) async {
     final ImagePicker picker = ImagePicker();
@@ -386,11 +373,9 @@ void updatePassword(String newPassword) async {
     if (userId.isNotEmpty && (name.isNotEmpty || email.isNotEmpty || bio.isNotEmpty || photo != null)) {
       String imageUrl = user.image;
       if (photo != null) {
-        // Se uma nova foto for selecionada, faça o upload dela para o Firebase Storage
         imageUrl = await uploadImageToStorage('userImage_$userId', photo!);
       }
 
-      // Atualize os dados do usuário no Firestore
       await FirebaseFirestore.instance.collection('users').doc(userId).update({
         'name': name,
         'email': email,

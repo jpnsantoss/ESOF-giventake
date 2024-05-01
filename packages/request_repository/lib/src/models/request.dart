@@ -1,4 +1,5 @@
 import '../entities/entities.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 
 class Request {
   String id;
@@ -30,4 +31,5 @@ class Request {
       accepted: entity.accepted,
     );
   }
+
 }
