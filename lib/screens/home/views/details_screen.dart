@@ -4,6 +4,7 @@ import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:giventake/screens/home/views/profile_screen.dart';
 import 'package:product_repository/product_repository.dart';
+import 'package:request_repository/request_repository.dart';
 import 'package:user_repository/user_repository.dart';
 import 'package:uuid/uuid.dart';
 
@@ -48,7 +49,7 @@ class DetailsScreen extends StatelessWidget {
                       ),
                     ),
                     const SizedBox(height: 24.0),
-                    Row( 
+                    Row(
                       children: [
                         const SizedBox(width: 8.0),
                         TextButton(
@@ -64,13 +65,14 @@ class DetailsScreen extends StatelessWidget {
                                   reviews: product.user!.reviews,
                                   bio: product.user!.bio,
                                   rating: product.user!.rating,
-                      ),
-                      productRepo: FirebaseProductRepo(),
-                                ),
-                              ),
-                            );
-                          },
-                          child: Text(
+                                  image: product.user!.image,
+                            ),
+                            productRepo: FirebaseProductRepo(),
+                                      ),
+                                    ),
+                                  );
+                                },
+                                child: Text(
                             product.user!.name,
                             style: const TextStyle(
                               color: Colors.black, // Cor do texto
@@ -148,19 +150,22 @@ class DetailsScreen extends StatelessWidget {
 
       if (productId.isNotEmpty ||
           requesterId.isNotEmpty) {
-        await _firestore.collection('requests').add({
-          'id': id,
-          'accepted': accepted,
-          'fromUserId': fromUserId,
-          'productId': productId,
-          'requesterId': requesterId,
-        });
+          FirebaseRequestRepo requestRepo = FirebaseRequestRepo();
+          await _firestore.collection('requests').add({
+            'id': id,
+            'accepted': accepted,
+            'fromUserId': fromUserId,
+            'productId': productId,
+            'requesterId': requesterId,
+          });
 
-        res = 'sucess';
+        res = 'success';
       }
     } catch (err) {
       res = err.toString();
     }
     return res;
   }
+
+
 }

@@ -230,7 +230,7 @@ class _ProfileScreenState extends State<ProfileScreen>
                                           Text('User: ${review['username']}'),
                                           const SizedBox(
                                               height:
-                                                  8), // Espaçamento entre as linhas
+                                                  8), 
                                           Text('${review['review']}'),
                                         ],
                                       ),

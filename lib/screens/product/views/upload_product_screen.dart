@@ -22,7 +22,7 @@ class _ProductUploadScreenState extends State<ProductUploadScreen> {
       TextEditingController();
   final TextEditingController productImageController = TextEditingController();
 
-  final _formKey = GlobalKey<FormState>();
+  
 
   @override
   void dispose() {
@@ -164,7 +164,7 @@ class _ProductUploadScreenState extends State<ProductUploadScreen> {
     if (file != null) {
       return await file.readAsBytes();
     }
-    print('No image selected');
+    Text('No image selected');
   }
 
   void selectImage() async {
