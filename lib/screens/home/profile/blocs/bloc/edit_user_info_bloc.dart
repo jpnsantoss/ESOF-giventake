@@ -12,38 +12,88 @@ part 'edit_user_info_event.dart';
 part 'edit_user_info_state.dart';
 
 class EditUserInfoBloc
-    extends Bloc<EditUserInfoEvent, EditUserInfoState> {
+  extends Bloc<EditUserInfoEvent, EditUserInfoState> {
   final ImagePicker _picker = ImagePicker();
   final FirebaseStorage _storage = FirebaseStorage.instance;
   final FirebaseFirestore _firestore = FirebaseFirestore.instance;
   final FirebaseAuth _firebaseAuth = FirebaseAuth.instance;
+  final String userId;
 
-  EditUserInfoBloc() : super(EditUserInfoInitial());
-
- @override
-  Stream<EditUserInfoState> mapEventToState(EditUserInfoEvent event) async* {
-    if (event is PickImageEvent) {
-      yield EditUserInfoProcess();
+  EditUserInfoBloc(this.userId) : super(EditUserInfoInitial()){
+    on<UpdateUserInfoEvent>((event, emit) async {
+      MyUser user = await FirebaseUserRepo().getUser(userId);
+      emit(EditUserInfoProcess(user));
       try {
-        XFile? file = await _picker.pickImage(source: event.source);
-        if (file != null) {
-          Uint8List imageBytes = await file.readAsBytes();
-          yield EditUserInfoSuccess();
+        
+        String name = event.updatedName;
+        String bio = event.updatedBio;
+        Uint8List? photo = event.photo;
+
+        user = await FirebaseUserRepo().getUser(userId);
+
+        if(event.updatedName == '') name=user.name;
+        if(event.updatedBio == '') bio=user.bio;
+
+        if(userId.isNotEmpty){
+           String imageUrl = user.image;
+            if (photo != null) {
+            // Se uma nova foto for selecionada, faça o upload dela para o Firebase Storage
+            imageUrl = await uploadImageToStorage('userImage_$userId', photo!);
+          }
+
+          // Atualize os dados do usuário no Firestore
+          await FirebaseFirestore.instance.collection('users').doc(userId).update({
+            'name': name,
+            'email': user.email,
+            'bio': bio,
+            'image': imageUrl, 
+          });
+
+
+          await FirebaseAuth.instance.currentUser?.reload();
+          await Future.delayed(Duration(seconds: 2)); 
+           emit( EditUserInfoSuccess());
+            }
+
+        
+      } catch (error) {
+        emit(EditUserInfoFailure());
+      }
+  });
+
+  on<PickImageEvent>((event, emit) async{
+    MyUser user = await FirebaseUserRepo().getUser(userId);
+    emit(EditUserInfoProcess(user));
+      try {
+        Uint8List? new_file;
+        final ImagePicker picker = ImagePicker();
+         XFile? file = await picker.pickImage(source: ImageSource.gallery);
+         if (file != null) {
+        new_file = await file.readAsBytes();
+        }
+
+        if (new_file != null) {
+          Uint8List photo = new_file;
+          emit (EditUserInfoSuccess());
+
+
         } else {
-          yield EditUserInfoFailure();
+          emit(EditUserInfoFailure());
         }
       } catch (error) {
-        yield EditUserInfoFailure();
-      }
-    } else if (event is UpdateUserInfoEvent) {
-      yield EditUserInfoProcess();
-      try {
-        // Implemente a lógica de atualização das informações do usuário aqui
-        yield EditUserInfoSuccess();
-      } catch (error) {
-        yield EditUserInfoFailure();
-      }
-    }
+        emit(EditUserInfoFailure());
+      }      
+  });
   }
+
+
+  Future<String> uploadImageToStorage(String imagePath, Uint8List file) async {
+    Reference ref = _storage.ref().child(imagePath);
+    UploadTask uploadTask = ref.putData(file);
+    TaskSnapshot snapshot = await uploadTask;
+    String downloadUrl = await snapshot.ref.getDownloadURL();
+    return downloadUrl;
+  }
+  
 }
 

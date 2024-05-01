@@ -4,6 +4,8 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:giventake/screens/home/profile/blocs/bloc/edit_user_info_bloc.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:user_repository/user_repository.dart';
 import 'package:user_repository/src/firebase_user_repo.dart';
@@ -11,7 +13,9 @@ import 'package:user_repository/src/firebase_user_repo.dart';
 
 class EditProfileScreen extends StatefulWidget {
   final String userId;
-  const EditProfileScreen({Key? key, required this.userId}) : super(key: key);
+  final MyUserEntity user;
+  
+  const EditProfileScreen({Key? key, required this.userId, required this.user}) : super(key: key);
 
   @override
   _EditProfileScreenState createState() => _EditProfileScreenState();
@@ -46,29 +50,24 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
   }
 
   Uint8List? photo;
-  @override
-Widget build(BuildContext context) {
-  return Scaffold(
-    appBar: AppBar(
-      title: Text('Your Profile'),
-    ),
-    body: FutureBuilder<MyUser>(
-      future: FirebaseUserRepo().getUser(userId),
-      builder: (context, snapshot) {
-        if (snapshot.connectionState == ConnectionState.waiting) {
-          return Center(child: CircularProgressIndicator());
-        } else if (snapshot.hasError) {
-          return Center(child: Text('Erro ao carregar usuário'));
-        } else {
-          final user = snapshot.data!;
-          
-          return SingleChildScrollView(
-          child: Center(
+@override
+  Widget build(BuildContext context) {
+    return BlocProvider(
+      create: (context) => EditUserInfoBloc(userId),
+      child: Scaffold(
+        appBar: AppBar(
+          title: Text('Edit Profile'),
+        ),
+        body:
+         BlocBuilder<EditUserInfoBloc, EditUserInfoState>(
+          builder: (context, state) {
+            return SingleChildScrollView(
             
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              
-              children: [
+              child: Center(
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                
+                children: [
 
                 Container(
                 height: 200,
@@ -80,13 +79,13 @@ Widget build(BuildContext context) {
                     )
                   : 
                 
-                Image.network(user.image,
+                Image.network(widget.user.image,
                 fit: BoxFit.cover),
                 
                 ),     
                 const SizedBox(height: 10.0),
                 GestureDetector(
-                  onTap: selectImage,
+                  onTap: (){context.read<EditUserInfoBloc>().add(PickImageEvent(ImageSource.gallery));},
                   child: Text(
                     'Change Photo',
                     style: TextStyle(
@@ -118,7 +117,7 @@ Widget build(BuildContext context) {
                                         crossAxisAlignment:
                                             CrossAxisAlignment.start,
                                         children: [                                      
-                                          Text('Nome: ${user.name}',
+                                          Text('Nome: ${widget.user.name}',
                                               style: TextStyle(
                                               fontSize: 16.0,
                                               fontWeight: FontWeight.bold,
@@ -126,7 +125,7 @@ Widget build(BuildContext context) {
                                             ),
                                             textAlign: TextAlign.left,),
                                              const SizedBox(height: 4),
-                                             Text('Email: ${user.email}',
+                                             Text('Email: ${widget.user.email}',
                                              style: TextStyle(
                                               fontSize: 16.0,
                                               fontWeight: FontWeight.bold,
@@ -134,7 +133,7 @@ Widget build(BuildContext context) {
                                             ),
                                             textAlign: TextAlign.left,),
                                             const SizedBox(height: 4),
-                                             Text('Biografia: ${user.bio}',
+                                             Text('Biografia: ${widget.user.bio}',
                                              style: TextStyle(
                                               fontSize: 16.0,
                                               fontWeight: FontWeight.bold,
@@ -143,9 +142,9 @@ Widget build(BuildContext context) {
                                             textAlign: TextAlign.left,),
                                             const SizedBox(height: 4),
                                             Text(
-                                                  user.rating == 0.0
+                                                  widget.user!.rating == 0.0
                                                   ? 'No ratings yet'
-                                                  : 'Rating: ${user.rating}',
+                                                  : 'Rating: ${widget.user.rating}',
                                                   style: TextStyle(
                                                     fontSize: 16,
                                                     fontWeight: FontWeight.bold,
@@ -181,26 +180,6 @@ Widget build(BuildContext context) {
                   ),
                 ),
                 const SizedBox(height: 16.0),
-                /*TextFormField(
-                  controller: userEmailController,
-                  decoration: const InputDecoration(
-                    labelText: 'Edit email',
-                    hintText: 'Email',
-                    contentPadding: EdgeInsets.all(10),
-                    border: OutlineInputBorder(),
-                  ),
-                ),
-                const SizedBox(height: 16.0),*/
-                /*TextFormField(
-                  controller: passwordController,
-                  decoration: const InputDecoration(
-                    labelText: 'Edit password',
-                    hintText: 'Password',
-                    contentPadding: EdgeInsets.all(10),
-                    border: OutlineInputBorder(),
-                  ),
-                ),
-                const SizedBox(height: 16.0),*/
                 TextFormField(
                   controller: userBioController,
                   decoration: const InputDecoration(
@@ -214,27 +193,17 @@ Widget build(BuildContext context) {
                 ElevatedButton(
                   onPressed: () {
                     
-                    updateUserInfo(user).then((result) {
-                      if (result == 'success') {
-                        // Atualize os controladores dos campos de texto com as novas informações do usuário
-                        setState(() {
-                          String updatedName = userNameController.text;
-                          String updatedEmail = userEmailController.text;
-                          String updatedBio = userBioController.text;
+                    context.read<EditUserInfoBloc>().add(
+                            UpdateUserInfoEvent(
+                              userId,
+                              userNameController.text,
+                              userBioController.text,
+                              photo,
+                            ),
+                          );
 
-                          // Atualize os controladores com as novas informações
-                          userNameController.text = updatedName;
-                          userEmailController.text = updatedEmail;
-                          userBioController.text = updatedBio;
-                        });
-                        // Feche a tela de edição do perfil
-                        Navigator.of(context).pop(true);
-                      } else {
-                        ScaffoldMessenger.of(context).showSnackBar(
-                          SnackBar(content: Text("Erro ao atualizar o perfil")),
-                        );
-                      }
-                    });
+                          Navigator.of(context).pop(true);
+                  
                   },
                   style: ButtonStyle(
                     backgroundColor: MaterialStateProperty.all<Color>(Colors.black),
@@ -253,141 +222,13 @@ Widget build(BuildContext context) {
                 ),
                 ),
               ],
+              ),
             ),
-          ),
-          );
-        }
-      },
-    ),
-  );
-}
-
-
-
- pickImage(ImageSource source) async {
-    final ImagePicker picker = ImagePicker();
-    XFile? file = await picker.pickImage(source: source);
-    if (file != null) {
-      return await file.readAsBytes();
-    }
-    Text('No image selected');
+            
+            );
+          },
+        ),
+      ),
+    );
   }
-  void selectImage() async {
-    Uint8List file = await pickImage(ImageSource.gallery);
-    setState(() {
-      photo = file;
-    });
-  }
-
-  void reauthenticateUser(String email, String password) async {
-    try {
-      AuthCredential credential = EmailAuthProvider.credential(email: email, password: password);
-      await FirebaseAuth.instance.currentUser?.reauthenticateWithCredential(credential);
-      print('Usuário reautenticado com sucesso.');
-      // Agora você pode realizar operações sensíveis, como atualizar o e-mail ou a senha
-    } catch (error) {
-      print('Erro ao reautenticar o usuário: $error');
-    }
-  }
-
-// Função para atualizar o e-mail do usuário
-void updateEmail(String newEmail) async {
-  try {
-    // Obtenha a instância do FirebaseAuth
-    FirebaseAuth _auth = FirebaseAuth.instance;
-
-    // Verifique se há um usuário autenticado
-    User? user = _auth.currentUser;
-    if (user != null) {
-      // Atualize o e-mail do usuário
-      await user.updateEmail(newEmail);
-      print('E-mail atualizado com sucesso para: $newEmail');
-    } else {
-      // Se não houver usuário autenticado, exiba uma mensagem de erro
-      print('Nenhum usuário autenticado.');
-    }
-  } catch (e) {
-    // Se ocorrer algum erro, exiba a mensagem de erro
-    print('Erro ao atualizar o e-mail: $e');
-  }
-}
-
-
-// Função para atualizar a senha do usuário
-void updatePassword(String newPassword) async {
-  try {
-    // Obtenha a instância do FirebaseAuth
-    FirebaseAuth _auth = FirebaseAuth.instance;
-
-    // Verifique se há um usuário autenticado
-    User? user = _auth.currentUser;
-    if (user != null) {
-      // Atualize a senha do usuário
-      await user.updatePassword(newPassword);
-      print('Senha atualizada com sucesso.');
-    } else {
-      // Se não houver usuário autenticado, exiba uma mensagem de erro
-      print('Nenhum usuário autenticado.');
-    }
-  } catch (e) {
-    // Se ocorrer algum erro, exiba a mensagem de erro
-    print('Erro ao atualizar a senha: $e');
-  }
-}
-
-
-  Future<String> updateUserInfo(MyUser user) async {
-  try {
-    String userId = FirebaseAuth.instance.currentUser?.uid ?? '';
-    String name = user.name;
-    String email = user.email;
-    String bio = user.bio;
-    String password = passwordController.text;
-  
-    if(userNameController.text.isNotEmpty) name=userNameController.text;
-    if(userEmailController.text.isNotEmpty) name=userEmailController.text;
-    if(userBioController.text.isNotEmpty) name=userBioController.text;
-
-    if (userId.isNotEmpty && (name.isNotEmpty || email.isNotEmpty || bio.isNotEmpty || photo != null)) {
-      String imageUrl = user.image;
-      if (photo != null) {
-        // Se uma nova foto for selecionada, faça o upload dela para o Firebase Storage
-        imageUrl = await uploadImageToStorage('userImage_$userId', photo!);
-      }
-
-      // Atualize os dados do usuário no Firestore
-      await FirebaseFirestore.instance.collection('users').doc(userId).update({
-        'name': name,
-        'email': email,
-        'bio': bio,
-        'image': imageUrl, 
-      });
-
-    reauthenticateUser(email, password);
-
-      await FirebaseAuth.instance.currentUser?.reload();
-      await Future.delayed(Duration(seconds: 2)); 
-      return 'success';
-    } else {
-      return 'Please provide at least one field to update.';
-    }
-  } catch (error) {
-    return 'An error occurred: $error';
-  }
-}
-
-
-  final FirebaseStorage _storage = FirebaseStorage.instance;
-  final FirebaseFirestore _firestore = FirebaseFirestore.instance;
-  final FirebaseAuth _firebaseAuth = FirebaseAuth.instance;
-
-  Future<String> uploadImageToStorage(String imagePath, Uint8List file) async {
-    Reference ref = _storage.ref().child(imagePath);
-    UploadTask uploadTask = ref.putData(file);
-    TaskSnapshot snapshot = await uploadTask;
-    String downloadUrl = await snapshot.ref.getDownloadURL();
-    return downloadUrl;
-  }
-
-
-}
+} 

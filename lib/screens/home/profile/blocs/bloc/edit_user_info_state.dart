@@ -11,6 +11,12 @@ final class EditUserInfoInitial extends EditUserInfoState {}
 
 final class EditUserInfoFailure extends EditUserInfoState {}
 
-final class EditUserInfoProcess extends EditUserInfoState {}
+final class EditUserInfoProcess extends EditUserInfoState {
+  final MyUser user;
+
+  const EditUserInfoProcess(this.user);
+@override
+  List<Object> get props => [user];
+}
 
 final class EditUserInfoSuccess extends EditUserInfoState {}

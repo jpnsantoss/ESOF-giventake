@@ -7,11 +7,20 @@ sealed class EditUserInfoEvent extends Equatable {
   List<Object> get props => [];
 }
 
-class EditUserInfo extends EditUserInfoEvent {
-  final MyUser user;
 
-  const EditUserInfo(this.user);
+class PickImageEvent extends EditUserInfoEvent {
+  final ImageSource source;
 
-  @override
-  List<Object> get props => [user];
+  PickImageEvent(this.source);
+}
+
+class UpdateUserInfoEvent extends EditUserInfoEvent {
+  final String userId;
+  final String updatedBio;
+  final String updatedName;
+  final Uint8List? photo;
+  
+
+
+  UpdateUserInfoEvent(this.userId, this.updatedName, this.updatedBio,this.photo );
 }
