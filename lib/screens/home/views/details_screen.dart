@@ -49,30 +49,31 @@ class DetailsScreen extends StatelessWidget {
                       ),
                     ),
                     const SizedBox(height: 24.0),
-                    Row(
-                      children: [
-                        const SizedBox(width: 8.0),
-                        TextButton(
-                        onPressed: () {
-                          Navigator.push(
-                            context,
-                            MaterialPageRoute<void>(
-                              builder: (BuildContext context) => ProfileScreen(
-                                user: MyUserEntity(
-                                  userId: product.user!.userId,
-                                  email: product.user!.email,
-                                  name: product.user!.name,
-                                  reviews: product.user!.reviews,
-                                  bio: product.user!.bio,
-                                  rating: product.user!.rating,
-                                  image: product.user!.image,
-                            ),
-                            productRepo: FirebaseProductRepo(),
-                                      ),
-                                    ),
-                                  );
-                                },
-                                child: Text(
+
+
+                    Row( 
+            children: [
+              const SizedBox(width: 8.0), 
+              TextButton(
+              onPressed: () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute<void>(
+                    builder: (BuildContext context) => ProfileScreen(
+                      user: MyUserEntity(
+                        userId: product.user!.userId,
+                        email: product.user!.email,
+                        name: product.user!.name,
+                        reviews: product.user!.reviews,
+                        bio: product.user!.bio,
+                        rating: product.user!.rating,
+                      ),
+                      productRepo: FirebaseProductRepo(),
+                                ),
+                              ),
+                            );
+                          },
+                          child: Text(
                             product.user!.name,
                             style: const TextStyle(
                               color: Colors.black, // Cor do texto
@@ -111,9 +112,16 @@ class DetailsScreen extends StatelessWidget {
           Padding(
             padding: const EdgeInsets.all(20.0),
             child: ElevatedButton(
-              onPressed: () {
-                saveRequestToFirestore(productId: product.id, requesterId: product.userId);
+              onPressed: () async {
+                String result = await saveRequestToFirestore(productId: product.id, requesterId: product.userId);
                 print("REQUEST SAVED\n");
+                ScaffoldMessenger.of(context).showSnackBar(
+                  SnackBar(
+                    content: Text(result == 'success'
+                        ? 'Request saved successfully!'
+                        : 'You have already requested this product!'),
+                  ),
+                );
               },
               style: ElevatedButton.styleFrom(
                 backgroundColor: Colors.black,
@@ -125,10 +133,6 @@ class DetailsScreen extends StatelessWidget {
               child: const Text("Request Product"),
             ),
           ),
-          Text(product.user!.name),
-          Text(product.location),
-          Text(product.description),
-          Text(product.location),
         ],
       ),
     );
@@ -137,13 +141,19 @@ class DetailsScreen extends StatelessWidget {
   final FirebaseStorage _storage = FirebaseStorage.instance;
   final FirebaseFirestore _firestore = FirebaseFirestore.instance;
 
-  Future<String> saveRequestToFirestore(
+  Future<String> saveRequestToFirestore (
       {required String productId,
        required String requesterId}) async {
     String res = "Some error occurred";
     try {
       String userId = FirebaseAuth.instance.currentUser?.uid ?? '';
       String fromUserId = userId;
+
+      if (!await canRequest(fromUserId)) {
+        print("user has already requested this product");
+        return 'fail';
+      }
+
       bool accepted = false;
 
       String id = const Uuid().v4();
@@ -167,5 +177,15 @@ class DetailsScreen extends StatelessWidget {
     return res;
   }
 
+
+  Future<bool> canRequest(String userId) async {
+    final currUserRequests = _firestore.collection('requests').where("fromUserId", isEqualTo: userId).where("productId", isEqualTo: product.id);
+    AggregateQuerySnapshot query = await currUserRequests.count().get();
+
+    if (query.count! > 0) {
+      return false;
+    }
+    return true;
+  }
 
 }
