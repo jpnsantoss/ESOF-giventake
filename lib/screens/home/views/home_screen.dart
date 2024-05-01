@@ -97,7 +97,7 @@ class _HomeScreenState extends State<HomeScreen> {
               final user = _auth.currentUser;
               String userId =user!.uid;
               
-          Navigator.of(context).push(MaterialPageRoute(
+          final result =await Navigator.of(context).push(MaterialPageRoute(
             builder: (context) => EditProfileScreen(userId: userId),
           ));
           

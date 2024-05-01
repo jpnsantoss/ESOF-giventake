@@ -73,12 +73,17 @@ Widget build(BuildContext context) {
                 Container(
                 height: 200,
                 width: 200,
-                child: Image.network(user.image,
+                child: photo != null
+                  ? Image.memory(
+                      photo!,
+                      fit: BoxFit.cover,
+                    )
+                  : 
+                
+                Image.network(user.image,
                 fit: BoxFit.cover),
                 
                 ),     
-
-
                 const SizedBox(height: 10.0),
                 GestureDetector(
                   onTap: selectImage,
@@ -208,8 +213,7 @@ Widget build(BuildContext context) {
                 const SizedBox(height: 16.0),
                 ElevatedButton(
                   onPressed: () {
-                    updateEmail(userEmailController.text);
-                    updatePassword(passwordController.text);
+                    
                     updateUserInfo(user).then((result) {
                       if (result == 'success') {
                         // Atualize os controladores dos campos de texto com as novas informações do usuário
