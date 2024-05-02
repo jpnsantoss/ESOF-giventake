@@ -4,6 +4,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:product_repository/product_repository.dart';
 import 'package:user_repository/user_repository.dart';
 import 'package:user_repository/src/firebase_user_repo.dart';
 import 'package:request_repository/request_repository.dart';
@@ -21,14 +22,19 @@ class EditProfileScreen extends StatefulWidget {
 class _EditProfileScreenState extends State<EditProfileScreen> {
 
   late String userId;
-  late List<DocumentSnapshot> requestDocs = [];
+  /* EXTRACT TO REQUEST LOGIC */
+  late List<Request> requests = [];
+  late List<MyUser> requestUsers= [];
   bool isLoadingRequests = true;
-
+  /* --------ENDS HERE------------ */
   @override
   void initState() {
     super.initState();
     userId = widget.userId;
-    fetchUserRequests(userId);
+    /* EXTRACT TO REQUEST LOGIC */
+    fetchUnansweredRequests();
+    fillRequestUsers();
+    /* --------ENDS HERE------------ */
   }
 
   final TextEditingController userNameController = TextEditingController();
@@ -50,6 +56,8 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
 
   @override
   Widget build(BuildContext context) {
+    print("Requests length is${requests.length}");
+    print("RequestsUsers length is${requestUsers.length}");
     return Scaffold(
       appBar: AppBar(
         title: Text('Your Profile'),
@@ -218,10 +226,11 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                             padding: const EdgeInsets.all(8.0),
 
                           ),
+                          /* EXTRACT TO REQUEST LOGIC */
                           // Display the list of requests
                           if (isLoadingRequests)
                             CircularProgressIndicator()
-                          else if (requestDocs.isEmpty)
+                          else if (requests.isEmpty)
                             Center(child: Text(
                               'No Pending Requests',
                               style: TextStyle(
@@ -244,30 +253,58 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                                   ),
                                   textAlign: TextAlign.left,
                                 ),
-                                ...requestDocs.map(
-                                  (request) => ListTile(
+                                for (int i = 0; i < requests.length; i++)
+                                  ListTile(
                                     leading: CircleAvatar(
                                       // Display user image
-                                      backgroundImage: AssetImage('assets/user_image.png'),
+                                      backgroundImage: AssetImage(/*requestUsers[i].image*/'User name'),
+                                      //RangeError (index): Index out of range: no indices are valid: 0
                                     ),
-                                    title: Text('UserName'), // Display user name
+
+                                    title: Text(/*requestUsers[i].name*/'User name'), // Display user name
                                     trailing: Row(
                                       mainAxisSize: MainAxisSize.min,
                                       children: [
                                         IconButton(
                                           icon: Icon(Icons.check),
-                                          onPressed: () => FirebaseRequestRepo().acceptRequest(request.id),
+                                            onPressed: () async {
+                                              try {
+                                                // Call rejectRequest function
+                                                await FirebaseRequestRepo().acceptRequest(requests[i].id);
+                                                setState(() {
+                                                  requests.removeAt(i);
+                                                });
+                                              } catch (error) {
+                                                ScaffoldMessenger.of(context).showSnackBar(
+                                                  SnackBar(content: Text("Failed to reject request: $error")),
+                                                );
+                                              }
+                                            },
                                         ),
-                                        IconButton(
+                                         IconButton(
                                           icon: Icon(Icons.close),
-                                          onPressed: () => FirebaseRequestRepo().rejectRequest(request.id),
+                                          onPressed: () async {
+                                            try {
+                                              // Call rejectRequest function
+                                              await FirebaseRequestRepo().rejectRequest(requests[i].id);
+                                              // Remove the rejected request from the list
+                                              setState(() {
+                                                requests.removeAt(i);
+                                              });
+                                            } catch (error) {
+                                              ScaffoldMessenger.of(context).showSnackBar(
+                                                SnackBar(content: Text("Failed to reject request: $error")),
+                                              );
+                                            }
+                                          },
                                         ),
                                       ],
                                     ),
                                   ),
-                                ).toList(),
                               ],
                             ),
+                          /* -----------------ENDS HERE----------------- */
+
                         ],
                       ),
                     ),
@@ -282,11 +319,64 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
   }
 
 
-  Future<void> fetchUserRequests(String userId) async {
-    /////doesnt work with query snapshots
+  /* EXTRACT TO REQUEST LOGIC */
+  Future<void> fetchUnansweredRequests() async {
+    try {
+      ProductRepo productRepo = FirebaseProductRepo();
+      List<Product> productss = await productRepo.getProducts();
+      RequestRepo requestRepo = FirebaseRequestRepo();
+      List<Request> requestss = await requestRepo.getRequests();
+
+      for(Product p in productss){
+        if (p.userId != FirebaseAuth.instance.currentUser?.uid) {
+          continue;
+        } else {
+          for(Request r in requestss){
+            if(p.id == r.productId && !r.accepted){
+              requests.add(r);
+            }
+          }
+        }
+      }
+    } catch (error) {
+      print('An error occurred while fetching user requests: $error');
+    } finally {
+      // Set isLoadingRequests to false once requests are loaded or an error occurs
+      setState(() {
+        isLoadingRequests = false;
+      });
+    }
   }
 
- pickImage(ImageSource source) async {
+
+  Future<MyUser> getRequesterInfo(Request r) async {
+    try {
+      String uid = r.fromUserId;
+      MyUser user = await FirebaseUserRepo().getUser(uid);
+      return user;
+    } catch (error) {
+      print('An error occurred while fetching requester info: $error');
+      throw error;
+    }
+  }
+
+  Future<void> fillRequestUsers() async {
+
+    try {
+      for(Request r in requests){
+        requestUsers.add(await getRequesterInfo(r));
+      }
+      //print("This is ${requestUsers}"); print("This is ${requests}");
+
+    } catch (error) {
+      print('An error occurred while fetching requester info: $error');
+    }
+
+  }
+
+  /* -----------------ENDS HERE----------------- */
+
+  pickImage(ImageSource source) async {
     final ImagePicker picker = ImagePicker();
     XFile? file = await picker.pickImage(source: source);
     if (file != null) {

@@ -2,14 +2,14 @@ part of 'request_bloc.dart';
 
 abstract class RequestEvent {}
 
-class AcceptRequest extends RequestEvent {
+class AcceptRequestEvent extends RequestEvent {
   final String requestId;
 
-  AcceptRequest(this.requestId);
+  AcceptRequestEvent(this.requestId);
 }
 
-class RejectRequest extends RequestEvent {
+class RejectRequestEvent extends RequestEvent {
   final String requestId;
 
-  RejectRequest(this.requestId);
+  RejectRequestEvent(this.requestId);
 }

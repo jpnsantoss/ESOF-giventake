@@ -1,4 +1,5 @@
 import 'dart:developer';
+import 'dart:js_interop_unsafe';
 import 'package:request_repository/request_repository.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_core/firebase_core.dart';
@@ -38,18 +39,40 @@ class FirebaseRequestRepo implements RequestRepo {
   @override
   Future<void> acceptRequest(String requestId) async {
     try {
-      await requestCollection.doc(requestId).update({
-        'accepted': true,
+
+      await requestCollection.where('id', isEqualTo: requestId).get().then((querySnapshot) {
+        if (querySnapshot.docs.isNotEmpty) {
+
+          DocumentReference docRef = querySnapshot.docs.first.reference;
+
+
+          return docRef.update({'accepted': true});
+        } else {
+
+          print("No document found with ID $requestId");
+          throw Exception("No document found with ID $requestId");
+        }
       });
+      print("Request accepted!");
     } catch (e) {
-      throw 'Failed to accept request: $e';
+      throw Exception('Failed to accept request: $e');
     }
   }
-
   @override
   Future<void> rejectRequest(String requestId) async {
     try {
-      await requestCollection.doc(requestId).delete();
+      QuerySnapshot querySnapshot = await requestCollection.where('id', isEqualTo: requestId).get();
+
+      if (querySnapshot.docs.isNotEmpty) {
+        DocumentReference docRef = querySnapshot.docs.first.reference;
+
+        await docRef.delete();
+
+        print("Request deleted!");
+        print("Request ID is $requestId!");
+      } else {
+        print("No document found with ID $requestId");
+      }
     } catch (e) {
       throw Exception('Failed to reject request: $e');
     }

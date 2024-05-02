@@ -9,8 +9,10 @@
     final List<Map<String, String>> reviews;
     final num rating;
     final String image;
-    
 
+
+    String get _name => name;
+    String get _image => image;
     const MyUser({required this.userId, required this.email, required this.name, required this.reviews, required this.bio, required this.rating, required this.image,});
 
     static const empty = MyUser(userId: '', email: '', name: '', reviews: [], bio: '' , rating: 0.0, image:'https://upload.wikimedia.org/wikipedia/commons/thumb/2/2c/Default_pfp.svg/2048px-Default_pfp.svg.png' );
