@@ -44,30 +44,6 @@ class UploadProductBloc extends Bloc<UploadProductEvent, UploadProductState> {
             emit(UploadProductFailure());
           }
     });
-
-    on<PickImageEvent>((event, emit) async{
-
-    emit(UploadProductProcess());
-      try {
-        Uint8List? new_file;
-        final ImagePicker picker = ImagePicker();
-         XFile? file = await picker.pickImage(source: ImageSource.gallery);
-         if (file != null) {
-        new_file = await file.readAsBytes();
-        }
-
-        if (new_file != null) {
-          Uint8List photo = new_file;
-          emit (UploadProductSuccess());
-
-
-        } else {
-          emit(UploadProductFailure());
-        }
-      } catch (error) {
-        emit(UploadProductFailure());
-      }      
-  });
   }
   
   Future<String> saveProductToFirestore({required String title, required String location, required String description, required Uint8List file}) async {

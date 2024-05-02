@@ -7,13 +7,6 @@ sealed class EditUserInfoEvent extends Equatable {
   List<Object> get props => [];
 }
 
-
-class PickImageUserEvent extends EditUserInfoEvent {
-  final ImageSource source;
-
-  PickImageUserEvent(this.source);
-}
-
 class UpdateUserInfoEvent extends EditUserInfoEvent {
   final String userId;
   final String updatedBio;

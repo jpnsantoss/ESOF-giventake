@@ -8,12 +8,6 @@ sealed class UploadProductEvent extends Equatable {
 
 }
 
-class PickImageEvent extends UploadProductEvent {
-  final ImageSource source;
-
-  PickImageEvent(this.source);
-}
-
 class UploadNewProductEvent extends UploadProductEvent {
   final String descrition;
   final String location;

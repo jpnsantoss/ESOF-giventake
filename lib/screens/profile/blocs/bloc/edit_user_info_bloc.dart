@@ -60,32 +60,7 @@ class EditUserInfoBloc
         emit(EditUserInfoFailure());
       }
   });
-
-  on<PickImageUserEvent>((event, emit) async{
-    MyUser user = await FirebaseUserRepo().getUser(userId);
-    emit(EditUserInfoProcess(user));
-      try {
-        Uint8List? new_file;
-        final ImagePicker picker = ImagePicker();
-         XFile? file = await picker.pickImage(source: ImageSource.gallery);
-         if (file != null) {
-        new_file = await file.readAsBytes();
-        }
-
-        if (new_file != null) {
-          Uint8List photo = new_file;
-
-          
-          emit (EditUserInfoSuccess(photo));
-
-
-        } else {
-          emit(EditUserInfoFailure());
-        }
-      } catch (error) {
-        emit(EditUserInfoFailure());
-      }      
-  });
+  
   }
 
 
