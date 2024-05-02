@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:giventake/screens/home/profile/views/profile_screen.dart';
+import 'package:giventake/screens/profile/views/profile_screen.dart';
 import 'package:product_repository/product_repository.dart';
 import 'package:user_repository/user_repository.dart';
 

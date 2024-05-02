@@ -19,4 +19,11 @@ final class EditUserInfoProcess extends EditUserInfoState {
   List<Object> get props => [user];
 }
 
-final class EditUserInfoSuccess extends EditUserInfoState {}
+final class EditUserInfoSuccess extends EditUserInfoState {
+  final Uint8List photo;
+
+  const EditUserInfoSuccess(this.photo);
+
+  @override
+  List<Object> get props => [photo];
+}

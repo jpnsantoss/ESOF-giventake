@@ -52,7 +52,7 @@ class EditUserInfoBloc
 
           await FirebaseAuth.instance.currentUser?.reload();
           await Future.delayed(Duration(seconds: 2)); 
-           emit( EditUserInfoSuccess());
+           emit( EditUserInfoSuccess(photo!));
             }
 
         
@@ -61,7 +61,7 @@ class EditUserInfoBloc
       }
   });
 
-  on<PickImageEvent>((event, emit) async{
+  on<PickImageUserEvent>((event, emit) async{
     MyUser user = await FirebaseUserRepo().getUser(userId);
     emit(EditUserInfoProcess(user));
       try {
@@ -74,7 +74,9 @@ class EditUserInfoBloc
 
         if (new_file != null) {
           Uint8List photo = new_file;
-          emit (EditUserInfoSuccess());
+
+          
+          emit (EditUserInfoSuccess(photo));
 
 
         } else {

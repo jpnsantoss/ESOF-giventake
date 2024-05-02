@@ -1,15 +1,10 @@
 import 'dart:typed_data';
 
-import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:firebase_auth/firebase_auth.dart';
-import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:giventake/screens/home/profile/blocs/bloc/edit_user_info_bloc.dart';
+import 'package:giventake/screens/profile/blocs/bloc/edit_user_info_bloc.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:user_repository/user_repository.dart';
-import 'package:user_repository/src/firebase_user_repo.dart';
-
 
 class EditProfileScreen extends StatefulWidget {
   final String userId;
@@ -26,14 +21,10 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
   late String userId;
 
   final TextEditingController userNameController = TextEditingController();
-  final TextEditingController userEmailController =
-      TextEditingController();
   final TextEditingController userBioController =
       TextEditingController();
   final TextEditingController userImageController = TextEditingController();
-  final TextEditingController passwordController =
-      TextEditingController();
-  
+
   @override
   void initState() {
     super.initState();
@@ -43,9 +34,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
   @override
   void dispose() {
     userNameController.dispose();
-    userEmailController.dispose();
     userBioController.dispose();
-    passwordController.dispose();
     super.dispose();
   }
 
@@ -85,7 +74,10 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                 ),     
                 const SizedBox(height: 10.0),
                 GestureDetector(
-                  onTap: (){context.read<EditUserInfoBloc>().add(PickImageEvent(ImageSource.gallery));},
+                  onTap: selectImage, /*(){context.read<EditUserInfoBloc>().add(PickImageUserEvent(ImageSource.gallery));
+                  if(state is EditUserInfoSuccess){
+                    photo = state.photo;
+                  }},*/
                   child: Text(
                     'Change Photo',
                     style: TextStyle(
@@ -231,4 +223,20 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
       ),
     );
   }
+
+  pickImage(ImageSource source) async {
+    final ImagePicker picker = ImagePicker();
+    XFile? file = await picker.pickImage(source: source);
+    if (file != null) {
+      return await file.readAsBytes();
+    }
+    Text('No image selected');
+  }
+  void selectImage() async {
+    Uint8List file = await pickImage(ImageSource.gallery);
+    setState(() {
+      photo = file;
+    });
+  }
+
 } 

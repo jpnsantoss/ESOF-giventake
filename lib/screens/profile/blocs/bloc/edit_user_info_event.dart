@@ -8,10 +8,10 @@ sealed class EditUserInfoEvent extends Equatable {
 }
 
 
-class PickImageEvent extends EditUserInfoEvent {
+class PickImageUserEvent extends EditUserInfoEvent {
   final ImageSource source;
 
-  PickImageEvent(this.source);
+  PickImageUserEvent(this.source);
 }
 
 class UpdateUserInfoEvent extends EditUserInfoEvent {
