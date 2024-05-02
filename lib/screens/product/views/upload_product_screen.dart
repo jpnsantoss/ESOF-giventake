@@ -186,5 +186,3 @@ class _ProductUploadScreenState extends State<ProductUploadScreen> {
       photo = file;
     });
   }
-
-}
