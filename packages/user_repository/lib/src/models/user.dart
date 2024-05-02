@@ -20,6 +20,7 @@
 
    MyUser copyWith({String? userId, String? email, String? name, List<Map<String, String>>? reviews, String? bio, num? rating, String? image}) {
 
+
       return MyUser(
           userId: userId ?? this.userId,
           email: email ?? this.email,
@@ -28,11 +29,13 @@
           bio: bio ?? this.bio,
           rating: rating ?? this.rating,
           image: image ?? this.image,
+
           );
     }
 
     MyUserEntity toEntity() {
       return MyUserEntity(userId: userId, email: email, name: name, reviews: reviews, bio: bio, rating: rating, image: image,);
+
     }
 
     static MyUser fromEntity(MyUserEntity entity) {
@@ -42,4 +45,5 @@
 
     @override
     List<Object?> get props => [userId, email, name, reviews, bio, rating, image];
+
   }
