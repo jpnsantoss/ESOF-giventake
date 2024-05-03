@@ -2,7 +2,6 @@
 import 'package:equatable/equatable.dart';
 import 'package:product_repository/product_repository.dart';
 
-part of 'upload_product_bloc_bloc.dart';
 
 enum ProductStatus { loading, loaded, error }
 
