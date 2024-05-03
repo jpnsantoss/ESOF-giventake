@@ -33,7 +33,7 @@ class GetProductBloc extends Bloc<GetProductEvent, GetProductState> {
             .products
             .where((product) =>
         product.title.toLowerCase().contains(query) ||
-            product.description.toLowerCase().contains(query))
+            product.description.toLowerCase().contains(query) || product.location.toLowerCase().contains(query) || product.user!.name.toLowerCase().contains(query))
             .toList();
         emit(GetProductSuccess(filteredProducts));
       } else {
