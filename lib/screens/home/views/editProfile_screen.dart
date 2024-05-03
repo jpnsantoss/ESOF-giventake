@@ -33,7 +33,6 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
     userId = widget.userId;
     /* EXTRACT TO REQUEST LOGIC */
     fetchUnansweredRequests();
-    fillRequestUsers();
     /* --------ENDS HERE------------ */
   }
 
@@ -257,11 +256,11 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                                   ListTile(
                                     leading: CircleAvatar(
                                       // Display user image
-                                      backgroundImage: AssetImage(/*requestUsers[i].image*/'User name'),
+                                      backgroundImage: AssetImage(requestUsers[i].image),
                                       //RangeError (index): Index out of range: no indices are valid: 0
                                     ),
 
-                                    title: Text(/*requestUsers[i].name*/'User name'), // Display user name
+                                    title: Text(requestUsers[i].name), // Display user name
                                     trailing: Row(
                                       mainAxisSize: MainAxisSize.min,
                                       children: [
@@ -338,6 +337,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
           }
         }
       }
+      await fillRequestUsers();
     } catch (error) {
       print('An error occurred while fetching user requests: $error');
     } finally {

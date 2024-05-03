@@ -36,10 +36,5 @@ class MyUserEntity extends Equatable {
   @override
   List<Object?> get props => [userId, email, name, reviews, bio, rating, image];
 
-        userId: doc['userId'], email: doc['email'], name: doc['name'], reviews: reviewsList, bio: doc['bio'], rating: doc['rating'] ?? 0.0,);
-  }
-
-  @override
-  List<Object?> get props => [userId, email, name, reviews, bio, rating];
 
 }
