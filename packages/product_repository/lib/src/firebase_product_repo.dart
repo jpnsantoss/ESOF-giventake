@@ -35,4 +35,23 @@ class FirebaseProductRepo implements ProductRepo {
       rethrow;
     }
   }
+
+  @override
+  Future<List<Product>> getUserProducts(String userId) {
+    return productCollection
+        .where('userId', isEqualTo: userId)
+        .get()
+        .then((snapshot) {
+      return snapshot.docs.map((doc) {
+        return Product(
+          id: doc.id,
+          title: doc['title'],
+          location: doc['location'],
+          description: doc['description'],
+          image: doc['image'],
+          userId: doc['userId'],
+        );
+      }).toList();
+    });
+  }
 }

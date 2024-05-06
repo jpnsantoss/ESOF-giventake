@@ -31,6 +31,8 @@ dependencies:
     path: packages/request_repository
   product_repository:
     path: packages/product_repository
+  review_repository:
+    path: packages/review_repository
 
 dev_dependencies:
   flutter_test:
