@@ -5,21 +5,6 @@ class FirebaseReviewRepo implements ReviewRepo {
   final reviewCollection = FirebaseFirestore.instance.collection('reviews');
 
   @override
-  Future<void> addReview(Review review) async {
-    try {
-      await reviewCollection.add({
-        'fromId': review.fromUserId,
-        'toId': review.toUserId,
-        'comment': review.comment,
-        'rating': review.rating,
-      });
-    } catch (e) {
-      print("Erro ao adicionar review: $e");
-      rethrow;
-    }
-  }
-
-  @override
   Future<List<Review>> getReviews(String userId) {
     return reviewCollection
         .where('toId', isEqualTo: userId)
@@ -34,6 +19,18 @@ class FirebaseReviewRepo implements ReviewRepo {
           rating: doc['rating'],
         );
       }).toList();
+    });
+  }
+
+  @override
+  @override
+  Future<void> addReview(
+      String fromUserId, String toUserId, String review, double rating) {
+    return reviewCollection.add({
+      'from_id': fromUserId,
+      'to_id': toUserId,
+      'description': review,
+      'rating': rating,
     });
   }
 }

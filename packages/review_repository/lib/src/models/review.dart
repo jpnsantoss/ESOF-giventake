@@ -5,7 +5,7 @@ class Review {
   String fromUserId;
   String toUserId;
   String comment;
-  int rating;
+  double rating;
 
   Review({
     required this.id,

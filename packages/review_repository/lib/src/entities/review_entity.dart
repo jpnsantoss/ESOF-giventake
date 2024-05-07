@@ -3,7 +3,7 @@ class ReviewEntity {
   String fromUserId;
   String toUserId;
   String comment;
-  int rating;
+  double rating;
 
   ReviewEntity({
     required this.id,
@@ -29,7 +29,7 @@ class ReviewEntity {
       fromUserId: doc['fromUserId'] as String,
       toUserId: doc['toUserId'] as String,
       comment: doc['comment'] as String,
-      rating: doc['rating'] as int,
+      rating: doc['rating'] as double,
     );
   }
 }
