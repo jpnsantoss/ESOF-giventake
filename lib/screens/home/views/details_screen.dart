@@ -78,14 +78,29 @@ class DetailsScreen extends StatelessWidget {
                               ),
                             );
                           },
-                          child: Text(
-                            product.user!.name,
-                            style: const TextStyle(
-                              color: Colors.black, // Cor do texto
-                              fontSize: 16, // Tamanho do texto
-                            ),
+                          child: Row(
+                            children: [
+                              Text(
+                                product.user!.name,
+                                style: const TextStyle(
+                                  color: Colors.black, // Cor do texto
+                                  fontSize: 16, // Tamanho do texto
+                                ),
+                              ),
+                              SizedBox(width: 5), // Spacing between name and rating
+                              // Display star rating
+                              _buildRatingStars(product.user!.rating),
+                              SizedBox(width: 5), // Spacing between rating and reviews count
+                              // Display number of reviews
+                              Text(
+                                '(${reviewCount(product.userId)} reviews)',
+                                style: TextStyle(
+                                  color: Colors.grey,
+                                ),
+                              ),
+                            ],
                           ),
-                        )
+                        ),
                       ],
                     ),
                     const SizedBox(height: 24.0),
@@ -144,7 +159,19 @@ class DetailsScreen extends StatelessWidget {
     );
   }
 
-  final FirebaseStorage _storage = FirebaseStorage.instance;
+  Widget _buildRatingStars(num rating) {
+    return Row(
+      children: List.generate(
+        rating.ceil(),
+            (index) => Icon(
+          Icons.star,
+          color: Colors.yellow,
+          size: 20,
+        ),
+      ),
+    );
+  }
+
   final FirebaseFirestore _firestore = FirebaseFirestore.instance;
 
   Future<String> saveRequestToFirestore(
@@ -179,6 +206,11 @@ class DetailsScreen extends StatelessWidget {
       res = err.toString();
     }
     return res;
+  }
+  
+  Future<int?> reviewCount(String userId) async {
+    AggregateQuerySnapshot query = await _firestore.collection('reviews').where("to_id", isEqualTo: userId).count().get();
+    return query.count;
   }
 
   Future<bool> canRequest(String userId) async {
