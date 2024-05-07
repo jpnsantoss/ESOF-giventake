@@ -1,11 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:giventake/screens/profile/blocs/add_review_bloc/add_review_bloc.dart';
 import 'package:giventake/screens/profile/blocs/get_reviews/get_reviews_bloc.dart';
 import 'package:giventake/screens/profile/blocs/get_user_products/get_user_products_bloc.dart';
 import 'package:giventake/screens/profile/views/products_screen.dart';
 import 'package:giventake/screens/profile/views/reviews_screen.dart';
 import 'package:product_repository/product_repository.dart';
-import 'package:review_repository/request_repository.dart';
+import 'package:review_repository/review_repository.dart';
 import 'package:user_repository/user_repository.dart';
 
 class ProfileScreen extends StatefulWidget {
@@ -151,23 +152,36 @@ class _ProfileScreenState extends State<ProfileScreen>
                         ),
                       ),
                       Expanded(
-                          child: TabBarView(
-                        controller: tabController,
-                        children: [
-                          BlocProvider(
-                            create: (context) => GetUserProductsBloc(
-                              FirebaseProductRepo(),
-                            )..add(GetUserProducts(widget.user.userId)),
-                            child: const ProductsScreen(),
-                          ),
-                          BlocProvider(
-                            create: (context) => GetReviewsBloc(
-                              FirebaseReviewRepo(),
-                            )..add(GetReviews(widget.user.userId)),
-                            child: const ReviewsScreen(),
-                          ),
-                        ],
-                      ))
+                        child: TabBarView(
+                          controller: tabController,
+                          children: [
+                            BlocProvider(
+                              create: (context) => GetUserProductsBloc(
+                                FirebaseProductRepo(),
+                              )..add(GetUserProducts(widget.user.userId)),
+                              child: const ProductsScreen(),
+                            ),
+                            MultiBlocProvider(
+                              providers: [
+                                BlocProvider(
+                                  create: (context) => GetReviewsBloc(
+                                    FirebaseReviewRepo(),
+                                    FirebaseUserRepo(),
+                                  )..add(GetReviews(widget.user.userId)),
+                                ),
+                                BlocProvider(
+                                  create: (context) => AddReviewBloc(
+                                    FirebaseReviewRepo(),
+                                  ),
+                                ),
+                              ],
+                              child: ReviewsScreen(
+                                toUserId: widget.user.userId,
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
                     ],
                   ),
                 ),

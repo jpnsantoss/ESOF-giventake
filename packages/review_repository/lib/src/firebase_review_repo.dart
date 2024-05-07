@@ -1,39 +1,34 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:review_repository/request_repository.dart';
+import 'package:review_repository/review_repository.dart';
 
 class FirebaseReviewRepo implements ReviewRepo {
   final reviewCollection = FirebaseFirestore.instance.collection('reviews');
 
   @override
-  Future<void> addReview(Review review) async {
+  Future<List<Review>> getReviews(String userId) async {
     try {
-      await reviewCollection.add({
-        'fromId': review.fromUserId,
-        'toId': review.toUserId,
-        'comment': review.comment,
-        'rating': review.rating,
-      });
+      return await reviewCollection.where('toId', isEqualTo: userId).get().then(
+          (value) => value.docs
+              .map(
+                  (e) => Review.fromEntity(ReviewEntity.fromDocument(e.data())))
+              .toList());
     } catch (e) {
-      print("Erro ao adicionar review: $e");
       rethrow;
     }
   }
 
   @override
-  Future<List<Review>> getReviews(String userId) {
-    return reviewCollection
-        .where('toId', isEqualTo: userId)
-        .get()
-        .then((snapshot) {
-      return snapshot.docs.map((doc) {
-        return Review(
-          id: doc.id,
-          fromUserId: doc['fromId'],
-          toUserId: doc['toId'],
-          comment: doc['comment'],
-          rating: doc['rating'],
-        );
-      }).toList();
-    });
+  Future<void> addReview(
+      String fromUserId, String toUserId, String comment, double rating) async {
+    try {
+      await reviewCollection.add({
+        'fromId': fromUserId,
+        'toId': toUserId,
+        'comment': comment,
+        'rating': rating,
+      });
+    } catch (e) {
+      rethrow;
+    }
   }
 }
