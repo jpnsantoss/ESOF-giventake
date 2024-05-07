@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:giventake/components/add_review_dialog.dart';
 import 'package:giventake/screens/profile/blocs/get_reviews/get_reviews_bloc.dart';
 
 class ReviewsScreen extends StatefulWidget {
@@ -15,6 +16,20 @@ class _ReviewsScreenState extends State<ReviewsScreen> {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
+        Padding(
+          padding: const EdgeInsets.all(8.0),
+          child: ElevatedButton(
+            onPressed: () {
+              showDialog(
+                context: context,
+                builder: (context) {
+                  return const AddReviewDialog();
+                },
+              );
+            },
+            child: const Text('Add new review'),
+          ),
+        ),
         Center(
           child: BlocBuilder<GetReviewsBloc, GetReviewsState>(
             builder: (context, state) {
