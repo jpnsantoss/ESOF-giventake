@@ -84,12 +84,29 @@ class _ReviewsScreenState extends State<ReviewsScreen> {
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
+                          Row(
+                            children: [
+                              // CircleAvatar(
+                              //   backgroundImage: NetworkImage(), // assuming 'avatarUrl' is the field for the user's avatar URL
+                              //   radius: 20.0,
+                              // ),
+                              const SizedBox(width: 8.0),
+                              Text(
+                                review.fromUser?.name ??
+                                    'Unknown', // assuming 'name' is the field for the user's name
+                                style: const TextStyle(
+                                  fontSize: 18.0,
+                                  fontWeight: FontWeight.bold,
+                                ),
+                              ),
+                            ],
+                          ),
+                          const SizedBox(height: 8.0),
                           Text(
                             review
                                 .comment, // assuming 'description' is the field for the review text
                             style: const TextStyle(
                               fontSize: 16.0,
-                              fontWeight: FontWeight.bold,
                             ),
                           ),
                           const SizedBox(height: 8.0),
