@@ -1,6 +1,6 @@
 import 'package:bloc/bloc.dart';
 import 'package:equatable/equatable.dart';
-import 'package:review_repository/request_repository.dart';
+import 'package:review_repository/review_repository.dart';
 
 part 'add_review_event.dart';
 part 'add_review_state.dart';

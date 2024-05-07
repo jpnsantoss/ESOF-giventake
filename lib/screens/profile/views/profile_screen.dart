@@ -6,7 +6,7 @@ import 'package:giventake/screens/profile/blocs/get_user_products/get_user_produ
 import 'package:giventake/screens/profile/views/products_screen.dart';
 import 'package:giventake/screens/profile/views/reviews_screen.dart';
 import 'package:product_repository/product_repository.dart';
-import 'package:review_repository/request_repository.dart';
+import 'package:review_repository/review_repository.dart';
 import 'package:user_repository/user_repository.dart';
 
 class ProfileScreen extends StatefulWidget {
@@ -166,11 +166,12 @@ class _ProfileScreenState extends State<ProfileScreen>
                                 BlocProvider(
                                   create: (context) => GetReviewsBloc(
                                     FirebaseReviewRepo(),
+                                    FirebaseUserRepo(),
                                   )..add(GetReviews(widget.user.userId)),
                                 ),
                                 BlocProvider(
                                   create: (context) => AddReviewBloc(
-                                    FirebaseReviewRepo(), // replace with the actual dependencies of AddReviewBloc
+                                    FirebaseReviewRepo(),
                                   ),
                                 ),
                               ],

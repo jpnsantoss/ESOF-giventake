@@ -81,14 +81,37 @@ class _ReviewsScreenState extends State<ReviewsScreen> {
                         border: Border.all(color: Colors.grey),
                         borderRadius: BorderRadius.circular(10.0),
                       ),
-                      child: const Column(
+                      child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
-                        // children: [
-                        //   Text('User: ${review['username']}'),
-                        //   const SizedBox(
-                        //       height: 8), // Espaçamento entre as linhas
-                        //   Text('${review['review']}'),
-                        // ],
+                        children: [
+                          Text(
+                            review
+                                .comment, // assuming 'description' is the field for the review text
+                            style: const TextStyle(
+                              fontSize: 16.0,
+                              fontWeight: FontWeight.bold,
+                            ),
+                          ),
+                          const SizedBox(height: 8.0),
+                          Row(
+                            children: [
+                              const Icon(
+                                Icons.star, // star icon
+                                color:
+                                    Colors.yellow, // yellow color for the star
+                              ),
+                              const SizedBox(
+                                  width:
+                                      4.0), // space between the star icon and the rating
+                              Text(
+                                '${review.rating}',
+                                style: const TextStyle(
+                                  fontSize: 16.0,
+                                ),
+                              ),
+                            ],
+                          ),
+                        ],
                       ),
                     );
                   }).toList(),

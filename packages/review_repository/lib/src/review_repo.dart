@@ -3,9 +3,5 @@ import 'models/models.dart';
 abstract class ReviewRepo {
   Future<List<Review>> getReviews(String userId);
   Future<void> addReview(
-    String fromUserId,
-    String toUserId,
-    String review,
-    double rating,
-  );
+      String fromUserId, String toUserId, String comment, double rating);
 }
