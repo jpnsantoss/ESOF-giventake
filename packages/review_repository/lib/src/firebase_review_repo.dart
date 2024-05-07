@@ -1,7 +1,5 @@
-import 'dart:developer';
-
-import 'package:review_repository/request_repository.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:review_repository/request_repository.dart';
 
 class FirebaseReviewRepo implements ReviewRepo {
   final reviewCollection = FirebaseFirestore.instance.collection('reviews');

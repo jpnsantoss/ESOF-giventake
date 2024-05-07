@@ -1,30 +1,42 @@
 import 'dart:typed_data';
+
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:product_repository/product_repository.dart';
-import 'package:user_repository/user_repository.dart';
-import 'package:user_repository/src/firebase_user_repo.dart';
 import 'package:request_repository/request_repository.dart';
-
+import 'package:user_repository/user_repository.dart';
 
 class EditProfileScreen extends StatefulWidget {
   final String userId;
 
-  const EditProfileScreen({Key? key, required this.userId}) : super(key: key);
+  const EditProfileScreen({super.key, required this.userId});
 
   @override
-  _EditProfileScreenState createState() => _EditProfileScreenState();
+  State<EditProfileScreen> createState() => _EditProfileScreenState();
+}
+
+class MyWidget extends StatefulWidget {
+  const MyWidget({super.key});
+
+  @override
+  State<MyWidget> createState() => _MyWidgetState();
+}
+
+class _MyWidgetState extends State<MyWidget> {
+  @override
+  Widget build(BuildContext context) {
+    return const Placeholder();
+  }
 }
 
 class _EditProfileScreenState extends State<EditProfileScreen> {
-
   late String userId;
   /* EXTRACT TO REQUEST LOGIC */
   late List<Request> requests = [];
-  late List<MyUser> requestUsers= [];
+  late List<MyUser> requestUsers = [];
   bool isLoadingRequests = true;
   /* --------ENDS HERE------------ */
   @override
@@ -55,19 +67,17 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
 
   @override
   Widget build(BuildContext context) {
-    print("Requests length is${requests.length}");
-    print("RequestsUsers length is${requestUsers.length}");
     return Scaffold(
       appBar: AppBar(
-        title: Text('Your Profile'),
+        title: const Text('Your Profile'),
       ),
       body: FutureBuilder<MyUser>(
         future: FirebaseUserRepo().getUser(userId),
         builder: (context, snapshot) {
           if (snapshot.connectionState == ConnectionState.waiting) {
-            return Center(child: CircularProgressIndicator());
+            return const Center(child: CircularProgressIndicator());
           } else if (snapshot.hasError) {
-            return Center(child: Text('Erro ao carregar usuário'));
+            return const Center(child: Text('Erro ao carregar usuário'));
           } else {
             final user = snapshot.data!;
 
@@ -76,7 +86,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                 child: Column(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
-                    Container(
+                    SizedBox(
                       height: 200,
                       width: 200,
                       child: Image.network(user.image, fit: BoxFit.cover),
@@ -84,11 +94,12 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                     const SizedBox(height: 10.0),
                     GestureDetector(
                       onTap: selectImage,
-                      child: Text(
+                      child: const Text(
                         'Change Photo',
                         style: TextStyle(
                           color: Colors.blue, // Define a cor do texto como azul
-                          decoration: TextDecoration.underline, // Adiciona uma linha por baixo do texto
+                          decoration: TextDecoration
+                              .underline, // Adiciona uma linha por baixo do texto
                         ),
                       ),
                     ),
@@ -113,35 +124,41 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          Text('Nome: ${user.name}',
-                            style: TextStyle(
+                          Text(
+                            'Nome: ${user.name}',
+                            style: const TextStyle(
                               fontSize: 16.0,
                               fontWeight: FontWeight.bold,
                               color: Colors.black,
                             ),
-                            textAlign: TextAlign.left,),
+                            textAlign: TextAlign.left,
+                          ),
                           const SizedBox(height: 4),
-                          Text('Email: ${user.email}',
-                            style: TextStyle(
+                          Text(
+                            'Email: ${user.email}',
+                            style: const TextStyle(
                               fontSize: 16.0,
                               fontWeight: FontWeight.bold,
                               color: Colors.black,
                             ),
-                            textAlign: TextAlign.left,),
+                            textAlign: TextAlign.left,
+                          ),
                           const SizedBox(height: 4),
-                          Text('Biografia: ${user.bio}',
-                            style: TextStyle(
+                          Text(
+                            'Biografia: ${user.bio}',
+                            style: const TextStyle(
                               fontSize: 16.0,
                               fontWeight: FontWeight.bold,
                               color: Colors.black,
                             ),
-                            textAlign: TextAlign.left,),
+                            textAlign: TextAlign.left,
+                          ),
                           const SizedBox(height: 4),
                           Text(
                             user.rating == 0.0
                                 ? 'No ratings yet'
                                 : 'Rating: ${user.rating}',
-                            style: TextStyle(
+                            style: const TextStyle(
                               fontSize: 16,
                               fontWeight: FontWeight.bold,
                             ),
@@ -191,8 +208,10 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                               updateUserInfo(user).then((result) {
                                 if (result == 'success') {
                                   setState(() {
-                                    String updatedName = userNameController.text;
-                                    String updatedEmail = userEmailController.text;
+                                    String updatedName =
+                                        userNameController.text;
+                                    String updatedEmail =
+                                        userEmailController.text;
                                     String updatedBio = userBioController.text;
 
                                     userNameController.text = updatedName;
@@ -202,13 +221,16 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                                   Navigator.of(context).pop(true);
                                 } else {
                                   ScaffoldMessenger.of(context).showSnackBar(
-                                    SnackBar(content: Text("Erro ao atualizar o perfil")),
+                                    const SnackBar(
+                                        content:
+                                            Text("Erro ao atualizar o perfil")),
                                   );
                                 }
                               });
                             },
                             style: ButtonStyle(
-                              backgroundColor: MaterialStateProperty.all<Color>(Colors.black),
+                              backgroundColor: MaterialStateProperty.all<Color>(
+                                  Colors.black),
                             ),
                             child: const Padding(
                               padding: EdgeInsets.symmetric(vertical: 16.0),
@@ -221,24 +243,25 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                             ),
                           ),
                           const SizedBox(height: 16.0),
-                          Padding(
-                            padding: const EdgeInsets.all(8.0),
-
+                          const Padding(
+                            padding: EdgeInsets.all(8.0),
                           ),
                           /* EXTRACT TO REQUEST LOGIC */
                           // Display the list of requests
                           if (isLoadingRequests)
-                            CircularProgressIndicator()
+                            const CircularProgressIndicator()
                           else if (requests.isEmpty)
-                            Center(child: Text(
-                              'No Pending Requests',
-                              style: TextStyle(
-                                fontSize: 25.0,
-                                fontWeight: FontWeight.bold,
-                                color: Theme.of(context).primaryColor,
+                            Center(
+                              child: Text(
+                                'No Pending Requests',
+                                style: TextStyle(
+                                  fontSize: 25.0,
+                                  fontWeight: FontWeight.bold,
+                                  color: Theme.of(context).primaryColor,
+                                ),
+                                textAlign: TextAlign.left,
                               ),
-                              textAlign: TextAlign.left,
-                            ),)
+                            )
                           else
                             Column(
                               crossAxisAlignment: CrossAxisAlignment.start,
@@ -256,43 +279,57 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                                   ListTile(
                                     leading: CircleAvatar(
                                       // Display user image
-                                      backgroundImage: AssetImage(requestUsers[i].image),
+                                      backgroundImage:
+                                          AssetImage(requestUsers[i].image),
                                       //RangeError (index): Index out of range: no indices are valid: 0
                                     ),
 
-                                    title: Text(requestUsers[i].name), // Display user name
+                                    title: Text(requestUsers[i]
+                                        .name), // Display user name
                                     trailing: Row(
                                       mainAxisSize: MainAxisSize.min,
                                       children: [
                                         IconButton(
-                                          icon: Icon(Icons.check),
-                                            onPressed: () async {
-                                              try {
-                                                // Call rejectRequest function
-                                                await FirebaseRequestRepo().acceptRequest(requests[i].id);
-                                                setState(() {
-                                                  requests.removeAt(i);
-                                                });
-                                              } catch (error) {
-                                                ScaffoldMessenger.of(context).showSnackBar(
-                                                  SnackBar(content: Text("Failed to reject request: $error")),
-                                                );
-                                              }
-                                            },
-                                        ),
-                                         IconButton(
-                                          icon: Icon(Icons.close),
+                                          icon: const Icon(Icons.check),
                                           onPressed: () async {
                                             try {
                                               // Call rejectRequest function
-                                              await FirebaseRequestRepo().rejectRequest(requests[i].id);
+                                              await FirebaseRequestRepo()
+                                                  .acceptRequest(
+                                                      requests[i].id);
+                                              setState(() {
+                                                requests.removeAt(i);
+                                              });
+                                            } catch (error) {
+                                              // ignore: use_build_context_synchronously
+                                              ScaffoldMessenger.of(context)
+                                                  .showSnackBar(
+                                                SnackBar(
+                                                    content: Text(
+                                                        "Failed to reject request: $error")),
+                                              );
+                                            }
+                                          },
+                                        ),
+                                        IconButton(
+                                          icon: const Icon(Icons.close),
+                                          onPressed: () async {
+                                            try {
+                                              // Call rejectRequest function
+                                              await FirebaseRequestRepo()
+                                                  .rejectRequest(
+                                                      requests[i].id);
                                               // Remove the rejected request from the list
                                               setState(() {
                                                 requests.removeAt(i);
                                               });
                                             } catch (error) {
-                                              ScaffoldMessenger.of(context).showSnackBar(
-                                                SnackBar(content: Text("Failed to reject request: $error")),
+                                              // ignore: use_build_context_synchronously
+                                              ScaffoldMessenger.of(context)
+                                                  .showSnackBar(
+                                                SnackBar(
+                                                    content: Text(
+                                                        "Failed to reject request: $error")),
                                               );
                                             }
                                           },
@@ -303,7 +340,6 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                               ],
                             ),
                           /* -----------------ENDS HERE----------------- */
-
                         ],
                       ),
                     ),
@@ -317,7 +353,6 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
     );
   }
 
-
   /* EXTRACT TO REQUEST LOGIC */
   Future<void> fetchUnansweredRequests() async {
     try {
@@ -326,20 +361,18 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
       RequestRepo requestRepo = FirebaseRequestRepo();
       List<Request> requestss = await requestRepo.getRequests();
 
-      for(Product p in productss){
+      for (Product p in productss) {
         if (p.userId != FirebaseAuth.instance.currentUser?.uid) {
           continue;
         } else {
-          for(Request r in requestss){
-            if(p.id == r.productId && !r.accepted){
+          for (Request r in requestss) {
+            if (p.id == r.productId && !r.accepted) {
               requests.add(r);
             }
           }
         }
       }
       await fillRequestUsers();
-    } catch (error) {
-      print('An error occurred while fetching user requests: $error');
     } finally {
       // Set isLoadingRequests to false once requests are loaded or an error occurs
       setState(() {
@@ -348,30 +381,25 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
     }
   }
 
-
   Future<MyUser> getRequesterInfo(Request r) async {
     try {
       String uid = r.fromUserId;
       MyUser user = await FirebaseUserRepo().getUser(uid);
       return user;
     } catch (error) {
-      print('An error occurred while fetching requester info: $error');
-      throw error;
+      rethrow;
     }
   }
 
   Future<void> fillRequestUsers() async {
-
     try {
-      for(Request r in requests){
+      for (Request r in requests) {
         requestUsers.add(await getRequesterInfo(r));
       }
       //print("This is ${requestUsers}"); print("This is ${requests}");
-
     } catch (error) {
-      print('An error occurred while fetching requester info: $error');
+      rethrow;
     }
-
   }
 
   /* -----------------ENDS HERE----------------- */
@@ -382,8 +410,9 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
     if (file != null) {
       return await file.readAsBytes();
     }
-    Text('No image selected');
+    const Text('No image selected');
   }
+
   void selectImage() async {
     Uint8List file = await pickImage(ImageSource.gallery);
     setState(() {
@@ -393,103 +422,100 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
 
   void reauthenticateUser(String email, String password) async {
     try {
-      AuthCredential credential = EmailAuthProvider.credential(email: email, password: password);
-      await FirebaseAuth.instance.currentUser?.reauthenticateWithCredential(credential);
-      print('Usuário reautenticado com sucesso.');
+      AuthCredential credential =
+          EmailAuthProvider.credential(email: email, password: password);
+      await FirebaseAuth.instance.currentUser
+          ?.reauthenticateWithCredential(credential);
       // Agora você pode realizar operações sensíveis, como atualizar o e-mail ou a senha
-    } catch (error) {
-      print('Erro ao reautenticar o usuário: $error');
+    } catch (e) {
+      rethrow;
     }
   }
 
 // Função para atualizar o e-mail do usuário
-void updateEmail(String newEmail) async {
-  try {
-    // Obtenha a instância do FirebaseAuth
-    FirebaseAuth _auth = FirebaseAuth.instance;
+  void updateEmail(String newEmail) async {
+    try {
+      // Obtenha a instância do FirebaseAuth
+      FirebaseAuth auth = FirebaseAuth.instance;
 
-    // Verifique se há um usuário autenticado
-    User? user = _auth.currentUser;
-    if (user != null) {
-      // Atualize o e-mail do usuário
-      await user.updateEmail(newEmail);
-      print('E-mail atualizado com sucesso para: $newEmail');
-    } else {
-      // Se não houver usuário autenticado, exiba uma mensagem de erro
-      print('Nenhum usuário autenticado.');
+      // Verifique se há um usuário autenticado
+      User? user = auth.currentUser;
+      if (user != null) {
+        // Atualize o e-mail do usuário
+        await user.verifyBeforeUpdateEmail(newEmail);
+      } else {
+        // Se não houver usuário autenticado, exiba uma mensagem de erro
+      }
+    } catch (e) {
+      // Se ocorrer algum erro, exiba a mensagem de erro
     }
-  } catch (e) {
-    // Se ocorrer algum erro, exiba a mensagem de erro
-    print('Erro ao atualizar o e-mail: $e');
   }
-}
-
 
 // Função para atualizar a senha do usuário
-void updatePassword(String newPassword) async {
-  try {
-    // Obtenha a instância do FirebaseAuth
-    FirebaseAuth _auth = FirebaseAuth.instance;
+  void updatePassword(String newPassword) async {
+    try {
+      // Obtenha a instância do FirebaseAuth
+      FirebaseAuth auth = FirebaseAuth.instance;
 
-    // Verifique se há um usuário autenticado
-    User? user = _auth.currentUser;
-    if (user != null) {
-      // Atualize a senha do usuário
-      await user.updatePassword(newPassword);
-      print('Senha atualizada com sucesso.');
-    } else {
-      // Se não houver usuário autenticado, exiba uma mensagem de erro
-      print('Nenhum usuário autenticado.');
+      // Verifique se há um usuário autenticado
+      User? user = auth.currentUser;
+      if (user != null) {
+        // Atualize a senha do usuário
+        await user.updatePassword(newPassword);
+      } else {
+        // Se não houver usuário autenticado, exiba uma mensagem de erro
+      }
+    } catch (e) {
+      // Se ocorrer algum erro, exiba a mensagem de erro
     }
-  } catch (e) {
-    // Se ocorrer algum erro, exiba a mensagem de erro
-    print('Erro ao atualizar a senha: $e');
   }
-}
-
 
   Future<String> updateUserInfo(MyUser user) async {
-  try {
-    String userId = FirebaseAuth.instance.currentUser?.uid ?? '';
-    String name = user.name;
-    String email = user.email;
-    String bio = user.bio;
-    String password = passwordController.text;
+    try {
+      String userId = FirebaseAuth.instance.currentUser?.uid ?? '';
+      String name = user.name;
+      String email = user.email;
+      String bio = user.bio;
+      String password = passwordController.text;
 
-    if(userNameController.text.isNotEmpty) name=userNameController.text;
-    if(userEmailController.text.isNotEmpty) name=userEmailController.text;
-    if(userBioController.text.isNotEmpty) name=userBioController.text;
+      if (userNameController.text.isNotEmpty) name = userNameController.text;
+      if (userEmailController.text.isNotEmpty) name = userEmailController.text;
+      if (userBioController.text.isNotEmpty) name = userBioController.text;
 
-    if (userId.isNotEmpty && (name.isNotEmpty || email.isNotEmpty || bio.isNotEmpty || photo != null)) {
-      String imageUrl = user.image;
-      if (photo != null) {
-        imageUrl = await uploadImageToStorage('userImage_$userId', photo!);
+      if (userId.isNotEmpty &&
+          (name.isNotEmpty ||
+              email.isNotEmpty ||
+              bio.isNotEmpty ||
+              photo != null)) {
+        String imageUrl = user.image;
+        if (photo != null) {
+          imageUrl = await uploadImageToStorage('userImage_$userId', photo!);
+        }
+
+        await FirebaseFirestore.instance
+            .collection('users')
+            .doc(userId)
+            .update({
+          'name': name,
+          'email': email,
+          'bio': bio,
+          'image': imageUrl,
+        });
+
+        reauthenticateUser(email, password);
+
+        await FirebaseAuth.instance.currentUser?.reload();
+        await Future.delayed(const Duration(seconds: 2));
+        return 'success';
+      } else {
+        return 'Please provide at least one field to update.';
       }
-
-      await FirebaseFirestore.instance.collection('users').doc(userId).update({
-        'name': name,
-        'email': email,
-        'bio': bio,
-        'image': imageUrl,
-      });
-
-    reauthenticateUser(email, password);
-
-      await FirebaseAuth.instance.currentUser?.reload();
-      await Future.delayed(Duration(seconds: 2));
-      return 'success';
-    } else {
-      return 'Please provide at least one field to update.';
+    } catch (error) {
+      return 'An error occurred: $error';
     }
-  } catch (error) {
-    return 'An error occurred: $error';
   }
-}
-
 
   final FirebaseStorage _storage = FirebaseStorage.instance;
-  final FirebaseFirestore _firestore = FirebaseFirestore.instance;
-  final FirebaseAuth _firebaseAuth = FirebaseAuth.instance;
 
   Future<String> uploadImageToStorage(String imagePath, Uint8List file) async {
     Reference ref = _storage.ref().child(imagePath);
@@ -498,6 +524,4 @@ void updatePassword(String newPassword) async {
     String downloadUrl = await snapshot.ref.getDownloadURL();
     return downloadUrl;
   }
-
-
 }
