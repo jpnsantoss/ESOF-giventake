@@ -10,7 +10,6 @@ class RequestBloc extends Bloc<RequestEvent, List<Request>> {
 
   final requestCollection = FirebaseFirestore.instance.collection('requests');
 
-  @override
   Stream<List<Request>> mapEventToState(RequestEvent event) async* {
     if (event is AcceptRequestEvent) {
       await acceptRequest(event.requestId);
@@ -25,7 +24,8 @@ class RequestBloc extends Bloc<RequestEvent, List<Request>> {
 
   Stream<List<Request>> _mapRejectRequestToState(String requestId) async* {
     // Filter out the rejected request from the current state
-    final updatedRequests = state.where((request) => request.id != requestId).toList();
+    final updatedRequests =
+        state.where((request) => request.id != requestId).toList();
     yield updatedRequests;
   }
 

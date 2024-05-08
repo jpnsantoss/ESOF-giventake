@@ -1,14 +1,16 @@
+import 'package:user_repository/user_repository.dart';
+
 import '../entities/entities.dart';
 
 class Review {
-  String id;
   String fromUserId;
   String toUserId;
   String comment;
-  int rating;
+  double rating;
+
+  MyUser? fromUser;
 
   Review({
-    required this.id,
     required this.fromUserId,
     required this.toUserId,
     required this.comment,
@@ -17,9 +19,8 @@ class Review {
 
   ReviewEntity toEntity() {
     return ReviewEntity(
-      id: id,
-      fromUserId: fromUserId,
-      toUserId: toUserId,
+      fromId: fromUserId,
+      toId: toUserId,
       comment: comment,
       rating: rating,
     );
@@ -27,11 +28,14 @@ class Review {
 
   static Review fromEntity(ReviewEntity entity) {
     return Review(
-      id: entity.id,
-      fromUserId: entity.fromUserId,
-      toUserId: entity.toUserId,
+      fromUserId: entity.fromId,
+      toUserId: entity.toId,
       comment: entity.comment,
       rating: entity.rating,
     );
+  }
+
+  Future<void> fetchUser(UserRepository userRepository) async {
+    fromUser = await userRepository.getUser(fromUserId);
   }
 }

@@ -1,13 +1,11 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:giventake/screens/profile/blocs/get_user_products/get_user_products_bloc.dart';
 import 'package:giventake/screens/profile/views/profile_screen.dart';
 import 'package:product_repository/product_repository.dart';
-import 'package:request_repository/request_repository.dart';
-import 'package:review_repository/request_repository.dart';
+import 'package:review_repository/review_repository.dart';
 import 'package:user_repository/user_repository.dart';
 import 'package:uuid/uuid.dart';
 
@@ -161,7 +159,7 @@ class _DetailsScreenState extends State<DetailsScreen> {
               onPressed: () async {
                 String result = await saveRequestToFirestore(
                     productId: product.id, requesterId: product.userId);
-                print("REQUEST SAVED\n");
+                // ignore: use_build_context_synchronously
                 ScaffoldMessenger.of(context).showSnackBar(
                   SnackBar(
                     content: Text(result == 'success'
@@ -208,7 +206,6 @@ class _DetailsScreenState extends State<DetailsScreen> {
       String fromUserId = userId;
 
       if (!await canRequest(fromUserId)) {
-        print("user has already requested this product");
         return 'fail';
       }
 
@@ -217,7 +214,6 @@ class _DetailsScreenState extends State<DetailsScreen> {
       String id = const Uuid().v4();
 
       if (productId.isNotEmpty || requesterId.isNotEmpty) {
-        FirebaseRequestRepo requestRepo = FirebaseRequestRepo();
         await _firestore.collection('requests').add({
           'id': id,
           'accepted': accepted,
