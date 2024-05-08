@@ -184,15 +184,47 @@ class _DetailsScreenState extends State<DetailsScreen> {
   }
 
   Widget _buildRatingStars(num rating) {
+    // Calculate the number of filled stars
+    int filledStars = rating.floor();
+
+    // Calculate the fractional part of the rating to determine if we need a half star
+    double remainder = rating.toDouble() - filledStars;
+    bool hasHalfStar = remainder >= 0.5;
+
+    // List to hold the star icons
+    List<Widget> starIcons = [];
+
+    // Add filled stars
+    for (int i = 0; i < filledStars; i++) {
+      starIcons.add(Icon(Icons.star, color: Colors.yellow));
+    }
+
+    // Add half star if necessary
+    if (hasHalfStar) {
+      starIcons.add(Icon(Icons.star_half, color: Colors.yellow));
+    }
+
+    // Add remaining empty stars
+    for (int i = starIcons.length; i < 5; i++) {
+      starIcons.add(Icon(Icons.star_border, color: Colors.yellow));
+    }
+
+    // Widget to display the rating
+    Widget ratingText = Text(
+      rating.toString(),
+      style: TextStyle(fontSize: 16),
+    );
+
+    // Return a Row containing the star icons and the rating
     return Row(
-      children: List.generate(
-        rating.ceil(),
-            (index) => Icon(
-          Icons.star,
-          color: Colors.yellow,
-          size: 20,
+      mainAxisSize: MainAxisSize.min,
+      children: [
+        Row(
+          children: starIcons,
         ),
-      ),
+        SizedBox(width: 5), // Spacer between stars and rating
+        ratingText,
+      ],
     );
   }
 
