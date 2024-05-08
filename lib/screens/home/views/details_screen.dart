@@ -7,15 +7,39 @@ import 'package:giventake/screens/profile/blocs/get_user_products/get_user_produ
 import 'package:giventake/screens/profile/views/profile_screen.dart';
 import 'package:product_repository/product_repository.dart';
 import 'package:request_repository/request_repository.dart';
+import 'package:review_repository/request_repository.dart';
 import 'package:user_repository/user_repository.dart';
 import 'package:uuid/uuid.dart';
 
-class DetailsScreen extends StatelessWidget {
+class DetailsScreen extends StatefulWidget {
   final Product product;
+
   DetailsScreen({
     super.key,
     required this.product,
   });
+
+  @override
+  _DetailsScreenState createState() => _DetailsScreenState();
+}
+  class _DetailsScreenState extends State<DetailsScreen> {
+  late List<Review> reviews = [];
+
+  @override
+  void initState() {
+  super.initState();
+  fetchUserReviews(widget.product.user!.userId);
+  }
+
+  Future<void> fetchUserReviews(String userId) async {
+    try {
+      ReviewRepo reviewRepo = FirebaseReviewRepo();
+      reviews = await reviewRepo.getReviews(userId);
+      setState(() {}); // Update the UI after fetching reviews and rating
+    } catch (e) {
+      print("Error fetching user reviews: $e");
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -29,7 +53,7 @@ class DetailsScreen extends StatelessWidget {
             mainAxisAlignment: MainAxisAlignment.start,
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              Image.network(product.image),
+              Image.network(widget.product.image),
               const SizedBox(height: 16.0),
               Padding(
                 padding: const EdgeInsets.symmetric(horizontal: 20),
@@ -37,14 +61,14 @@ class DetailsScreen extends StatelessWidget {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Text(
-                      product.title,
+                      widget.product.title,
                       style: const TextStyle(
                         fontWeight: FontWeight.bold,
                         fontSize: 24.0,
                       ),
                     ),
                     Text(
-                      product.location,
+                      widget.product.location,
                       style: TextStyle(
                         fontWeight: FontWeight.bold,
                         color: Theme.of(context).colorScheme.onTertiary,
@@ -64,13 +88,13 @@ class DetailsScreen extends StatelessWidget {
                                       FirebaseProductRepo()),
                                   child: ProfileScreen(
                                     user: MyUserEntity(
-                                      userId: product.user!.userId,
-                                      email: product.user!.email,
-                                      name: product.user!.name,
-                                      reviews: product.user!.reviews,
-                                      bio: product.user!.bio,
-                                      rating: product.user!.rating,
-                                      image: product.user!.image,
+                                      userId: widget.product.user!.userId,
+                                      email: widget.product.user!.email,
+                                      name: widget.product.user!.name,
+                                      reviews: widget.product.user!.reviews,
+                                      bio: widget.product.user!.bio,
+                                      rating: widget.product.user!.rating,
+                                      image: widget.product.user!.image,
                                     ),
                                     productRepo: FirebaseProductRepo(),
                                   ),
@@ -81,7 +105,7 @@ class DetailsScreen extends StatelessWidget {
                           child: Row(
                             children: [
                               Text(
-                                product.user!.name,
+                                widget.product.user!.name,
                                 style: const TextStyle(
                                   color: Colors.black, // Cor do texto
                                   fontSize: 16, // Tamanho do texto
@@ -89,11 +113,11 @@ class DetailsScreen extends StatelessWidget {
                               ),
                               SizedBox(width: 5), // Spacing between name and rating
                               // Display star rating
-                              _buildRatingStars(product.user!.rating),
+                              _buildRatingStars(widget.product.user!.rating),
                               SizedBox(width: 5), // Spacing between rating and reviews count
                               // Display number of reviews
                               Text(
-                                '(${reviewCount(product.userId)} reviews)',
+                                '(${reviews.length} reviews)',
                                 style: TextStyle(
                                   color: Colors.grey,
                                 ),
@@ -105,7 +129,7 @@ class DetailsScreen extends StatelessWidget {
                     ),
                     const SizedBox(height: 24.0),
                     Text(
-                      product.description,
+                      widget.product.description,
                       style: TextStyle(
                         fontSize: 18.0,
                         color: Theme.of(context).colorScheme.onTertiary,
@@ -134,7 +158,7 @@ class DetailsScreen extends StatelessWidget {
             child: ElevatedButton(
               onPressed: () async {
                 String result = await saveRequestToFirestore(
-                    productId: product.id, requesterId: product.userId);
+                    productId: widget.product.id, requesterId: widget.product.userId);
                 print("REQUEST SAVED\n");
                 ScaffoldMessenger.of(context).showSnackBar(
                   SnackBar(
@@ -207,17 +231,12 @@ class DetailsScreen extends StatelessWidget {
     }
     return res;
   }
-  
-  Future<int?> reviewCount(String userId) async {
-    AggregateQuerySnapshot query = await _firestore.collection('reviews').where("to_id", isEqualTo: userId).count().get();
-    return query.count;
-  }
 
   Future<bool> canRequest(String userId) async {
     final currUserRequests = _firestore
         .collection('requests')
         .where("fromUserId", isEqualTo: userId)
-        .where("productId", isEqualTo: product.id);
+        .where("productId", isEqualTo: widget.product.id);
     AggregateQuerySnapshot query = await currUserRequests.count().get();
 
     if (query.count! > 0) {
@@ -225,4 +244,5 @@ class DetailsScreen extends StatelessWidget {
     }
     return true;
   }
+
 }
