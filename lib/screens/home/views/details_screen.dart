@@ -104,23 +104,35 @@ class _DetailsScreenState extends State<DetailsScreen> {
                           },
                           child: Row(
                             children: [
-                              Text(
-                                product.user!.name,
-                                style: const TextStyle(
-                                  color: Colors.black, // Cor do texto
-                                  fontSize: 16, // Tamanho do texto
-                                ),
+                              CircleAvatar(
+                                backgroundImage: NetworkImage(widget.product.user!.image),
+                                radius: 20,
                               ),
-                              SizedBox(width: 5), // Spacing between name and rating
-                              // Display star rating
-                              _buildRatingStars(product.user!.rating),
-                              SizedBox(width: 5), // Spacing between rating and reviews count
-                              // Display number of reviews
-                              Text(
-                                '(${reviews.length} reviews)',
-                                style: TextStyle(
-                                  color: Colors.grey,
-                                ),
+                              SizedBox(width: 10),
+                              Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  Text(
+                                    widget.product.user!.name,
+                                    style: const TextStyle(
+                                      color: Colors.black,
+                                      fontSize: 16,
+                                    ),
+                                  ),
+                                  SizedBox(height: 5),
+                                  Row(
+                                    children: [
+                                      _buildRatingStars(product.user!.rating),
+                                      SizedBox(width: 5),
+                                      Text(
+                                        '(${reviews.length} reviews)',
+                                        style: TextStyle(
+                                          color: Colors.grey,
+                                        ),
+                                      ),
+                                    ],
+                                  ),
+                                ],
                               ),
                             ],
                           ),
