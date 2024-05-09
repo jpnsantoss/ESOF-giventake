@@ -119,7 +119,6 @@ class _DetailsScreenState extends State<DetailsScreen> {
                                       fontSize: 16,
                                     ),
                                   ),
-                                  SizedBox(height: 5),
                                   Row(
                                     children: [
                                       _buildRatingStars(product.user!.rating),
@@ -131,6 +130,13 @@ class _DetailsScreenState extends State<DetailsScreen> {
                                         ),
                                       ),
                                     ],
+                                  ),
+                                  SizedBox(height: 5),
+                                  Text(
+                                    'added ${timeDiff(widget.product.createdAt)} ago',
+                                    style: TextStyle(
+                                      color: Colors.grey,
+                                    ),
                                   ),
                                 ],
                               ),
@@ -285,6 +291,15 @@ class _DetailsScreenState extends State<DetailsScreen> {
       return false;
     }
     return true;
+  }
+
+  String timeDiff(DateTime createdAt) {
+    Duration difference = DateTime.now().difference(createdAt);
+    if (difference.inHours < 24) {
+      return '${difference.inHours} hours';
+    } else {
+      return '${difference.inDays} days';
+    }
   }
 
 }
