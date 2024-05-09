@@ -45,158 +45,160 @@ class _DetailsScreenState extends State<DetailsScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(),
-      body: Column(
-        mainAxisAlignment: MainAxisAlignment.start,
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Column(
-            mainAxisAlignment: MainAxisAlignment.start,
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Image.network(product.image),
-              const SizedBox(height: 16.0),
-              Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 20),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text(
-                      product.title,
-                      style: const TextStyle(
-                        fontWeight: FontWeight.bold,
-                        fontSize: 24.0,
+      body: SingleChildScrollView(
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.start,
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Column(
+              mainAxisAlignment: MainAxisAlignment.start,
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Image.network(product.image),
+                const SizedBox(height: 16.0),
+                Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 20),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(
+                        product.title,
+                        style: const TextStyle(
+                          fontWeight: FontWeight.bold,
+                          fontSize: 24.0,
+                        ),
                       ),
-                    ),
-                    Text(
-                      product.location,
-                      style: TextStyle(
-                        fontWeight: FontWeight.bold,
-                        color: Theme.of(context).colorScheme.onTertiary,
+                      Text(
+                        product.location,
+                        style: TextStyle(
+                          fontWeight: FontWeight.bold,
+                          color: Theme.of(context).colorScheme.onTertiary,
+                        ),
                       ),
-                    ),
-                    const SizedBox(height: 24.0),
-                    Row(
-                      children: [
-                        const SizedBox(width: 8.0),
-                        TextButton(
-                          onPressed: () {
-                            Navigator.push(
-                              context,
-                              MaterialPageRoute<void>(
-                                builder: (BuildContext context) => BlocProvider(
-                                  create: (context) => GetUserProductsBloc(
-                                      FirebaseProductRepo()),
-                                  child: ProfileScreen(
-                                    user: MyUserEntity(
-                                      userId: product.user!.userId,
-                                      email: product.user!.email,
-                                      name: product.user!.name,
-                                      reviews: product.user!.reviews,
-                                      bio: product.user!.bio,
-                                      rating: product.user!.rating,
-                                      image: product.user!.image,
+                      const SizedBox(height: 24.0),
+                      Row(
+                        children: [
+                          const SizedBox(width: 8.0),
+                          TextButton(
+                            onPressed: () {
+                              Navigator.push(
+                                context,
+                                MaterialPageRoute<void>(
+                                  builder: (BuildContext context) => BlocProvider(
+                                    create: (context) => GetUserProductsBloc(
+                                        FirebaseProductRepo()),
+                                    child: ProfileScreen(
+                                      user: MyUserEntity(
+                                        userId: product.user!.userId,
+                                        email: product.user!.email,
+                                        name: product.user!.name,
+                                        reviews: product.user!.reviews,
+                                        bio: product.user!.bio,
+                                        rating: product.user!.rating,
+                                        image: product.user!.image,
+                                      ),
+                                      productRepo: FirebaseProductRepo(),
                                     ),
-                                    productRepo: FirebaseProductRepo(),
                                   ),
                                 ),
-                              ),
-                            );
-                          },
-                          child: Row(
-                            children: [
-                              CircleAvatar(
-                                backgroundImage: NetworkImage(widget.product.user!.image),
-                                radius: 20,
-                              ),
-                              SizedBox(width: 10),
-                              Column(
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: [
-                                  Text(
-                                    widget.product.user!.name,
-                                    style: const TextStyle(
-                                      color: Colors.black,
-                                      fontSize: 16,
-                                    ),
-                                  ),
-                                  Row(
-                                    children: [
-                                      _buildRatingStars(product.user!.rating),
-                                      SizedBox(width: 5),
-                                      Text(
-                                        '(${reviews.length} reviews)',
-                                        style: TextStyle(
-                                          color: Colors.grey,
-                                        ),
+                              );
+                            },
+                            child: Row(
+                              children: [
+                                CircleAvatar(
+                                  backgroundImage: NetworkImage(widget.product.user!.image),
+                                  radius: 20,
+                                ),
+                                SizedBox(width: 10),
+                                Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    Text(
+                                      widget.product.user!.name,
+                                      style: const TextStyle(
+                                        color: Colors.black,
+                                        fontSize: 16,
                                       ),
-                                    ],
-                                  ),
-                                  SizedBox(height: 5),
-                                  Text(
-                                    'added ${timeDiff(widget.product.createdAt)} ago',
-                                    style: TextStyle(
-                                      color: Colors.grey,
                                     ),
-                                  ),
-                                ],
-                              ),
-                            ],
+                                    Row(
+                                      children: [
+                                        _buildRatingStars(product.user!.rating),
+                                        SizedBox(width: 5),
+                                        Text(
+                                          '(${reviews.length} reviews)',
+                                          style: TextStyle(
+                                            color: Colors.grey,
+                                          ),
+                                        ),
+                                      ],
+                                    ),
+                                    SizedBox(height: 5),
+                                    Text(
+                                      'added ${timeDiff(widget.product.createdAt)} ago',
+                                      style: TextStyle(
+                                        color: Colors.grey,
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                              ],
+                            ),
                           ),
-                        ),
-                      ],
-                    ),
-                    const SizedBox(height: 24.0),
-                    Text(
-                      product.description,
-                      style: TextStyle(
-                        fontSize: 18.0,
-                        color: Theme.of(context).colorScheme.onTertiary,
+                        ],
                       ),
+                      const SizedBox(height: 24.0),
+                      Text(
+                        product.description,
+                        style: TextStyle(
+                          fontSize: 18.0,
+                          color: Theme.of(context).colorScheme.onTertiary,
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+                const SizedBox(height: 48.0),
+                Container(
+                  width: double.infinity,
+                  padding: const EdgeInsets.all(20),
+                  color: Theme.of(context).colorScheme.tertiary,
+                  child: const Text(
+                    "Everything in this section is given away for free 💚. Strictly no selling, no swaps, no donations.",
+                    textAlign: TextAlign.center,
+                    style: TextStyle(
+                      color: Colors.black,
                     ),
-                  ],
-                ),
-              ),
-              const SizedBox(height: 48.0),
-              Container(
-                width: double.infinity,
-                padding: const EdgeInsets.all(20),
-                color: Theme.of(context).colorScheme.tertiary,
-                child: const Text(
-                  "Everything in this section is given away for free 💚. Strictly no selling, no swaps, no donations.",
-                  textAlign: TextAlign.center,
-                  style: TextStyle(
-                    color: Colors.black,
                   ),
                 ),
-              ),
-            ],
-          ),
-          Padding(
-            padding: const EdgeInsets.all(20.0),
-            child: ElevatedButton(
-              onPressed: () async {
-                String result = await saveRequestToFirestore(
-                    productId: product.id, requesterId: product.userId);
-                // ignore: use_build_context_synchronously
-                ScaffoldMessenger.of(context).showSnackBar(
-                  SnackBar(
-                    content: Text(result == 'success'
-                        ? 'Request saved successfully!'
-                        : 'You have already requested this product!'),
-                  ),
-                );
-              },
-              style: ElevatedButton.styleFrom(
-                backgroundColor: Colors.black,
-                foregroundColor: Colors.white,
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(10),
-                ),
-              ),
-              child: const Text("Request Product"),
+              ],
             ),
-          ),
-        ],
+            Padding(
+              padding: const EdgeInsets.all(20.0),
+              child: ElevatedButton(
+                onPressed: () async {
+                  String result = await saveRequestToFirestore(
+                      productId: product.id, requesterId: product.userId);
+                  // ignore: use_build_context_synchronously
+                  ScaffoldMessenger.of(context).showSnackBar(
+                    SnackBar(
+                      content: Text(result == 'success'
+                          ? 'Request saved successfully!'
+                          : 'You have already requested this product!'),
+                    ),
+                  );
+                },
+                style: ElevatedButton.styleFrom(
+                  backgroundColor: Colors.black,
+                  foregroundColor: Colors.white,
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(10),
+                  ),
+                ),
+                child: const Text("Request Product"),
+              ),
+            ),
+          ],
+        ),
       ),
     );
   }
