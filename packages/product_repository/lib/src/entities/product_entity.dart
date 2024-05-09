@@ -37,7 +37,7 @@ class ProductEntity {
       location: doc['location'] as String,
       image: doc['image'] as String,
       userId: doc['userId'] as String,
-      createdAt: doc['createdAt'] as DateTime,
+      createdAt: doc['createdAt'].toDate() as DateTime,
     );
   }
 }
