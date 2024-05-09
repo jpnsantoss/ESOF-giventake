@@ -11,6 +11,7 @@ class Product {
   final String image;
   final String userId;
   MyUser? user;
+  final DateTime createdAt;
 
   Product({
     required this.id,
@@ -19,6 +20,7 @@ class Product {
     required this.location,
     required this.image,
     required this.userId,
+    required this.createdAt,
   });
 
   Future<void> fetchUser(UserRepository userRepository) async {
@@ -33,6 +35,7 @@ class Product {
       location: location,
       image: image,
       userId: userId,
+      createdAt: createdAt,
     );
   }
 
@@ -44,6 +47,7 @@ class Product {
       location: entity.location,
       image: entity.image,
       userId: entity.userId,
+      createdAt: entity.createdAt,
     );
   }
 }
