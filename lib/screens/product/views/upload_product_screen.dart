@@ -207,6 +207,7 @@ class _ProductUploadScreenState extends State<ProductUploadScreen> {
 
       String id = const Uuid().v4();
       String imageName = 'productImage_$id';
+      DateTime createdAt = DateTime.now();
 
       if (title.isNotEmpty ||
           location.isNotEmpty ||
@@ -220,6 +221,7 @@ class _ProductUploadScreenState extends State<ProductUploadScreen> {
           'location': location,
           'description': description,
           'image': imageUrl,
+          'createdAt': createdAt,
         });
 
         res = 'sucess';
