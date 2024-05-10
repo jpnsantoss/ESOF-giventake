@@ -11,7 +11,7 @@ class ProductUploadScreen extends StatefulWidget {
   const ProductUploadScreen({super.key});
 
   @override
-  _ProductUploadScreenState createState() => _ProductUploadScreenState();
+  State<ProductUploadScreen> createState() => _ProductUploadScreenState();
 }
 
 class _ProductUploadScreenState extends State<ProductUploadScreen> {
@@ -21,8 +21,6 @@ class _ProductUploadScreenState extends State<ProductUploadScreen> {
   final TextEditingController productLocationController =
       TextEditingController();
   final TextEditingController productImageController = TextEditingController();
-
-  
 
   @override
   void dispose() {
@@ -164,12 +162,11 @@ class _ProductUploadScreenState extends State<ProductUploadScreen> {
     if (file != null) {
       return await file.readAsBytes();
     }
-    Text('No image selected');
+    const Text('No image selected');
   }
 
   void selectImage() async {
     Uint8List file = await pickImage(ImageSource.gallery);
-    print('File selected: $file');
     setState(() {
       photo = file;
     });
@@ -210,6 +207,7 @@ class _ProductUploadScreenState extends State<ProductUploadScreen> {
 
       String id = const Uuid().v4();
       String imageName = 'productImage_$id';
+      DateTime createdAt = DateTime.now();
 
       if (title.isNotEmpty ||
           location.isNotEmpty ||
@@ -223,6 +221,7 @@ class _ProductUploadScreenState extends State<ProductUploadScreen> {
           'location': location,
           'description': description,
           'image': imageUrl,
+          'createdAt': createdAt,
         });
 
         res = 'sucess';

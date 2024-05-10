@@ -3,7 +3,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:giventake/blocs/authentication_bloc/authentication_bloc.dart';
 import 'package:giventake/screens/auth/blocs/sign_in_bloc/sign_in_bloc.dart';
 import 'package:giventake/screens/auth/views/welcome_screen.dart';
-import 'package:giventake/screens/home/blocs/bloc/get_product_bloc.dart';
+import 'package:giventake/screens/home/blocs/get_product_bloc/get_product_bloc.dart';
 import 'package:giventake/screens/home/views/home_screen.dart';
 import 'package:product_repository/product_repository.dart';
 import 'package:user_repository/user_repository.dart';

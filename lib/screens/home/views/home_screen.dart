@@ -3,9 +3,9 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:giventake/screens/auth/blocs/sign_in_bloc/sign_in_bloc.dart';
-import 'package:giventake/screens/home/blocs/bloc/get_product_bloc.dart';
+import 'package:giventake/screens/home/blocs/get_product_bloc/get_product_bloc.dart';
 import 'package:giventake/screens/home/views/details_screen.dart';
-import 'package:giventake/screens/home/views/editProfile_screen.dart';
+import 'package:giventake/screens/home/views/edit_profile_screen.dart';
 import 'package:giventake/screens/product/views/upload_product_screen.dart';
 
 class HomeScreen extends StatefulWidget {
@@ -109,6 +109,7 @@ class _HomeScreenState extends State<HomeScreen> {
                     builder: (context) => const ProductUploadScreen(),
                   ));
                   if (result == true) {
+                    // ignore: use_build_context_synchronously
                     context.read<GetProductBloc>().add(GetProduct());
                   }
                 },
