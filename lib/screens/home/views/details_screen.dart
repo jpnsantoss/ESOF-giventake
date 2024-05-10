@@ -9,7 +9,7 @@ import 'package:uuid/uuid.dart';
 
 class DetailsScreen extends StatelessWidget {
   final Product product;
-  const DetailsScreen({
+  DetailsScreen({
     super.key,
     required this.product,
   });
@@ -51,7 +51,12 @@ class DetailsScreen extends StatelessWidget {
 
                     Row( 
             children: [
-              const SizedBox(width: 8.0), 
+              Image.network(
+                product.user!.image,
+                width: 50,
+                height: 50,
+              ),
+              const SizedBox(width: 3.0), 
               TextButton(
               onPressed: () {
                 Navigator.push(
