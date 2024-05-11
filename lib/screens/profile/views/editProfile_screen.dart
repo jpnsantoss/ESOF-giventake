@@ -10,18 +10,18 @@ import 'package:giventake/screens/profile/blocs/bloc/edit_user_info_bloc.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:user_repository/user_repository.dart';
 
-class EditProfileScreen extends StatefulWidget {
+class EditUserProfileScreen extends StatefulWidget {
   final String userId;
   final MyUserEntity user;
   
-  const EditProfileScreen({Key? key, required this.userId, required this.user}) : super(key: key);
+  const EditUserProfileScreen({Key? key, required this.userId, required this.user}) : super(key: key);
 
   @override
   _EditProfileScreenState createState() => _EditProfileScreenState();
 }
 
 
-class _EditProfileScreenState extends State<EditProfileScreen> {
+class _EditProfileScreenState extends State<EditUserProfileScreen> {
   late String userId;
 
   final TextEditingController userNameController = TextEditingController();

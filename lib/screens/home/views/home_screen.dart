@@ -96,10 +96,11 @@ class _HomeScreenState extends State<HomeScreen> {
                   final FirebaseAuth auth = FirebaseAuth.instance;
                   final user = auth.currentUser;
                   String userId = user!.uid;
+                  MyUser currentUser = await FirebaseUserRepo().getUser(userId);
 
-                  Navigator.of(context).push(MaterialPageRoute(
-                    builder: (context) => EditProfileScreen(userId: userId),
-                  ));
+                  final result =await Navigator.of(context).push(MaterialPageRoute(
+                  builder: (context) => EditProfileScreen(userId: userId, user: MyUserEntity(userId: userId, email: currentUser.email, name: currentUser.name, reviews: currentUser.reviews, rating: currentUser.rating, bio: currentUser.bio, image: currentUser.image,   )),
+          ));
                 },
                 child: const Icon(Icons.person),
               ),
@@ -121,83 +122,7 @@ class _HomeScreenState extends State<HomeScreen> {
             ],
           ),
 
-        ],
-      ),
-      body: BlocBuilder<GetProductBloc, GetProductState>(
-        builder: (context, state) {
-          if (state is GetProductSuccess) {
-            return ListView.builder(
-              itemCount: state.products.length,
-              itemBuilder: (context, index) {
-                return ListTile(
-                  title: Text(state.products[index].title),
-                  subtitle: Text(state.products[index].description),
-                  leading: Image.network(state.products[index].image),
-                  onTap: () {
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute<void>(
-                        builder: (BuildContext context) =>
-                            DetailsScreen(product: state.products[index]),
-                      ),
-                    );
-                  },
-                );
-              },
-            );
-          } else if (state is GetProductProcess) {
-            return const Center(
-              child: CircularProgressIndicator(),
-            );
-          } else {
-            return const Center(
-              child: Text("An error has occured..."),
-            );
-          }
-        },
-      ),
-      floatingActionButton: 
-      Padding(
-    padding: const EdgeInsets.only(left: 30.0, bottom: 16.0, right: 0.0),
-      child:Row(
-       mainAxisAlignment: MainAxisAlignment.spaceBetween,  // Alinha o botão à direita
-      children: [
-        FloatingActionButton(
-          onPressed: () 
-            async {
-              final FirebaseAuth _auth = FirebaseAuth.instance;
-              final user = _auth.currentUser;
-              String userId =user!.uid;
-              MyUser currentUser = await FirebaseUserRepo().getUser(userId);
-              
-          final result =await Navigator.of(context).push(MaterialPageRoute(
-            builder: (context) => EditProfileScreen(userId: userId, user: MyUserEntity(userId: userId, email: currentUser.email, name: currentUser.name, reviews: currentUser.reviews, rating: currentUser.rating, bio: currentUser.bio, image: currentUser.image,   )),
-          ));
-          
-        },
-          child: Icon(Icons.person),
-        ),
-        Spacer(), // Espaçamento entre os botões
-        FloatingActionButton(
-          onPressed: () 
-           async {
-          final result = await Navigator.of(context).push(MaterialPageRoute(
-            builder: (context) => const ProductUploadScreen(),
-          ));
-          if (result == true) {
-            context.read<GetProductBloc>().add(GetProduct());
-          }
-        },
-          
-          child: Icon(Icons.add),
-        ),
-      ],
-    ),
-      )
-  );
-      
-
+        ));
   }
-  
-
 }
+      
