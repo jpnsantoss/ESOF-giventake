@@ -5,6 +5,7 @@ class ProductEntity {
   final String location;
   final String image;
   final String userId;
+  final DateTime createdAt;
 
   ProductEntity({
     required this.id,
@@ -13,6 +14,7 @@ class ProductEntity {
     required this.location,
     required this.image,
     required this.userId,
+    required this.createdAt,
   });
 
   Map<String, Object?> toDocument() {
@@ -23,6 +25,7 @@ class ProductEntity {
       'location': location,
       'image': image,
       'userId': userId,
+      'createdAt': createdAt,
     };
   }
 
@@ -34,6 +37,7 @@ class ProductEntity {
       location: doc['location'] as String,
       image: doc['image'] as String,
       userId: doc['userId'] as String,
+      createdAt: doc['createdAt'].toDate() as DateTime,
     );
   }
 }

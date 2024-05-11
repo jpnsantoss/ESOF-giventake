@@ -1,17 +1,21 @@
-part of 'upload_product_bloc_bloc.dart';
 
-sealed class UploadProductBlocEvent extends Equatable {
-  const UploadProductBlocEvent();
+import 'package:equatable/equatable.dart';
+import 'package:product_repository/product_repository.dart';
+
+
+enum ProductStatus { loading, loaded, error }
+
+class ProductState extends Equatable {
+  final ProductStatus status;
+  final List<Product> products;
+  final String? errorMessage;
+
+  const ProductState({
+    required this.status,
+    required this.products,
+    this.errorMessage,
+  });
 
   @override
-  List<Object> get props => [];
-}
-
-class AddProduct extends UploadProductBlocEvent {
-  final Product product;
-
-  const AddProduct(this.product);
-
-  @override
-  List<Object> get props => [product];
+  List<Object?> get props => [status, products, errorMessage];
 }

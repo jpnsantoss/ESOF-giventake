@@ -15,11 +15,10 @@ class FirebaseProductRepo implements ProductRepo {
         'title': product.title,
         'location': product.location,
         'description': product.description,
-        'image' : product.image,
-
+        'image': product.image,
+        'createdAt': product.createdAt,
       });
     } catch (e) {
-      print('Erro ao adicionar produto: $e');
       rethrow;
     }
   }
@@ -34,5 +33,25 @@ class FirebaseProductRepo implements ProductRepo {
       log(e.toString());
       rethrow;
     }
+  }
+
+  @override
+  Future<List<Product>> getUserProducts(String userId) {
+    return productCollection
+        .where('userId', isEqualTo: userId)
+        .get()
+        .then((snapshot) {
+      return snapshot.docs.map((doc) {
+        return Product(
+          id: doc.id,
+          title: doc['title'],
+          location: doc['location'],
+          description: doc['description'],
+          image: doc['image'],
+          userId: doc['userId'],
+          createdAt: doc['createdAt'],
+        );
+      }).toList();
+    });
   }
 }

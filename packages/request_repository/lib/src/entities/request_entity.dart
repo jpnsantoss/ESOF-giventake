@@ -25,7 +25,9 @@ class RequestEntity {
       id: doc['id'],
       fromUserId: doc['fromUserId'],
       productId: doc['productId'],
-      accepted: doc['accepted'],
+      accepted: doc['accepted'] ?? false,
     );
   }
+
+
 }

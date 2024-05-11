@@ -1,6 +1,17 @@
 import 'package:flutter/material.dart';
+
 import 'package:giventake/screens/home/views/details_screen.dart';
 import 'package:product_repository/product_repository.dart';
+
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:giventake/screens/profile/blocs/add_review_bloc/add_review_bloc.dart';
+import 'package:giventake/screens/profile/blocs/get_reviews/get_reviews_bloc.dart';
+import 'package:giventake/screens/profile/blocs/get_user_products/get_user_products_bloc.dart';
+import 'package:giventake/screens/profile/views/products_screen.dart';
+import 'package:giventake/screens/profile/views/reviews_screen.dart';
+import 'package:product_repository/product_repository.dart';
+import 'package:review_repository/review_repository.dart';
+
 import 'package:user_repository/user_repository.dart';
 
 class ProfileScreen extends StatefulWidget {
@@ -20,25 +31,12 @@ class ProfileScreen extends StatefulWidget {
 class _ProfileScreenState extends State<ProfileScreen>
     with TickerProviderStateMixin {
   late TabController tabController;
-  late List<Product> userProducts = [];
+
   @override
   void initState() {
     super.initState();
     tabController = TabController(initialIndex: 0, length: 2, vsync: this);
-    filterUserProducts(); // Filtrar os produtos do usuário
-  }
 
-  // Método para filtrar os produtos do usuário
-  Future<void> filterUserProducts() async {
-    try {
-      final productList = await widget.productRepo.getProducts();
-      final filteredProducts = productList.where((product) => product.userId == widget.user.userId).toList();
-      setState(() {
-        userProducts = filteredProducts; // Atualizar a lista de produtos no estado
-      });
-    } catch (e) {
-      // Trate os erros conforme necessário
-    }
   }
 
   @override
@@ -82,7 +80,8 @@ class _ProfileScreenState extends State<ProfileScreen>
                             widget.user.rating == 0.0
                                 ? 'No ratings yet'
                                 : 'Rating: ${widget.user.rating}',
-                            style: TextStyle(
+
+                            style: const TextStyle(
                               fontSize: 16,
                               fontWeight: FontWeight.bold,
                             ),
@@ -161,87 +160,38 @@ class _ProfileScreenState extends State<ProfileScreen>
                         ),
                       ),
                       Expanded(
-                          child: TabBarView(
-                        controller: tabController,
-                        children: [
-                          SizedBox(
-                              height: MediaQuery.of(context).size.height,
-                              child: ListView.builder(
-                                shrinkWrap: true,
-                                itemCount: userProducts.length,
-                                itemBuilder: (context, index) {
-                                  final product = userProducts[index];
-                                  return ListTile(
-                                    title: Text(product.title),
-                                    subtitle: Column(
-                                      crossAxisAlignment:
-                                          CrossAxisAlignment.start,
-                                      children: [
-                                        Text(product.description),
-                                      ],
-                                    ),
-                                    leading: Image.network(product.image),
-                                    onTap: () {
-                                      Navigator.push(
-                                        context,
-                                        MaterialPageRoute<void>(
-                                          builder: (BuildContext context) =>
-                                              DetailsScreen(product: product),
-                                        ),
-                                      );
-                                    },
-                                  );
-                                },
-                              )),
-                          Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              Center(
-                                child: Column(
-                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                  children: widget.user.reviews.map((review) {
-                                    return Container(
-                                      margin: const EdgeInsets.symmetric(
-                                          vertical: 5.0),
-                                      padding: const EdgeInsets.all(20.0),
-                                      width: 350,
-                                      decoration: BoxDecoration(
-                                        color: Colors.white,
-                                        boxShadow: [
-                                          BoxShadow(
-                                            color: Colors.grey.withOpacity(
-                                                0.5), // Cor da sombra
-                                            spreadRadius:
-                                                3, // Raio de propagação da sombra
-                                            blurRadius:
-                                                7, // Raio de desfoque da sombra
-                                            offset: const Offset(
-                                                0, 3), // Deslocamento da sombra
-                                          ),
-                                        ],
-                                        border: Border.all(color: Colors.grey),
-                                        borderRadius:
-                                            BorderRadius.circular(10.0),
-                                      ),
-                                      child: Column(
-                                        crossAxisAlignment:
-                                            CrossAxisAlignment.start,
-                                        children: [
-                                          Text('User: ${review['username']}'),
-                                          const SizedBox(
-                                              height:
-                                                  8), 
-                                          Text('${review['review']}'),
-                                        ],
-                                      ),
-                                    );
-                                  }).toList(),
+
+                        child: TabBarView(
+                          controller: tabController,
+                          children: [
+                            BlocProvider(
+                              create: (context) => GetUserProductsBloc(
+                                FirebaseProductRepo(),
+                              )..add(GetUserProducts(widget.user.userId)),
+                              child: const ProductsScreen(),
+                            ),
+                            MultiBlocProvider(
+                              providers: [
+                                BlocProvider(
+                                  create: (context) => GetReviewsBloc(
+                                    FirebaseReviewRepo(),
+                                    FirebaseUserRepo(),
+                                  )..add(GetReviews(widget.user.userId)),
                                 ),
+                                BlocProvider(
+                                  create: (context) => AddReviewBloc(
+                                    FirebaseReviewRepo(),
+                                  ),
+                                ),
+                              ],
+                              child: ReviewsScreen(
+                                toUserId: widget.user.userId,
                               ),
-                            ],
-                          )
-                        ],
-                      ))
+                            ),
+                          ],
+                        ),
+                      ),
+
                     ],
                   ),
                 ),
