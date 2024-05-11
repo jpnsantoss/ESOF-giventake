@@ -1,5 +1,6 @@
 import 'dart:typed_data';
 
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -212,6 +213,33 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                     border: OutlineInputBorder(),
                   ),
                 ),
+                SizedBox(height: 16.0),
+                TextFormField(
+                  controller: oldPasswordController,
+                    obscureText: obscurePassword,
+                    decoration: InputDecoration(
+                      labelText: 'Old Password',
+                      hintText: 'Enter old password',
+                      contentPadding: EdgeInsets.all(10),
+                      border: OutlineInputBorder(),
+                      prefixIcon: Icon(CupertinoIcons.lock_fill),
+                      suffixIcon: IconButton(
+                        onPressed: () {
+                          setState(() {
+                            obscurePassword = !obscurePassword;
+                            if (obscurePassword) {
+                              iconPassword = CupertinoIcons.eye_fill;
+                            } else {
+                              iconPassword = CupertinoIcons.eye_slash_fill;
+                            }
+                          });
+                        },
+                        icon: Icon(iconPassword),
+                      ),
+                    ),
+                    keyboardType: TextInputType.visiblePassword,
+                ),
+                
                 const SizedBox(height: 16.0),
                 TextFormField(
                   controller: newEmailController,
@@ -222,19 +250,9 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                     border: OutlineInputBorder(),
                   ),
                 ),
+                Text('--verification email will be send--'),
                 const SizedBox(height: 16.0),
-                 TextFormField(
-                  controller: oldPasswordController,
-                  obscureText: true, // Configura para mostrar bolinhas em vez de letras
-                  decoration: InputDecoration(
-                    labelText: 'Old Password',
-                    hintText: 'Enter old password',
-                    contentPadding: EdgeInsets.all(10),
-                    border: OutlineInputBorder(),
-                    prefixIcon: Icon(CupertinoIcons.lock_fill),
-                  ),
-                ),
-                SizedBox(height: 16.0),
+                 
                 SizedBox(
                   width: MediaQuery.of(context).size.width * 0.9,
                   child: TextFormField(
@@ -323,29 +341,59 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                   ),
                 ),
 
-                
-
-
-
-                ElevatedButton(
-                  onPressed: () async {
-                    
-                   changePassword(oldEmailController.text, newEmailController.text, oldPasswordController.text ,newPasswordController.text);
-                  
-                  },
-                  style: ButtonStyle(
-                    backgroundColor: MaterialStateProperty.all<Color>(Colors.black),
-                  ),
-                  child: const Padding(
-                    padding: EdgeInsets.symmetric(vertical: 16.0),
-                    child: Text(
-                      'Change password',
-                      style: TextStyle(
-                        color: Colors.white,
+                const SizedBox(height: 10),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(
+                        "⚈  1 uppercase",
+                        style: TextStyle(
+                            color: containsUpperCase
+                                ? Colors.green
+                                : Theme.of(context).colorScheme.onBackground),
                       ),
-                    ),
+                      Text(
+                        "⚈  1 lowercase",
+                        style: TextStyle(
+                            color: containsLowerCase
+                                ? Colors.green
+                                : Theme.of(context).colorScheme.onBackground),
+                      ),
+                      Text(
+                        "⚈  1 number",
+                        style: TextStyle(
+                            color: containsNumber
+                                ? Colors.green
+                                : Theme.of(context).colorScheme.onBackground),
+                      ),
+                    ],
                   ),
-                ),
+                  Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(
+                        "⚈  1 special character",
+                        style: TextStyle(
+                            color: containsSpecialChar
+                                ? Colors.green
+                                : Theme.of(context).colorScheme.onBackground),
+                      ),
+                      Text(
+                        "⚈  8 minimum character",
+                        style: TextStyle(
+                            color: contains8Length
+                                ? Colors.green
+                                : Theme.of(context).colorScheme.onBackground),
+                      ),
+                    ],
+                  ),
+                ],
+              ),
+
 
                 ElevatedButton(
                   onPressed: () {
@@ -358,6 +406,9 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                               photo,
                             ),
                           );
+
+                          changeEmailPassword(oldEmailController.text, newEmailController.text, oldPasswordController.text ,newPasswordController.text);
+                       
 
                           Navigator.of(context).pop(true);
                   
@@ -409,16 +460,33 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
 
   
 
-  void changePassword(oldEmail, newEmail, oldPassword, newPassword) async {
+  void changeEmailPassword(String oldEmail, String newEmail, String oldPassword, String newPassword) async {
+  try {
     var cred = EmailAuthProvider.credential(email: oldEmail, password: oldPassword);
 
-    await currentUser!.reauthenticateWithCredential(cred).then((value) {
-      currentUser!.updatePassword(newPassword);
-    }).catchError((error){
-      print(error.toString());
-    });
+    // Reautenticação do usuário
+    await currentUser!.reauthenticateWithCredential(cred);
 
-   
+    // Atualização do email, se necessário
+    if (newEmail.isNotEmpty && oldEmail != newEmail) {
+      await currentUser!.verifyBeforeUpdateEmail(newEmail);
+      await FirebaseFirestore.instance
+          .collection('users') // Substitua 'users' pelo nome da coleção onde os dados do usuário são armazenados
+          .doc(currentUser!.uid) // Supondo que você esteja usando o UID do usuário como identificador do documento
+          .update({'email': newEmail}); // Atualiza o campo de e-mail no Firestore
+    }
+
+    // Atualização da senha, se necessário
+    if (newPassword.isNotEmpty && oldPassword != newPassword) {
+      await currentUser!.updatePassword(newPassword);
+    }
+
+    print('Atualização bem-sucedida.');
+
+  } catch (error) {
+    print('Erro ao atualizar: $error');
   }
+}
+
 
 } 
