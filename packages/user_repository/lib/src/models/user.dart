@@ -1,6 +1,7 @@
 import 'package:equatable/equatable.dart';
 import '../entities/entities.dart';
 
+
 class MyUser extends Equatable {
   final String userId;
   final String email;
@@ -70,6 +71,7 @@ class MyUser extends Equatable {
         bio: entity.bio,
         rating: entity.rating,
         image: entity.image);
+
   }
 
   @override

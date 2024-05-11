@@ -9,6 +9,7 @@ class MyUserEntity extends Equatable {
   final num rating;
   final String image;
 
+
   const MyUserEntity({
     required this.userId,
     required this.email,
@@ -19,15 +20,18 @@ class MyUserEntity extends Equatable {
     required this.image,
   });
 
+
   Map<String, Object?> toDocument() {
     return {
       'userId': userId,
       'email': email,
       'name': name,
       'reviews': reviews,
+
       'bio': bio,
       'rating': rating,
       'image': image,
+
     };
   }
 
@@ -37,6 +41,7 @@ class MyUserEntity extends Equatable {
       return Map<String, String>.from(review);
     }).toList();
     return MyUserEntity(
+
       userId: doc['userId'] ?? '',
       email: doc['email'] ?? '',
       name: doc['name'] ?? '',
@@ -46,6 +51,7 @@ class MyUserEntity extends Equatable {
       image: doc['image'] ??
           'https://upload.wikimedia.org/wikipedia/commons/thumb/2/2c/Default_pfp.svg/2048px-Default_pfp.svg.png',
     );
+
   }
 
   @override

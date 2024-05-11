@@ -13,4 +13,5 @@ abstract class UserRepository {
   Future<MyUser> getUser(String userId);
 
   Future<void> signOut();
+  
 }

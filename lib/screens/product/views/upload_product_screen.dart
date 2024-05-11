@@ -1,11 +1,9 @@
 import 'dart:typed_data';
 
-import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:firebase_auth/firebase_auth.dart';
-import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:giventake/screens/product/blocs/bloc/upload_product_bloc.dart';
 import 'package:image_picker/image_picker.dart';
-import 'package:uuid/uuid.dart';
 
 class ProductUploadScreen extends StatefulWidget {
   const ProductUploadScreen({super.key});
@@ -15,12 +13,20 @@ class ProductUploadScreen extends StatefulWidget {
 }
 
 class _ProductUploadScreenState extends State<ProductUploadScreen> {
+  
   final TextEditingController productTitleController = TextEditingController();
   final TextEditingController productDescriptionController =
       TextEditingController();
   final TextEditingController productLocationController =
       TextEditingController();
   final TextEditingController productImageController = TextEditingController();
+
+
+  @override
+  void initState() {
+    super.initState();
+  }
+
 
   @override
   void dispose() {
@@ -33,9 +39,16 @@ class _ProductUploadScreenState extends State<ProductUploadScreen> {
   Uint8List? photo;
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(),
-      body: Center(
+    return BlocProvider(
+      create: (context) => UploadProductBloc(),
+    child: Scaffold(
+      appBar: AppBar(
+        title: Text('Upload product'),
+      ),
+      body: BlocBuilder<UploadProductBloc, UploadProductState>(
+        builder: (context, state) {
+          return SingleChildScrollView(
+      child: Center(
         child: Padding(
           padding: const EdgeInsets.all(16.0),
           child: Column(
@@ -50,7 +63,7 @@ class _ProductUploadScreenState extends State<ProductUploadScreen> {
               ),
               const SizedBox(height: 30.0),
               GestureDetector(
-                onTap: selectImage,
+                onTap: selectImage, /*(){context.read<UploadProductBloc>().add(PickImageEvent(ImageSource.gallery));},*/
                 child: Container(
                   width: 200,
                   height: 200,
@@ -124,16 +137,17 @@ class _ProductUploadScreenState extends State<ProductUploadScreen> {
               const SizedBox(height: 16.0),
               ElevatedButton(
                 onPressed: () {
-                  saveProduct().then((result) {
-                    if (result == 'sucess') {
-                      Navigator.of(context).pop(true);
-                    }
-                  });
+                  context.read<UploadProductBloc>().add(
+                            UploadNewProductEvent(
+                              
+                              productDescriptionController.text,
+                              productLocationController.text,
+                              productTitleController.text,
+                              photo,
+                            ),
+                          );
 
-                  /*Navigator.of(context).push(MaterialPageRoute(
-            builder: (context) => HomeScreen(),
-          ));*/
-                  //Navigator.of(context).pop(true);
+                          Navigator.of(context).pop(true);
                 },
                 style: ButtonStyle(
                   backgroundColor:
@@ -154,6 +168,10 @@ class _ProductUploadScreenState extends State<ProductUploadScreen> {
         ),
       ),
     );
+          }
+      ),
+    ),
+    );
   }
 
   pickImage(ImageSource source) async {
@@ -162,9 +180,10 @@ class _ProductUploadScreenState extends State<ProductUploadScreen> {
     if (file != null) {
       return await file.readAsBytes();
     }
-    const Text('No image selected');
-  }
 
+    const Text('No image selected');
+
+  }
   void selectImage() async {
     Uint8List file = await pickImage(ImageSource.gallery);
     setState(() {
@@ -172,63 +191,4 @@ class _ProductUploadScreenState extends State<ProductUploadScreen> {
     });
   }
 
-  Future<String> saveProduct() async {
-    String title = productTitleController.text;
-    String location = productLocationController.text;
-    String description = productDescriptionController.text;
-
-    String resp = await saveProductToFirestore(
-        title: title,
-        location: location,
-        description: description,
-        file: photo!);
-    return resp;
-  }
-
-  final FirebaseStorage _storage = FirebaseStorage.instance;
-  final FirebaseFirestore _firestore = FirebaseFirestore.instance;
-
-  Future<String> uploadImageToStorage(String imagePath, Uint8List file) async {
-    Reference ref = _storage.ref().child(imagePath);
-    UploadTask uploadTask = ref.putData(file);
-    TaskSnapshot snapshot = await uploadTask;
-    String downloadUrl = await snapshot.ref.getDownloadURL();
-    return downloadUrl;
-  }
-
-  Future<String> saveProductToFirestore(
-      {required String title,
-      required String location,
-      required String description,
-      required Uint8List file}) async {
-    String res = "Some error occurred";
-    try {
-      String userId = FirebaseAuth.instance.currentUser?.uid ?? '';
-
-      String id = const Uuid().v4();
-      String imageName = 'productImage_$id';
-      DateTime createdAt = DateTime.now();
-
-      if (title.isNotEmpty ||
-          location.isNotEmpty ||
-          description.isNotEmpty ||
-          file.isNotEmpty) {
-        String imageUrl = await uploadImageToStorage(imageName, file);
-        await _firestore.collection('products').add({
-          'id': id,
-          'userId': userId,
-          'title': title,
-          'location': location,
-          'description': description,
-          'image': imageUrl,
-          'createdAt': createdAt,
-        });
-
-        res = 'sucess';
-      }
-    } catch (err) {
-      res = err.toString();
-    }
-    return res;
-  }
 }

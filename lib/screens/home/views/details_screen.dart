@@ -1,6 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:giventake/screens/profile/blocs/get_user_products/get_user_products_bloc.dart';
 import 'package:giventake/screens/profile/views/profile_screen.dart';
@@ -75,6 +76,7 @@ class _DetailsScreenState extends State<DetailsScreen> {
                           color: Theme.of(context).colorScheme.onTertiary,
                         ),
                       ),
+
                       const SizedBox(height: 24.0),
                       Row(
                         children: [
