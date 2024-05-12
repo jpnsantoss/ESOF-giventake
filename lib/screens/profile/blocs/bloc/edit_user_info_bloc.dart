@@ -44,7 +44,7 @@ class EditUserInfoBloc
           // Atualize os dados do usuário no Firestore
           await FirebaseFirestore.instance.collection('users').doc(userId).update({
             'name': name,
-            'email': user.email,
+            
             'bio': bio,
             'image': imageUrl, 
           });

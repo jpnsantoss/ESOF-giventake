@@ -1,5 +1,7 @@
 import 'package:bloc/bloc.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:equatable/equatable.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:user_repository/user_repository.dart';
 
 part 'sign_in_event.dart';
@@ -7,6 +9,7 @@ part 'sign_in_state.dart';
 
 class SignInBloc extends Bloc<SignInEvent, SignInState> {
   final UserRepository _userRepository;
+  
 
   SignInBloc(
     this._userRepository,
@@ -14,7 +17,11 @@ class SignInBloc extends Bloc<SignInEvent, SignInState> {
     on<SignInRequired>((event, emit) async {
       emit(SignInProcess());
       try {
+       
+
         await _userRepository.signIn(event.email, event.password);
+
+        
       } catch (e) {
         emit(SignInFailure());
       }
