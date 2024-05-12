@@ -236,6 +236,12 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                     contentPadding: EdgeInsets.all(10),
                     border: OutlineInputBorder(),
                   ),
+                  validator: (value) {
+                    if (value == null || value.isEmpty) {
+                      return 'Old email is required';
+                    }
+                    return null;
+                  },
                 ),
                 SizedBox(height: 16.0),
                 TextFormField(
@@ -261,6 +267,12 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                         icon: Icon(iconPassword),
                       ),
                     ),
+                    validator: (value) {
+                      if (value == null || value.isEmpty) {
+                        return 'Old email is required';
+                      }
+                      return null;
+                    },
                     keyboardType: TextInputType.visiblePassword,
                 ),
                 
