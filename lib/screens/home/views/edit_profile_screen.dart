@@ -73,7 +73,9 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
   bool contains8Length = false;
 
 
-  
+  var auth = FirebaseAuth.instance;
+  var currentUser = FirebaseAuth.instance.currentUser;
+
   @override
   void dispose() {
     userNameController.dispose();
@@ -161,7 +163,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                                             ),
                                             textAlign: TextAlign.left,),
                                              const SizedBox(height: 4),
-                                             Text('Email: ${widget.user.email}',
+                                             Text('Email: ${currentUser!.email}',
                                              style: TextStyle(
                                               fontSize: 16.0,
                                               fontWeight: FontWeight.bold,
@@ -418,7 +420,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
 
 
                 ElevatedButton(
-                  onPressed: () {
+                  onPressed: () async {
                     
                     context.read<EditUserInfoBloc>().add(
                             UpdateUserInfoEvent(
@@ -429,10 +431,19 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                             ),
                           );
 
-                          changeEmailPassword(oldEmailController.text, newEmailController.text, oldPasswordController.text ,newPasswordController.text);
-                       
-
+                          var success =await changeEmailPassword(oldEmailController.text, newEmailController.text, oldPasswordController.text ,newPasswordController.text);
+                       if (success) {
+                        ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+                            content: Text('Atualização bem-sucedida.'),
+                          ));
                           Navigator.of(context).pop(true);
+                        } else {
+                          ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+                            content: Text('Falha ao atualizar. Verifique o email antigo ou a senha antiga.'),
+                          ));
+                        }
+
+                          
                   
                   },
                   style: ButtonStyle(
@@ -638,42 +649,55 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
     });
   }
 
-  var auth = FirebaseAuth.instance;
-  var currentUser = FirebaseAuth.instance.currentUser;
+  
 
   
 
- void changeEmailPassword(String oldEmail, String newEmail, String oldPassword, String newPassword) async {
+Future<bool> changeEmailPassword(String oldEmail, String newEmail, String oldPassword, String newPassword) async {
   try {
     var cred = EmailAuthProvider.credential(email: oldEmail, password: oldPassword);
 
     // Reautenticação do usuário
     await currentUser!.reauthenticateWithCredential(cred);
 
-    // Atualização do email, se necessário
-    if (newEmail.isNotEmpty && oldEmail != newEmail) {
-      await currentUser!.verifyBeforeUpdateEmail(newEmail);
+    // Verificação de sucesso da reautenticação
+    if (currentUser!.email == oldEmail) {
+      // Atualização do email, se necessário
+      if (newEmail.isNotEmpty && oldEmail != newEmail) {
+        await currentUser!.verifyBeforeUpdateEmail(newEmail);
 
-      // Aguarda a verificação antes de atualizar no Firestore
-      await currentUser!.reload(); // Atualiza os dados do usuário
-      if (currentUser!.email == newEmail) {
-        // Atualiza no Firestore apenas se o novo email estiver verificado
-        await FirebaseFirestore.instance
-          .collection('users')
-          .doc(currentUser!.uid)
-          .update({'email': newEmail});
+        // Aguarda a verificação antes de atualizar no Firestore
+        await currentUser!.reload(); // Atualiza os dados do usuário
+        if (currentUser!.email == newEmail) {
+          // Atualiza no Firestore apenas se o novo email estiver verificado
+          await FirebaseFirestore.instance
+              .collection('users')
+              .doc(currentUser!.uid)
+              .update({'email': newEmail});
+        }
       }
-    }
 
-    // Atualização da senha, se necessário
-    if (newPassword.isNotEmpty && oldPassword != newPassword) {
-      await currentUser!.updatePassword(newPassword);
-    }
+      // Atualização da senha, se necessário
+      if (newPassword.isNotEmpty && oldPassword != newPassword) {
+        await currentUser!.updatePassword(newPassword);
+      }
 
-    print('Atualização bem-sucedida.');
+       ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+        content: Text('Atualização bem-sucedida.'),
+      ));
+      return true;
+    } else {
+      ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+        content: Text('Erro: O email antigo ou a senha antiga estão incorretos.'),
+      ));
+      return false;
+    }
 
   } catch (error) {
-    print('Erro ao atualizar: $error');
+    ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+      content: Text('Erro ao atualizar: $error'),
+    ));
+    return false;
   }
 }
 
