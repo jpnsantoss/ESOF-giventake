@@ -3,7 +3,7 @@ import 'dart:developer';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:user_repository/user_repository.dart';
-import 'package:review_repository/request_repository.dart'; // Import ReviewRepo
+import 'package:review_repository/review_repository.dart'; // Import ReviewRepo
 
 class FirebaseUserRepo implements UserRepository {
   final FirebaseAuth _firebaseAuth;
@@ -76,7 +76,6 @@ class FirebaseUserRepo implements UserRepository {
 
       List<Review> reviews = reviewsSnapshot.docs.map((doc) {
         return Review(
-          id: doc.id,
           fromUserId: doc['fromId'],
           toUserId: doc['toId'],
           comment: doc['comment'],
