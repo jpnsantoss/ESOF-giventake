@@ -682,21 +682,15 @@ Future<bool> changeEmailPassword(String oldEmail, String newEmail, String oldPas
         await currentUser!.updatePassword(newPassword);
       }
 
-       ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-        content: Text('Atualização bem-sucedida.'),
-      ));
+      
       return true;
     } else {
-      ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-        content: Text('Erro: O email antigo ou a senha antiga estão incorretos.'),
-      ));
+      
       return false;
     }
 
   } catch (error) {
-    ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-      content: Text('Erro ao atualizar: $error'),
-    ));
+    
     return false;
   }
 }

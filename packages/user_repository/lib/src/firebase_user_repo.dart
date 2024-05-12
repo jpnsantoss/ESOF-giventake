@@ -24,6 +24,17 @@ class FirebaseUserRepo implements UserRepository {
     try {
       await _firebaseAuth.signInWithEmailAndPassword(
           email: email, password: password);
+
+      final FirebaseAuth auth = FirebaseAuth.instance;
+        final user = auth.currentUser;
+        String userId = user!.uid;
+        MyUser currentUser = await FirebaseUserRepo().getUser(userId);
+        
+          await FirebaseFirestore.instance
+              .collection('users')
+              .doc(user!.uid)
+              .update({'email': user.email});
+
     } catch (e) {
       log(e.toString());
       rethrow;
