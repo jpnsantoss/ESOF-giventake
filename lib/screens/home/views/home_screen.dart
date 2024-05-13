@@ -41,12 +41,20 @@ class _HomeScreenState extends State<HomeScreen> {
             );
           })),
           actions: [
-            IconButton(
-              onPressed: () {
-                context.read<SignInBloc>().add(SignOutRequired());
-              },
-              icon: const Icon(CupertinoIcons.arrow_right_to_line),
-            ),
+           IconButton(
+               // heroTag: 'btn1',
+                onPressed: () async {
+                  final FirebaseAuth auth = FirebaseAuth.instance;
+                  final user = auth.currentUser;
+                  String userId = user!.uid;
+                  MyUser currentUser = await FirebaseUserRepo().getUser(userId);
+
+                  final result =await Navigator.of(context).push(MaterialPageRoute(
+                  builder: (context) => EditProfileScreen(userId: userId, user: MyUserEntity(userId: userId, email: currentUser.email, name: currentUser.name, reviews: currentUser.reviews, rating: currentUser.rating, bio: currentUser.bio, image: currentUser.image,   )),
+          ));
+                },
+                icon: const Icon(Icons.person),
+              ),
           ],
         ),
         body: BlocBuilder<GetProductBloc, GetProductState>(
@@ -88,33 +96,10 @@ class _HomeScreenState extends State<HomeScreen> {
             mainAxisAlignment:
                 MainAxisAlignment.spaceBetween, // Alinha o botão à direita
             children: [
-              FloatingActionButton(
-                heroTag: 'btn1',
-                onPressed: () async {
-                  final FirebaseAuth auth = FirebaseAuth.instance;
-                  final user = auth.currentUser;
-                  String userId = user!.uid;
-                  MyUser currentUser = await FirebaseUserRepo().getUser(userId);
-
-                  await Navigator.of(context).push(MaterialPageRoute(
-                    builder: (context) => EditProfileScreen(
-                        userId: userId,
-                        user: MyUserEntity(
-                          userId: userId,
-                          email: currentUser.email,
-                          name: currentUser.name,
-                          reviews: currentUser.reviews,
-                          rating: currentUser.rating,
-                          bio: currentUser.bio,
-                          image: currentUser.image,
-                        )),
-                  ));
-                },
-                child: const Icon(Icons.person),
-              ),
+              
               const Spacer(), // Espaçamento entre os botões
               FloatingActionButton(
-                heroTag: 'btn2',
+                //heroTag: 'btn2',
                 onPressed: () async {
                   final result =
                       await Navigator.of(context).push(MaterialPageRoute(

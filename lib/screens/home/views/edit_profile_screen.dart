@@ -5,6 +5,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:giventake/screens/auth/views/welcome_screen.dart';
 import 'package:giventake/screens/profile/blocs/bloc/edit_user_info_bloc.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:product_repository/product_repository.dart';
@@ -81,6 +82,8 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
   }
 
   Uint8List? photo;
+  late final FirebaseAuth _firebaseAuth = FirebaseAuth.instance;
+
 
   @override
   Widget build(BuildContext context) {
@@ -89,6 +92,22 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
       child: Scaffold(
         appBar: AppBar(
           title: const Text('Edit Profile'),
+          actions: [
+            IconButton(
+              onPressed: () async {
+                await _firebaseAuth.signOut();
+                Navigator.push(
+                        context,
+                        MaterialPageRoute<void>(
+                          builder: (BuildContext context) =>
+                              WelcomeScreen(),
+                        ),
+                      );
+              },
+
+              icon: const Icon(CupertinoIcons.arrow_right_to_line),
+            ),
+          ],
         ),
         body: BlocBuilder<EditUserInfoBloc, EditUserInfoState>(
           builder: (context, state) {
