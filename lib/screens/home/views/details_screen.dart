@@ -13,14 +13,15 @@ import 'package:uuid/uuid.dart';
 class DetailsScreen extends StatefulWidget {
   final Product product;
 
-  DetailsScreen({
+  const DetailsScreen({
     super.key,
     required this.product,
   });
 
   @override
-  _DetailsScreenState createState() => _DetailsScreenState();
+  State<DetailsScreen> createState() => _DetailsScreenState();
 }
+
 class _DetailsScreenState extends State<DetailsScreen> {
   late Product product;
   late List<Review> reviews = [];
@@ -38,7 +39,8 @@ class _DetailsScreenState extends State<DetailsScreen> {
       reviews = await reviewRepo.getReviews(userId);
       setState(() {}); // Update the UI after fetching reviews
     } catch (e) {
-      print("Error fetching user reviews: $e");
+      // ignore: avoid_print
+      print(e);
     }
   }
 
@@ -76,7 +78,6 @@ class _DetailsScreenState extends State<DetailsScreen> {
                           color: Theme.of(context).colorScheme.onTertiary,
                         ),
                       ),
-
                       const SizedBox(height: 24.0),
                       Row(
                         children: [
@@ -86,7 +87,8 @@ class _DetailsScreenState extends State<DetailsScreen> {
                               Navigator.push(
                                 context,
                                 MaterialPageRoute<void>(
-                                  builder: (BuildContext context) => BlocProvider(
+                                  builder: (BuildContext context) =>
+                                      BlocProvider(
                                     create: (context) => GetUserProductsBloc(
                                         FirebaseProductRepo()),
                                     child: ProfileScreen(
@@ -108,10 +110,11 @@ class _DetailsScreenState extends State<DetailsScreen> {
                             child: Row(
                               children: [
                                 CircleAvatar(
-                                  backgroundImage: NetworkImage(widget.product.user!.image),
+                                  backgroundImage:
+                                      NetworkImage(widget.product.user!.image),
                                   radius: 20,
                                 ),
-                                SizedBox(width: 10),
+                                const SizedBox(width: 10),
                                 Column(
                                   crossAxisAlignment: CrossAxisAlignment.start,
                                   children: [
@@ -125,19 +128,19 @@ class _DetailsScreenState extends State<DetailsScreen> {
                                     Row(
                                       children: [
                                         _buildRatingStars(product.user!.rating),
-                                        SizedBox(width: 5),
+                                        const SizedBox(width: 5),
                                         Text(
                                           '(${reviews.length} reviews)',
-                                          style: TextStyle(
+                                          style: const TextStyle(
                                             color: Colors.grey,
                                           ),
                                         ),
                                       ],
                                     ),
-                                    SizedBox(height: 5),
+                                    const SizedBox(height: 5),
                                     Text(
                                       'added ${timeDiff(widget.product.createdAt)} ago',
-                                      style: TextStyle(
+                                      style: const TextStyle(
                                         color: Colors.grey,
                                       ),
                                     ),
@@ -218,23 +221,23 @@ class _DetailsScreenState extends State<DetailsScreen> {
 
     // Add filled stars
     for (int i = 0; i < filledStars; i++) {
-      starIcons.add(Icon(Icons.star, color: Colors.yellow));
+      starIcons.add(const Icon(Icons.star, color: Colors.yellow));
     }
 
     // Add half star if necessary
     if (hasHalfStar) {
-      starIcons.add(Icon(Icons.star_half, color: Colors.yellow));
+      starIcons.add(const Icon(Icons.star_half, color: Colors.yellow));
     }
 
     // Add remaining empty stars
     for (int i = starIcons.length; i < 5; i++) {
-      starIcons.add(Icon(Icons.star_border, color: Colors.yellow));
+      starIcons.add(const Icon(Icons.star_border, color: Colors.yellow));
     }
 
     // Widget to display the rating
     Widget ratingText = Text(
       rating.toString(),
-      style: TextStyle(fontSize: 16),
+      style: const TextStyle(fontSize: 16),
     );
 
     // Return a Row containing the star icons and the rating
@@ -244,7 +247,7 @@ class _DetailsScreenState extends State<DetailsScreen> {
         Row(
           children: starIcons,
         ),
-        SizedBox(width: 5), // Spacer between stars and rating
+        const SizedBox(width: 5), // Spacer between stars and rating
         ratingText,
       ],
     );
@@ -305,5 +308,4 @@ class _DetailsScreenState extends State<DetailsScreen> {
       return '${difference.inDays} days';
     }
   }
-
 }

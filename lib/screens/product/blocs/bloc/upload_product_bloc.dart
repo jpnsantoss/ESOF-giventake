@@ -5,49 +5,43 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:equatable/equatable.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_storage/firebase_storage.dart';
-import 'package:image_picker/image_picker.dart';
-import 'package:product_repository/product_repository.dart';
-import 'package:user_repository/user_repository.dart';
 import 'package:uuid/uuid.dart';
 
 part 'upload_product_event.dart';
 part 'upload_product_state.dart';
 
 class UploadProductBloc extends Bloc<UploadProductEvent, UploadProductState> {
-  final ImagePicker _picker = ImagePicker();
   final FirebaseStorage _storage = FirebaseStorage.instance;
   final FirebaseFirestore _firestore = FirebaseFirestore.instance;
-  final FirebaseAuth _firebaseAuth = FirebaseAuth.instance;
-  
 
   UploadProductBloc() : super(UploadProductInitial()) {
     on<UploadNewProductEvent>((event, emit) async {
       emit(UploadProductProcess());
-      try{
-        
-          
-          String title = event.title;
-          String location = event.location;
-          String description = event.descrition;
-          Uint8List? photo = event.photo;
+      try {
+        String title = event.title;
+        String location = event.location;
+        String description = event.descrition;
+        Uint8List? photo = event.photo;
 
-          String resp = await saveProductToFirestore(
-              title: title,
-              location: location,
-              description: description,
-              file: photo!);
-          if(resp == 'sucess'){
-            emit( UploadProductSuccess());
-            }
-          }
-          catch(error){
-            emit(UploadProductFailure());
-          }
+        String resp = await saveProductToFirestore(
+            title: title,
+            location: location,
+            description: description,
+            file: photo!);
+        if (resp == 'sucess') {
+          emit(UploadProductSuccess());
+        }
+      } catch (error) {
+        emit(UploadProductFailure());
+      }
     });
   }
-  
-  Future<String> saveProductToFirestore({required String title, required String location, required String description, required Uint8List file}) async {
-    
+
+  Future<String> saveProductToFirestore(
+      {required String title,
+      required String location,
+      required String description,
+      required Uint8List file}) async {
     String res = "Some error occurred";
     try {
       String userId = FirebaseAuth.instance.currentUser?.uid ?? '';
@@ -75,7 +69,6 @@ class UploadProductBloc extends Bloc<UploadProductEvent, UploadProductState> {
       res = err.toString();
     }
     return res;
-  
   }
 
   Future<String> uploadImageToStorage(String imagePath, Uint8List file) async {

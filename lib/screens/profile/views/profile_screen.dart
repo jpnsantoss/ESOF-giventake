@@ -1,8 +1,4 @@
 import 'package:flutter/material.dart';
-
-import 'package:giventake/screens/home/views/details_screen.dart';
-import 'package:product_repository/product_repository.dart';
-
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:giventake/screens/profile/blocs/add_review_bloc/add_review_bloc.dart';
 import 'package:giventake/screens/profile/blocs/get_reviews/get_reviews_bloc.dart';
@@ -11,7 +7,6 @@ import 'package:giventake/screens/profile/views/products_screen.dart';
 import 'package:giventake/screens/profile/views/reviews_screen.dart';
 import 'package:product_repository/product_repository.dart';
 import 'package:review_repository/review_repository.dart';
-
 import 'package:user_repository/user_repository.dart';
 
 class ProfileScreen extends StatefulWidget {
@@ -36,7 +31,6 @@ class _ProfileScreenState extends State<ProfileScreen>
   void initState() {
     super.initState();
     tabController = TabController(initialIndex: 0, length: 2, vsync: this);
-
   }
 
   @override
@@ -80,7 +74,6 @@ class _ProfileScreenState extends State<ProfileScreen>
                             widget.user.rating == 0.0
                                 ? 'No ratings yet'
                                 : 'Rating: ${widget.user.rating}',
-
                             style: const TextStyle(
                               fontSize: 16,
                               fontWeight: FontWeight.bold,
@@ -160,7 +153,6 @@ class _ProfileScreenState extends State<ProfileScreen>
                         ),
                       ),
                       Expanded(
-
                         child: TabBarView(
                           controller: tabController,
                           children: [
@@ -191,7 +183,6 @@ class _ProfileScreenState extends State<ProfileScreen>
                           ],
                         ),
                       ),
-
                     ],
                   ),
                 ),
