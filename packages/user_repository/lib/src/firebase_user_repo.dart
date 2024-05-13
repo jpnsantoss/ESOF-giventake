@@ -2,8 +2,8 @@ import 'dart:developer';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:user_repository/user_repository.dart';
 import 'package:review_repository/review_repository.dart'; // Import ReviewRepo
+import 'package:user_repository/user_repository.dart';
 
 class FirebaseUserRepo implements UserRepository {
   final FirebaseAuth _firebaseAuth;
@@ -12,7 +12,7 @@ class FirebaseUserRepo implements UserRepository {
 
   FirebaseUserRepo({
     FirebaseAuth? firebaseAuth,
-  })  : _firebaseAuth = firebaseAuth ?? FirebaseAuth.instance;
+  }) : _firebaseAuth = firebaseAuth ?? FirebaseAuth.instance;
   @override
   Stream<User?> get user {
     return _firebaseAuth.authStateChanges().map((firebaseUser) {
@@ -27,15 +27,14 @@ class FirebaseUserRepo implements UserRepository {
           email: email, password: password);
 
       final FirebaseAuth auth = FirebaseAuth.instance;
-        final user = auth.currentUser;
-        String userId = user!.uid;
-        MyUser currentUser = await FirebaseUserRepo().getUser(userId);
-        
-          await FirebaseFirestore.instance
-              .collection('users')
-              .doc(user!.uid)
-              .update({'email': user.email});
+      final user = auth.currentUser;
+      String userId = user!.uid;
+      await FirebaseUserRepo().getUser(userId);
 
+      await FirebaseFirestore.instance
+          .collection('users')
+          .doc(user.uid)
+          .update({'email': user.email});
     } catch (e) {
       log(e.toString());
       rethrow;
@@ -81,9 +80,8 @@ class FirebaseUserRepo implements UserRepository {
           MyUser.fromEntity(MyUserEntity.fromDocument(value.data()!)));
 
       // Fetch reviews for the user directly from the reviews collection
-      QuerySnapshot reviewsSnapshot = await reviewsCollection
-          .where('toId', isEqualTo: userId)
-          .get();
+      QuerySnapshot reviewsSnapshot =
+          await reviewsCollection.where('toId', isEqualTo: userId).get();
 
       List<Review> reviews = reviewsSnapshot.docs.map((doc) {
         return Review(

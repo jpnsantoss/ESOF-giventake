@@ -9,7 +9,6 @@ import 'package:giventake/screens/home/views/edit_profile_screen.dart';
 import 'package:giventake/screens/product/views/upload_product_screen.dart';
 import 'package:user_repository/user_repository.dart';
 
-
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
 
@@ -97,9 +96,19 @@ class _HomeScreenState extends State<HomeScreen> {
                   String userId = user!.uid;
                   MyUser currentUser = await FirebaseUserRepo().getUser(userId);
 
-                  final result =await Navigator.of(context).push(MaterialPageRoute(
-                  builder: (context) => EditProfileScreen(userId: userId, user: MyUserEntity(userId: userId, email: currentUser.email, name: currentUser.name, reviews: currentUser.reviews, rating: currentUser.rating, bio: currentUser.bio, image: currentUser.image,   )),
-          ));
+                  await Navigator.of(context).push(MaterialPageRoute(
+                    builder: (context) => EditProfileScreen(
+                        userId: userId,
+                        user: MyUserEntity(
+                          userId: userId,
+                          email: currentUser.email,
+                          name: currentUser.name,
+                          reviews: currentUser.reviews,
+                          rating: currentUser.rating,
+                          bio: currentUser.bio,
+                          image: currentUser.image,
+                        )),
+                  ));
                 },
                 child: const Icon(Icons.person),
               ),
@@ -120,8 +129,6 @@ class _HomeScreenState extends State<HomeScreen> {
               ),
             ],
           ),
-
         ));
   }
 }
-      

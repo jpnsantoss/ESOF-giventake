@@ -9,6 +9,8 @@ environment:
 dependencies:
   flutter:
     sdk: flutter
+  review_repository:
+    path: ../review_repository
   firebase_storage: ^11.6.9
   image_picker: ^1.0.8
   equatable: ^2.0.5
