@@ -55,7 +55,7 @@ class _HomeScreenState extends State<HomeScreen> {
         ],
       ),
       body: Padding(
-        padding: const EdgeInsets.all(20.0),
+        padding: const EdgeInsets.all(24.0),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
@@ -105,28 +105,141 @@ class _HomeScreenState extends State<HomeScreen> {
                 ),
               ],
             ),
+            const SizedBox(height: 20), // give it some space
             Expanded(
               child: BlocBuilder<GetProductBloc, GetProductState>(
                 builder: (context, state) {
                   if (state is GetProductSuccess) {
-                    return ListView.builder(
+                    return ListView.separated(
                       itemCount: state.products.length,
                       itemBuilder: (context, index) {
-                        return ListTile(
-                          title: Text(state.products[index].title),
-                          subtitle: Text(state.products[index].description),
-                          //leading: Image.network(state.products[index].image),
-                          onTap: () {
-                            Navigator.push(
-                              context,
-                              MaterialPageRoute<void>(
-                                builder: (BuildContext context) =>
-                                    DetailsScreen(
-                                        product: state.products[index]),
+                        return Container(
+                          decoration: BoxDecoration(
+                            color: Colors.white,
+                            borderRadius: BorderRadius.circular(10),
+                            boxShadow: [
+                              BoxShadow(
+                                color: Colors.grey.withOpacity(0.5),
+                                spreadRadius: 1,
+                                blurRadius: 7,
+                                offset: const Offset(0, 3),
                               ),
-                            );
-                          },
+                            ],
+                          ),
+                          padding: const EdgeInsets.all(10),
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Container(
+                                decoration: BoxDecoration(
+                                  borderRadius: BorderRadius.circular(10),
+                                ),
+                                height: 250,
+                                width: double.infinity,
+                                child: ClipRRect(
+                                  borderRadius: BorderRadius.circular(6),
+                                  child: Image.network(
+                                    state.products[index].image,
+                                    fit: BoxFit.cover,
+                                  ),
+                                ),
+                              ),
+                              const SizedBox(height: 10),
+                              Text(
+                                state.products[index].title,
+                                style: const TextStyle(
+                                  fontWeight: FontWeight.bold,
+                                  fontSize: 20,
+                                ),
+                              ),
+                              Text(
+                                state.products[index].location,
+                                style: const TextStyle(
+                                  fontWeight: FontWeight.bold,
+                                  fontSize: 14,
+                                  color: Colors.grey,
+                                ),
+                              ),
+                              const SizedBox(height: 10),
+                              Row(
+                                mainAxisAlignment:
+                                    MainAxisAlignment.spaceBetween,
+                                children: [
+                                  Row(
+                                    children: [
+                                      Container(
+                                        width:
+                                            50, // adjust these values as needed
+                                        height: 50,
+                                        decoration: BoxDecoration(
+                                          image: DecorationImage(
+                                            image: NetworkImage(state
+                                                .products[index].user!.image),
+                                            fit: BoxFit.cover,
+                                          ),
+                                          borderRadius: BorderRadius.circular(
+                                              5), // adjust this value to change the roundness of the corners
+                                        ),
+                                      ),
+                                      const SizedBox(width: 10),
+                                      Column(
+                                        crossAxisAlignment:
+                                            CrossAxisAlignment.start,
+                                        children: [
+                                          Text(
+                                            state.products[index].user!.name,
+                                            style: const TextStyle(
+                                              color: Colors.black,
+                                              fontSize: 16,
+                                            ),
+                                          ),
+                                          Row(
+                                            children: [
+                                              const Icon(
+                                                Icons.star,
+                                                color: Colors.yellow,
+                                              ),
+                                              Text(state
+                                                  .products[index].user!.rating
+                                                  .toString()),
+                                              const SizedBox(width: 5),
+                                            ],
+                                          ),
+                                          const SizedBox(height: 5),
+                                        ],
+                                      ),
+                                    ],
+                                  ),
+                                  const SizedBox(width: 10),
+                                  ElevatedButton(
+                                    onPressed: () async {
+                                      Navigator.push(
+                                        context,
+                                        MaterialPageRoute(
+                                          builder: (context) => DetailsScreen(
+                                            product: state.products[index],
+                                          ),
+                                        ),
+                                      );
+                                    },
+                                    style: ElevatedButton.styleFrom(
+                                      backgroundColor: Colors.black,
+                                      foregroundColor: Colors.white,
+                                      shape: RoundedRectangleBorder(
+                                        borderRadius: BorderRadius.circular(10),
+                                      ),
+                                    ),
+                                    child: const Text("See Details"),
+                                  ),
+                                ],
+                              ),
+                            ],
+                          ),
                         );
+                      },
+                      separatorBuilder: (context, index) {
+                        return const SizedBox(
+                            height: 20); // adjust the height as needed
                       },
                     );
                   } else if (state is GetProductProcess) {
