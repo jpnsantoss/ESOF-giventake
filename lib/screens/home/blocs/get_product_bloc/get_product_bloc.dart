@@ -26,22 +26,23 @@ class GetProductBloc extends Bloc<GetProductEvent, GetProductState> {
       }
     });
 
-    on<SearchProduct>((event, emit) async {
-      if (event.query.isNotEmpty) {
-        final query = event.query.toLowerCase();
-        final List<Product> filteredProducts = (state as GetProductSuccess)
-            .products
-            .where((product) =>
-        product.title.toLowerCase().contains(query) ||
-            product.description.toLowerCase().contains(query) || product.location.toLowerCase().contains(query) || product.user!.name.toLowerCase().contains(query))
-            .toList();
-        emit(GetProductSuccess(filteredProducts));
-      } else {
-        add(GetProduct()); // Fetch all products when query is empty
-      }
-    });
-
-
-
+    on<SearchProduct>(
+      (event, emit) async {
+        if (event.query.isNotEmpty) {
+          final query = event.query.toLowerCase();
+          final List<Product> filteredProducts = (state as GetProductSuccess)
+              .products
+              .where((product) =>
+                  product.title.toLowerCase().contains(query) ||
+                  product.description.toLowerCase().contains(query) ||
+                  product.location.toLowerCase().contains(query) ||
+                  product.user!.name.toLowerCase().contains(query))
+              .toList();
+          emit(GetProductSuccess(filteredProducts));
+        } else {
+          add(GetProduct()); // Fetch all products when query is empty
+        }
+      },
+    );
   }
 }
