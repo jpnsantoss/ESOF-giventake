@@ -92,22 +92,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
       child: Scaffold(
         appBar: AppBar(
           title: const Text('Edit Profile'),
-          actions: [
-            IconButton(
-              onPressed: () async {
-                await _firebaseAuth.signOut();
-                Navigator.push(
-                        context,
-                        MaterialPageRoute<void>(
-                          builder: (BuildContext context) =>
-                              WelcomeScreen(),
-                        ),
-                      );
-              },
-
-              icon: const Icon(CupertinoIcons.arrow_right_to_line),
-            ),
-          ],
+          
         ),
         body: BlocBuilder<EditUserInfoBloc, EditUserInfoState>(
           builder: (context, state) {

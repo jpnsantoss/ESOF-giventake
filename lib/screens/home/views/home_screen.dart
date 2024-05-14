@@ -55,6 +55,12 @@ class _HomeScreenState extends State<HomeScreen> {
                 },
                 icon: const Icon(Icons.person),
               ),
+               IconButton(
+              onPressed: () {
+                context.read<SignInBloc>().add(SignOutRequired());
+              },
+              icon: const Icon(CupertinoIcons.arrow_right_to_line),
+            ),
           ],
         ),
         body: BlocBuilder<GetProductBloc, GetProductState>(
