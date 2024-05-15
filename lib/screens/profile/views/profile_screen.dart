@@ -130,7 +130,7 @@ class _ProfileScreenState extends State<ProfileScreen>
                                                                 widget.user.name,
                                                                 style: TextStyle(
                                                                     color: Color(0xFF212121),
-                                                                    fontSize: 19.73,
+                                                                    fontSize: 16.73,
                                                                     fontFamily: 'Inter',
                                                                     fontWeight: FontWeight.w700,
                                                                     height: 0,
@@ -156,7 +156,7 @@ class _ProfileScreenState extends State<ProfileScreen>
                                                         crossAxisAlignment: CrossAxisAlignment.center,
                                                         children: [
                                                             Container(
-                                                                width: 20.73,
+                                                                width: 16.73,
                                                                 height: 16.73,
                                                                 
                                                             ),
@@ -167,7 +167,7 @@ class _ProfileScreenState extends State<ProfileScreen>
                                                                 : 'Rating: ${widget.user.rating}',
                                                                 style: TextStyle(
                                                                     color: Colors.black,
-                                                                    fontSize: 16.39,
+                                                                    fontSize: 13.39,
                                                                     fontFamily: 'Inter',
                                                                     fontWeight: FontWeight.w600,
                                                                     height: 0,
@@ -181,7 +181,7 @@ class _ProfileScreenState extends State<ProfileScreen>
                                                      '${widget.user.reviews.length} reviews',
                                                     style: TextStyle(
                                                         color: Color(0xFF818181),
-                                                        fontSize: 14.39,
+                                                        fontSize: 13.39,
                                                         fontFamily: 'Inter',
                                                         fontWeight: FontWeight.w400,
                                                         height: 0,
@@ -235,7 +235,7 @@ class _ProfileScreenState extends State<ProfileScreen>
                                                     widget.user.bio,
                                                     style: TextStyle(
                                                     color: Colors.black,
-                                                    fontSize: 17.04,
+                                                    fontSize: 14.04,
                                                     fontFamily: 'Inter',
                                                     fontWeight: FontWeight.w400,
                                                     height: 0,
