@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:giventake/screens/home/blocs/get_product_bloc/get_product_bloc.dart';
 import 'package:giventake/screens/home/views/details_screen.dart';
+import 'package:giventake/screens/product/views/upload_product_screen.dart';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
@@ -98,8 +99,15 @@ class _HomeScreenState extends State<HomeScreen> {
                   ),
                   child: IconButton(
                     icon: const Icon(Icons.add, color: Colors.white),
-                    onPressed: () {
-                      // Handle add button tap
+                    onPressed: () async {
+                      final result =
+                      await Navigator.of(context).push(MaterialPageRoute(
+                    builder: (context) => const ProductUploadScreen(),
+                  ));
+                  if (result == true) {
+                    // ignore: use_build_context_synchronously
+                    context.read<GetProductBloc>().add(GetProduct());
+                  }
                     },
                   ),
                 ),
