@@ -181,8 +181,7 @@ class _DetailsScreenState extends State<DetailsScreen> {
               padding: const EdgeInsets.all(20.0),
               child: ElevatedButton(
                 onPressed: () async {
-                  String result = await saveRequestToFirestore(
-                      productId: product.id, requesterId: product.userId);
+                  String result = await saveRequestToFirestore(productId: product.id, requesterId: product.userId);
                   // ignore: use_build_context_synchronously
                   ScaffoldMessenger.of(context).showSnackBar(
                     SnackBar(
@@ -255,8 +254,8 @@ class _DetailsScreenState extends State<DetailsScreen> {
 
   final FirebaseFirestore _firestore = FirebaseFirestore.instance;
 
-  Future<String> saveRequestToFirestore(
-      {required String productId, required String requesterId}) async {
+  Future<String> saveRequestToFirestore({required String productId, required String requesterId})
+  async {
     String res = "Some error occurred";
     try {
       String userId = FirebaseAuth.instance.currentUser?.uid ?? '';
@@ -266,14 +265,15 @@ class _DetailsScreenState extends State<DetailsScreen> {
         return 'fail';
       }
 
-      bool accepted = false;
 
       String id = const Uuid().v4();
 
       if (productId.isNotEmpty || requesterId.isNotEmpty) {
+        print("Condition is True");
+
         await _firestore.collection('requests').add({
           'id': id,
-          'accepted': accepted,
+          'accepted': null,
           'fromUserId': fromUserId,
           'productId': productId,
           'requesterId': requesterId,
@@ -294,7 +294,12 @@ class _DetailsScreenState extends State<DetailsScreen> {
         .where("productId", isEqualTo: product.id);
     AggregateQuerySnapshot query = await currUserRequests.count().get();
 
+
     if (query.count! > 0) {
+      for(int i = 0;i < 10;i++){
+        print("count? ${query.count}");
+      }
+
       return false;
     }
     return true;

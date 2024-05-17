@@ -4,6 +4,7 @@ import 'package:user_repository/user_repository.dart';
 import '../entities/entities.dart';
 
 class Product {
+
   final String id;
   final String title;
   final String description;

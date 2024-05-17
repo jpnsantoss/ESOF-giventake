@@ -601,7 +601,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
           continue;
         } else {
           for (Request r in requestss) {
-            if (p.id == r.productId && !r.accepted) {
+            if (p.id == r.productId && r.accepted == false) {
               requests.add(r);
             }
           }

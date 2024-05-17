@@ -36,6 +36,24 @@ class FirebaseProductRepo implements ProductRepo {
   }
 
   @override
+  Future<Product> getProduct(String productId) async {
+    try {
+      final querySnapshot = await productCollection.where('id', isEqualTo: productId).get();
+      if (querySnapshot.docs.isNotEmpty) {
+        final productEntity = ProductEntity.fromDocument(querySnapshot.docs.first.data());
+        final product = Product.fromEntity(productEntity);
+        return product;
+      } else {
+        // Product with the given ID not found
+        throw Exception("Product with ID $productId not found");
+      }
+    } catch (e, stackTrace) {
+      log("Error fetching product: $e\n$stackTrace");
+      rethrow;
+    }
+  }
+
+  @override
   Future<List<Product>> getUserProducts(String userId) {
     return productCollection
         .where('userId', isEqualTo: userId)

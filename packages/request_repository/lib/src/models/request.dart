@@ -4,13 +4,13 @@ class Request {
   String id;
   String fromUserId;
   String productId;
-  bool accepted;
+  bool? accepted;
 
   Request({
     required this.id,
     required this.fromUserId,
     required this.productId,
-    required this.accepted,
+    this.accepted,
   });
 
   RequestEntity toEntity() {

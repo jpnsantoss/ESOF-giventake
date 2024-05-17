@@ -2,13 +2,13 @@ class RequestEntity {
   String id;
   String fromUserId;
   String productId;
-  bool accepted;
+  bool? accepted;
 
   RequestEntity({
     required this.id,
     required this.fromUserId,
     required this.productId,
-    required this.accepted,
+    this.accepted
   });
 
   Map<String, Object?> toDocument() {
@@ -25,7 +25,7 @@ class RequestEntity {
       id: doc['id'],
       fromUserId: doc['fromUserId'],
       productId: doc['productId'],
-      accepted: doc['accepted'] ?? false,
+      accepted: doc['accepted'],
     );
   }
 

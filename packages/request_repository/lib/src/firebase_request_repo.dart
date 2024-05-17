@@ -28,7 +28,7 @@ class FirebaseRequestRepo implements RequestRepo {
         'accepted': request.accepted,
       });
     } catch (e) {
-      print("Erro ao adicionar request: $e");
+        print("Erro ao adicionar request: $e");
       rethrow;
     }
   }
@@ -49,7 +49,6 @@ class FirebaseRequestRepo implements RequestRepo {
           throw Exception("No document found with ID $requestId");
         }
       });
-      print("Request accepted!");
     } catch (e) {
       throw Exception('Failed to accept request: $e');
     }
@@ -58,20 +57,19 @@ class FirebaseRequestRepo implements RequestRepo {
   @override
   Future<void> rejectRequest(String requestId) async {
     try {
-      QuerySnapshot querySnapshot =
-          await requestCollection.where('id', isEqualTo: requestId).get();
-
-      if (querySnapshot.docs.isNotEmpty) {
-        DocumentReference docRef = querySnapshot.docs.first.reference;
-
-        await docRef.delete();
-
-        print("Request deleted!");
-        print("Request ID is $requestId!");
-      } else {
-        print("No document found with ID $requestId");
-      }
-    } catch (e) {
+      await requestCollection
+          .where('id', isEqualTo: requestId)
+          .get()
+          .then((querySnapshot) {
+        if (querySnapshot.docs.isNotEmpty) {
+          DocumentReference docRef = querySnapshot.docs.first.reference;
+          return docRef.update({'accepted': false});
+        } else {
+          print("No document found with ID $requestId");
+          throw Exception("No document found with ID $requestId");
+        }
+      });
+    }  catch (e) {
       throw Exception('Failed to reject request: $e');
     }
   }
