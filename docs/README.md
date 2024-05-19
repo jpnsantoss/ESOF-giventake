@@ -105,9 +105,63 @@ At this phase, instead of a complete user story, you can simply implement a smal
 
 
 ## Project management
-Software project management is the art and science of planning and leading software projects, in which software projects are planned, implemented, monitored and controlled.
 
-In the context of ESOF, we recommend each team to adopt a set of project management practices and tools capable of registering tasks, assigning tasks to team members, adding estimations to tasks, monitor tasks progress, and therefore being able to track their projects.
+All the management of the project is done using this [Github Project board](https://github.com/orgs/FEUP-LEIC-ES-2023-24/projects/2) where all the issues are organized in Product backlog and Iteration backlog. Therefore, our project has 5 columns: Backlog, Sprint Backlog, In Progress, Done and User Stories. At the end of each iteration, the tasks that weren't finished are passed to the Sprint Backlog, so that the In Progress column appears empty at the end of every iteration.
+
+# Releases
+- [v0](https://github.com/FEUP-LEIC-ES-2023-24/2LEIC05T2/releases/tag/vertical-prototype)
+- [v1](https://github.com/FEUP-LEIC-ES-2023-24/2LEIC05T21/releases/tag/sprint-1)
+- [v2](https://github.com/FEUP-LEIC-ES-2023-24/2LEIC05T2/releases/tag/sprint-2)
+
+## Iteration **#1**
+
+At the beginning of this iteration we intented to focus on product increment consist, most importantly, of:
+-All products listed in main page;
+-Products can be added by users;
+-Users can log in;
+-Product details can be accessed.
+-Request products
+
+At the end of the first iteration we considered the sprint was successful as we managed to implement several challenging things. We implemented almost everything, expect for product request that is still a work in progress and we found a bug when uploading photos of products that will be fixed in the next Sprint. Sprint 0 backlog was updated with improvements on the components that weren't matched/yet done and work was assigned to every member. Even though sprint work was uneven among us, we hope further sprints might balance the workload so as in the release every member has developed around the same. We hope to improve delivery in the next sprint by getting more work done, since we haven't accomplished a third of the App as of the end of the 1st sprint. 
+
+![image](https://github.com/FEUP-LEIC-ES-2023-24/2LEIC05T2/assets/131759998/56bf4c59-7ae3-438c-be11-fc9f1f91d970)
+![end](https://github.com/FEUP-LEIC-ES-2023-24/2LEIC05T2/assets/131759998/e5961c1f-b683-40d6-9e80-05d0f0408138)
+
+
+## Iteration **#2**
+
+At the beginning of the second iterations our main goals were to implement the following features:
+- Search bar, allowing the user to search any product by name or description;
+- Request products by users;
+- Check other users information, reviews and products on their profile screen;
+
+  During this sprint, most of the team was more available so we assigned tasks accordingly. This sprint went really well since the bugs from the previous sprint were sucessfully fixed and we implemented almost everything that we expected at the begging of the sprint. However, there is still some work to do on the request and acceptance of products by users and bugs to fix on the users products on their profile.
+
+Before:
+  ![Screenshot from 2024-05-03 18-40-43](https://github.com/FEUP-LEIC-ES-2023-24/2LEIC05T2/assets/131995213/c28ccf36-72f9-4523-abb2-abba05999f61)
+
+After:
+![Screenshot from 2024-05-03 18-53-05](https://github.com/FEUP-LEIC-ES-2023-24/2LEIC05T2/assets/131995213/6cb4def4-4451-44a1-a5b9-d04b07b028f2)
+
+
+## Iteration **#3**
+
+At the beginning of Sprint 3 we intended to:
+- users being able to make reviews of other users;
+- users being able to see their profile and edit their informations;
+- users being able to accept requests of their products;
+- improve product details screen
+
+This sprint were sucessfully completed since all features are now correctly implemented. During the sprint we found some bugs, but we were able to correct them so that the app works properly.
+
+
+Before:
+<img width="956" alt="image" src="https://github.com/FEUP-LEIC-ES-2023-24/2LEIC05T2/assets/145434267/14603ab2-7b90-4a36-a0cd-96932a7b6d57">
+
+After:
+<img width="920" alt="image" src="https://github.com/FEUP-LEIC-ES-2023-24/2LEIC05T2/assets/145434267/636fac61-6c75-48e2-908a-6de552cced59">
+
+
 
 Common practices of managing iterative software development are: backlog management, release management, estimation, iteration planning, iteration development, acceptance tests, and retrospectives.
 
