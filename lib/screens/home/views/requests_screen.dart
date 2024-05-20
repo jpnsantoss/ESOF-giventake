@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:product_repository/product_repository.dart';
 import 'package:request_repository/request_repository.dart';
 import 'package:user_repository/user_repository.dart';
+import 'package:review_repository/review_repository.dart';
 
 class Pair<T, U> {
   final T first;
@@ -419,7 +420,7 @@ class _RequestsScreenState extends State<RequestsScreen> {
                             ),
                             const SizedBox(height: 1.73),
                             Text(
-                              '${requestsUsers[i].reviews.length} reviews',
+                              '${requestsUsers.length} reviews',
                               style: TextStyle(
                                 color: Color(0xFF818181),
                                 fontSize: 13.86,
