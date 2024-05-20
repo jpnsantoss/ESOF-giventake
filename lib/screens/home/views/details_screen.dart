@@ -188,7 +188,10 @@ class _DetailsScreenState extends State<DetailsScreen> {
                     SnackBar(
                       content: Text(result == 'success'
                           ? 'Request saved successfully!'
-                          : 'You have already requested this product!'),
+                          : result == 'same user'
+                          ? "You can't request your own products!"
+                          : 'You have already requested this product!'
+                      ),
                     ),
                   );
                 },
@@ -262,9 +265,9 @@ class _DetailsScreenState extends State<DetailsScreen> {
       String userId = FirebaseAuth.instance.currentUser?.uid ?? '';
       String fromUserId = userId;
 
-      if (!await canRequest(fromUserId)) {
-        return 'fail';
-      }
+      String requestRes = await canRequest(fromUserId);
+      if (requestRes != 'success') return requestRes;
+
 
       bool accepted = false;
 
@@ -287,7 +290,7 @@ class _DetailsScreenState extends State<DetailsScreen> {
     return res;
   }
 
-  Future<bool> canRequest(String userId) async {
+  Future<String> canRequest(String userId) async {
     final currUserRequests = _firestore
         .collection('requests')
         .where("fromUserId", isEqualTo: userId)
@@ -295,9 +298,12 @@ class _DetailsScreenState extends State<DetailsScreen> {
     AggregateQuerySnapshot query = await currUserRequests.count().get();
 
     if (query.count! > 0) {
-      return false;
+      return 'already requested';
     }
-    return true;
+    if (userId == product.userId) {
+      return 'same user';
+    }
+    return 'success';
   }
 
   String timeDiff(DateTime createdAt) {
