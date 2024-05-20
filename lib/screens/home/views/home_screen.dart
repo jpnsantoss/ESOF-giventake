@@ -47,13 +47,6 @@ class _HomeScreenState extends State<HomeScreen> {
         ),
         actions: [
           IconButton(
-            onPressed: () {
-              context.read<SignInBloc>().add(SignOutRequired());
-            },
-            icon: const Icon(CupertinoIcons.arrow_right_to_line),
-          ),
-
-          IconButton(
             onPressed: () async {
               final FirebaseAuth auth = FirebaseAuth.instance;
               final user = auth.currentUser;
