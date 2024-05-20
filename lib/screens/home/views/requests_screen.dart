@@ -251,7 +251,7 @@ class _RequestsScreenState extends State<RequestsScreen> {
                         ),
                         TextSpan(
                           text:
-                              '${ans ? ' accepted ' : ' declined '} your request.',
+                              '${ans ? ' accepted ' : ' declined '}your request.',
                           style: TextStyle(
                             color: Colors.black,
                             fontSize: 14,
