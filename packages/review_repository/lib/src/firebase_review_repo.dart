@@ -4,6 +4,15 @@ import 'package:review_repository/review_repository.dart';
 class FirebaseReviewRepo implements ReviewRepo {
   final reviewCollection = FirebaseFirestore.instance.collection('reviews');
 
+  Future<int> getReviewCount(String userId) async {
+   try {
+      QuerySnapshot snapshot = await reviewCollection.where('toId', isEqualTo: userId).get();
+      return snapshot.size;
+    } catch (e) {
+      rethrow;
+    }
+  }
+
   @override
   Future<List<Review>> getReviews(String userId) async {
     try {

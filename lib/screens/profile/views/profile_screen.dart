@@ -1,3 +1,5 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:giventake/screens/home/views/details_screen.dart';
@@ -194,14 +196,62 @@ class _ProfileScreenState extends State<ProfileScreen>
                                                 ),
                                               ),
                                               const SizedBox(height: 1.67),
-                                              Text(
-                                                '${widget.user.reviews.length} reviews',
-                                                style: const TextStyle(
-                                                  color: Color(0xFF818181),
-                                                  fontSize: 13.39,
-                                                  fontFamily: 'Inter',
-                                                  fontWeight: FontWeight.w400,
-                                                  height: 0,
+                                              BlocProvider(
+                                                create: (context) =>
+                                                    GetReviewsBloc(
+                                                  FirebaseReviewRepo(),
+                                                  FirebaseUserRepo(),
+                                                )..add(GetReviewsCount(
+                                                        widget.user.userId)),
+                                                child: BlocBuilder<
+                                                    GetReviewsBloc,
+                                                    GetReviewsState>(
+                                                  builder: (context, state) {
+                                                    if (state
+                                                        is GetReviewsCountProcess) {
+                                                      return Text(
+                                                        'Loading...',
+                                                        style: TextStyle(
+                                                          color:
+                                                              Color(0xFF818181),
+                                                          fontSize: 13.39,
+                                                          fontFamily: 'Inter',
+                                                          fontWeight:
+                                                              FontWeight.w400,
+                                                          height: 0,
+                                                        ),
+                                                      );
+                                                    } else if (state
+                                                        is GetReviewsCountSuccess) {
+                                                      return Text(
+                                                        '${state.reviews} reviews',
+                                                        style: TextStyle(
+                                                          color:
+                                                              Color(0xFF818181),
+                                                          fontSize: 13.39,
+                                                          fontFamily: 'Inter',
+                                                          fontWeight:
+                                                              FontWeight.w400,
+                                                          height: 0,
+                                                        ),
+                                                      );
+                                                    } else if (state
+                                                        is GetReviewsCountFailure) {
+                                                      return Text(
+                                                        'Error: Failed to load reviews',
+                                                        style: TextStyle(
+                                                          color:
+                                                              Color(0xFF818181),
+                                                          fontSize: 13.39,
+                                                          fontFamily: 'Inter',
+                                                          fontWeight:
+                                                              FontWeight.w400,
+                                                          height: 0,
+                                                        ),
+                                                      );
+                                                    }
+                                                    return Container(); // or a default text
+                                                  },
                                                 ),
                                               ),
                                             ],
@@ -213,6 +263,7 @@ class _ProfileScreenState extends State<ProfileScreen>
                                   const SizedBox(height: 20.08),
                                   Container(
                                     width: double.infinity,
+
                                     decoration: const ShapeDecoration(
                                       shape: RoundedRectangleBorder(
                                         side: BorderSide(
@@ -249,7 +300,7 @@ class _ProfileScreenState extends State<ProfileScreen>
                                           left: 12.51,
                                           top: 2.53,
                                           child: Text(
-                                            widget.user.bio,
+                                            widget.user.bio,=
                                             style: const TextStyle(
                                               color: Colors.black,
                                               fontSize: 14.04,
@@ -280,6 +331,7 @@ class _ProfileScreenState extends State<ProfileScreen>
                           labelColor:
                               Theme.of(context).colorScheme.onBackground,
                           indicatorSize: TabBarIndicatorSize.label,
+
                           tabs: const [
                             Tab(
                               child: Padding(
@@ -330,7 +382,6 @@ class _ProfileScreenState extends State<ProfileScreen>
                                           userId: widget.user.userId,
                                           email: widget.user.email,
                                           name: widget.user.name,
-                                          reviews: widget.user.reviews,
                                           bio: widget.user.bio,
                                           rating: widget.user.rating,
                                           image: widget.user.image);

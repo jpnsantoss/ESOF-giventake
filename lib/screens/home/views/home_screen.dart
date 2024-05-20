@@ -51,17 +51,7 @@ class _HomeScreenState extends State<HomeScreen> {
               MyUser currentUser = await FirebaseUserRepo().getUser(userId);
 
               final result = await Navigator.of(context).push(MaterialPageRoute(
-                builder: (context) => RequestsScreen(
-                    userId: userId,
-                    user: MyUserEntity(
-                      userId: userId,
-                      email: currentUser.email,
-                      name: currentUser.name,
-                      reviews: currentUser.reviews,
-                      rating: currentUser.rating,
-                      bio: currentUser.bio,
-                      image: currentUser.image,
-                    )),
+                  builder: (context) => RequestsScreen(userId: userId, user: MyUserEntity(userId: userId, email: currentUser.email, name: currentUser.name, rating: currentUser.rating, bio: currentUser.bio, image: currentUser.image,)),
               ));
             },
             icon: const Icon(Icons.mail_outline), // Envelope symbol icon
@@ -74,17 +64,18 @@ class _HomeScreenState extends State<HomeScreen> {
                 String userId = user.uid;
                 MyUser currentUser = await FirebaseUserRepo().getUser(userId);
 
-                await Navigator.of(context).push(MaterialPageRoute(
-                  builder: (context) => ProfileScreen(
-                    productRepo: FirebaseProductRepo(),
-                    user: MyUserEntity(
-                      userId: userId,
-                      email: currentUser.email,
-                      name: currentUser.name,
-                      reviews: currentUser.reviews,
-                      rating: currentUser.rating,
-                      bio: currentUser.bio,
-                      image: currentUser.image,
+
+      await Navigator.of(context).push(MaterialPageRoute(
+        builder: (context) => EditProfileScreen(
+          userId: userId,
+          user: MyUserEntity(
+            userId: userId,
+            email: currentUser.email,
+            name: currentUser.name,
+            rating: currentUser.rating,
+            bio: currentUser.bio,
+            image: currentUser.image,
+
                     ),
                   ),
                 ));
@@ -119,6 +110,7 @@ class _HomeScreenState extends State<HomeScreen> {
                 }
               },
             ),
+
           ),
         ],
       ),

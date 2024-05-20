@@ -1,7 +1,10 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:giventake/screens/profile/blocs/get_reviews/get_reviews_bloc.dart';
 import 'package:product_repository/product_repository.dart';
 import 'package:request_repository/request_repository.dart';
+import 'package:review_repository/review_repository.dart';
 import 'package:user_repository/user_repository.dart';
 
 class Pair<T, U> {
@@ -444,17 +447,64 @@ class _RequestsScreenState extends State<RequestsScreen> {
                                   ),
                                 ),
                                 const SizedBox(height: 1.73),
-                                Text(
-                                  '${requestsUsers[i].reviews
-                                      .length} reviews',
-                                  style: TextStyle(
-                                    color: Color(0xFF818181),
-                                    fontSize: 13.86,
-                                    fontFamily: 'Inter',
-                                    fontWeight: FontWeight.w400,
-                                    height: 0,
-                                  ),
-                                ),
+                                BlocProvider(
+                                                create: (context) =>
+                                                    GetReviewsBloc(
+                                                  FirebaseReviewRepo(),
+                                                  FirebaseUserRepo(),
+                                                )..add(GetReviewsCount(
+                                                        widget.user.userId)),
+                                                child: BlocBuilder<
+                                                    GetReviewsBloc,
+                                                    GetReviewsState>(
+                                                  builder: (context, state) {
+                                                    if (state
+                                                        is GetReviewsCountProcess) {
+                                                      return Text(
+                                                        'Loading...',
+                                                        style: TextStyle(
+                                                          color:
+                                                              Color(0xFF818181),
+                                                          fontSize: 13.39,
+                                                          fontFamily: 'Inter',
+                                                          fontWeight:
+                                                              FontWeight.w400,
+                                                          height: 0,
+                                                        ),
+                                                      );
+                                                    } else if (state
+                                                        is GetReviewsCountSuccess) {
+                                                      return Text(
+                                                        '${state.reviews} reviews',
+                                                        style: TextStyle(
+                                                          color:
+                                                              Color(0xFF818181),
+                                                          fontSize: 13.39,
+                                                          fontFamily: 'Inter',
+                                                          fontWeight:
+                                                              FontWeight.w400,
+                                                          height: 0,
+                                                        ),
+                                                      );
+                                                    } else if (state
+                                                        is GetReviewsCountFailure) {
+                                                      return Text(
+                                                        'Error: Failed to load reviews',
+                                                        style: TextStyle(
+                                                          color:
+                                                              Color(0xFF818181),
+                                                          fontSize: 13.39,
+                                                          fontFamily: 'Inter',
+                                                          fontWeight:
+                                                              FontWeight.w400,
+                                                          height: 0,
+                                                        ),
+                                                      );
+                                                    }
+                                                    return Container(); // or a default text
+                                                  },
+                                                ),
+                                              ),
                               ],
                             ),
                           ),
