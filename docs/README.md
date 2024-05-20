@@ -138,7 +138,7 @@ At the beginning of the second iterations our main goals were to implement the f
   During this sprint, most of the team was more available so we assigned tasks accordingly. This sprint went really well since the bugs from the previous sprint were sucessfully fixed and we implemented almost everything that we expected at the begging of the sprint. However, there is still some work to do on the request and acceptance of products by users and bugs to fix on the users products on their profile.
 
 Before:
-  ![Screenshot from 2024-05-03 18-40-43](https://github.com/FEUP-LEIC-ES-2023-24/2LEIC05T2/assets/131995213/c28ccf36-72f9-4523-abb2-abba05999f61)
+![Screenshot from 2024-05-03 18-40-43](https://github.com/FEUP-LEIC-ES-2023-24/2LEIC05T2/assets/131995213/c28ccf36-72f9-4523-abb2-abba05999f61)
 
 After:
 ![Screenshot from 2024-05-03 18-53-05](https://github.com/FEUP-LEIC-ES-2023-24/2LEIC05T2/assets/131995213/6cb4def4-4451-44a1-a5b9-d04b07b028f2)
@@ -156,10 +156,10 @@ This sprint were sucessfully completed since all features are now correctly impl
 
 
 Before:
-<img width="956" alt="image" src="https://github.com/FEUP-LEIC-ES-2023-24/2LEIC05T2/assets/145434267/14603ab2-7b90-4a36-a0cd-96932a7b6d57">
+<img width="920" alt="image" src="https://github.com/FEUP-LEIC-ES-2023-24/2LEIC05T2/assets/145434267/636fac61-6c75-48e2-908a-6de552cced59">
 
 After:
-<img width="920" alt="image" src="https://github.com/FEUP-LEIC-ES-2023-24/2LEIC05T2/assets/145434267/636fac61-6c75-48e2-908a-6de552cced59">
+<img width="956" alt="image" src="https://github.com/FEUP-LEIC-ES-2023-24/2LEIC05T2/assets/145434267/14603ab2-7b90-4a36-a0cd-96932a7b6d57">
 
 
 
