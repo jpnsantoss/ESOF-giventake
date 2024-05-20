@@ -4,6 +4,12 @@ import 'package:product_repository/product_repository.dart';
 import 'package:request_repository/request_repository.dart';
 import 'package:user_repository/user_repository.dart';
 
+class Pair<T, U> {
+  final T first;
+  final U second;
+
+  Pair(this.first, this.second);
+}
 
 class RequestsScreen extends StatefulWidget {
 
@@ -18,18 +24,27 @@ class RequestsScreen extends StatefulWidget {
 }
 
 class _RequestsScreenState extends State<RequestsScreen> {
+
   late String userId;
+
   late List<Request> requests = [];
-  late List<MyUser> requestUsers = [];
-  late List<Product> requestProducts = [];
-  late int nrequests = 0;
-  bool isLoadingRequests = true;
+  late List<MyUser> requestsUsers = [];
+  late List<Product> requestsProducts = [];
+/*
+  late List<Request> fromUser = [];
+  late List<MyUser> fromUserUsers = [];
+  late List<Product> fromUserProducts = [];
+  */
+  late List<Widget> myWidgets = [];
+  late int requestsToAnswer = 0;
+  bool isLoadingrequestsRequests = true;
+
 
   @override
   void initState() {
     super.initState();
     userId = widget.userId;
-    fetchUnansweredRequests();
+    buildRequestWidgets();
   }
   @override
   Widget build(BuildContext context) {
@@ -76,15 +91,18 @@ class _RequestsScreenState extends State<RequestsScreen> {
                   mainAxisAlignment: MainAxisAlignment.start,
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    if (isLoadingRequests)
-                      const CircularProgressIndicator()
+                    const SizedBox(height: 24),
+                    if (isLoadingrequestsRequests)
+                      Center(
+                        child: const CircularProgressIndicator(),
+                      )
                     else if (requests.isEmpty)
                       const SizedBox(height: 24)
                     else
                       SizedBox(
                         width: 345,
                         child: Text(
-                          '${nrequests} new product requests',
+                          '${requestsToAnswer} new product requests',
                           textAlign: TextAlign.right,
                           style: const TextStyle(
                             color: Color(0xFF6C8A47),
@@ -95,7 +113,7 @@ class _RequestsScreenState extends State<RequestsScreen> {
                           ),
                         ),
                       ),
-                    ...buildRequestWidgets(),
+                    ...myWidgets,
                     const SizedBox(height: 24),
                   ],
                 ),
@@ -106,6 +124,7 @@ class _RequestsScreenState extends State<RequestsScreen> {
       ),
     );
   }
+
 
   @override
   void dispose(){
@@ -132,7 +151,7 @@ class _RequestsScreenState extends State<RequestsScreen> {
                   height: 42,
                   decoration: ShapeDecoration(
                     image: DecorationImage(
-                      image: NetworkImage(requestUsers[i].image),
+                      image: NetworkImage(requestsUsers[i].image),
                       fit: BoxFit.fill,
                     ),
                     shape: RoundedRectangleBorder(
@@ -157,7 +176,7 @@ class _RequestsScreenState extends State<RequestsScreen> {
                           ),
                         ),
                         TextSpan(
-                          text: requestUsers[i].name,
+                          text: requestsUsers[i].name,
                           style: TextStyle(
                             color: Colors.black,
                             fontSize: 14,
@@ -198,7 +217,7 @@ class _RequestsScreenState extends State<RequestsScreen> {
             height: 42,
             decoration: ShapeDecoration(
               image: DecorationImage(
-                image: NetworkImage(requestProducts[i].image),
+                image: NetworkImage(requestsProducts[i].image),
                 fit: BoxFit.fill,
               ),
               shape: RoundedRectangleBorder(
@@ -231,7 +250,7 @@ class _RequestsScreenState extends State<RequestsScreen> {
                   height: 42,
                   decoration: ShapeDecoration(
                     image: DecorationImage(
-                      image: NetworkImage(requestUsers[i].image),
+                      image: NetworkImage(requestsUsers[i].image),
                       fit: BoxFit.fill,
                     ),
                     shape: RoundedRectangleBorder(
@@ -246,7 +265,7 @@ class _RequestsScreenState extends State<RequestsScreen> {
                     TextSpan(
                       children: [
                         TextSpan(
-                          text: requestUsers[i].name,
+                          text: requestsUsers[i].name,
                           style: TextStyle(
                             color: Colors.black,
                             fontSize: 14,
@@ -256,7 +275,7 @@ class _RequestsScreenState extends State<RequestsScreen> {
                           ),
                         ),
                         TextSpan(
-                          text: '${ans ? 'accepted ' : 'declined '} your request.',
+                          text: '${ans ? ' accepted ' : ' declined '} your request.',
                           style: TextStyle(
                             color: Colors.black,
                             fontSize: 14,
@@ -277,7 +296,7 @@ class _RequestsScreenState extends State<RequestsScreen> {
             height: 42,
             decoration: ShapeDecoration(
               image: DecorationImage(
-                image: NetworkImage(requestProducts[i].image),
+                image: NetworkImage(requestsProducts[i].image),
                 fit: BoxFit.fill,
               ),
               shape: RoundedRectangleBorder(
@@ -343,7 +362,7 @@ class _RequestsScreenState extends State<RequestsScreen> {
                                   height: 55.45,
                                   decoration: ShapeDecoration(
                                     image: DecorationImage(
-                                      image: NetworkImage(requestUsers[i].image),
+                                      image: NetworkImage(requestsUsers[i].image),
                                       fit: BoxFit.fill,
                                     ),
                                     shape: RoundedRectangleBorder(
@@ -362,7 +381,7 @@ class _RequestsScreenState extends State<RequestsScreen> {
                                         .start,
                                     children: [
                                       Text(
-                                        requestUsers[i].name,
+                                        requestsUsers[i].name,
                                         style: TextStyle(
                                           color: Color(0xFF212121),
                                           fontSize: 17.33,
@@ -373,7 +392,7 @@ class _RequestsScreenState extends State<RequestsScreen> {
                                       ),
                                       const SizedBox(height: 3.47),
                                       Text(
-                                        '2 days ago',
+                                        DateTime.now().difference(requests[i].created_at.toDate()).inDays == 0 ? 'Today' : '${DateTime.now().difference(requests[i].created_at.toDate()).inDays} day(s) ago',
                                         style: TextStyle(
                                           color: Color(0xFF818181),
                                           fontSize: 10.40,
@@ -412,7 +431,7 @@ class _RequestsScreenState extends State<RequestsScreen> {
                                       ),
                                       const SizedBox(width: 3.47),
                                       Text(
-                                        requestUsers[i].rating.toString(),
+                                        requestsUsers[i].rating.toString(),
                                         style: TextStyle(
                                           color: Colors.black,
                                           fontSize: 13.86,
@@ -426,7 +445,7 @@ class _RequestsScreenState extends State<RequestsScreen> {
                                 ),
                                 const SizedBox(height: 1.73),
                                 Text(
-                                  '${requestUsers[i].reviews
+                                  '${requestsUsers[i].reviews
                                       .length} reviews',
                                   style: TextStyle(
                                     color: Color(0xFF818181),
@@ -472,7 +491,7 @@ class _RequestsScreenState extends State<RequestsScreen> {
                                 ),
                                 const SizedBox(height: 3.47),
                                 Text(
-                                  requestProducts[i].title,
+                                  requestsProducts[i].title,
                                   style: TextStyle(
                                     color: Colors.black,
                                     fontSize: 17.33,
@@ -491,7 +510,7 @@ class _RequestsScreenState extends State<RequestsScreen> {
                             height: 55.45,
                             decoration: ShapeDecoration(
                               image: DecorationImage(
-                                image: NetworkImage(requestProducts[i].image),
+                                image: NetworkImage(requestsProducts[i].image),
                                 fit: BoxFit.fill,
                               ),
                               shape: RoundedRectangleBorder(
@@ -517,8 +536,13 @@ class _RequestsScreenState extends State<RequestsScreen> {
                               try {
                                 // Call rejectRequest function
                                 await FirebaseRequestRepo().rejectRequest(requests[i].id);
-                                // Remove the rejected request from the list
-                                setState(() {requests.removeAt(i);});
+                                setState(() {
+                                  Widget w = youDid(i, false); //building the right widget
+                                  myWidgets.removeAt(i*2 + 1);
+                                  myWidgets.insert(i*2 + 1, w);
+                                  requestsToAnswer--;
+                                });
+
                               } catch (error) {
                                 // ignore: use_build_context_synchronously
                                 ScaffoldMessenger.of(context)
@@ -558,9 +582,13 @@ class _RequestsScreenState extends State<RequestsScreen> {
                                 // Call acceptRequest function
                                 await FirebaseRequestRepo().acceptRequest(requests[i].id);
                                 setState(() {
-                                  requests.removeAt(i);
-                                  youDid(i, requests[i].accepted!);
+                                  //this always happens
+                                  Widget w = youDid(i, true); //building the right widget
+                                  myWidgets.removeAt(i*2 + 1); //removing the index before :(
+                                  myWidgets.insert(i*2 + 1, w);
+                                  requestsToAnswer--;
                                 });
+
                               } catch (error) {
                                 ScaffoldMessenger.of(context)
                                     .showSnackBar(
@@ -601,66 +629,69 @@ class _RequestsScreenState extends State<RequestsScreen> {
         );
 }
 
-List<Widget> buildRequestWidgets(){
-    List<Widget> widgets = [];
+  Future<void> buildRequestWidgets() async {
+    await fetchUserRequests();
+    List<Widget> tempWidgets = [];
+
     for (int i = 0; i < requests.length; i++) {
-      widgets.add(const SizedBox(height: 24));
+      tempWidgets.add(const SizedBox(height: 24));
       if (requests[i].accepted == null) {
-          widgets.add(unacceptedWidget(i));
-        } else {
-          bool ans = requests[i].accepted!;
-          widgets.add(youDid(i, ans));
-        }
+        tempWidgets.add(unacceptedWidget(i));
+      }else if(requests[i].fromUserId == userId){
+        bool ans = requests[i].accepted!;
+        tempWidgets.add(someoneDid(i, ans));
+      }else{
+        bool ans = requests[i].accepted!;
+        tempWidgets.add(youDid(i, ans));
+      }
     }
-    return widgets;
-}
-  /* EXTRACT TO REQUEST LOGIC */
-  Future<void> fetchUnansweredRequests() async {
+    setState(() {
+      myWidgets = tempWidgets;
+    });
+  }
+
+
+  Future<void> fetchUserRequests() async {
     try {
       ProductRepo productRepo = FirebaseProductRepo();
       List<Product> productss = await productRepo.getProducts();
       RequestRepo requestRepo = FirebaseRequestRepo();
       List<Request> requestss = await requestRepo.getRequests();
 
-      for (Product p in productss) {
-        if (p.userId != FirebaseAuth.instance.currentUser?.uid) {
-          continue;
-        } else {
-          for (Request r in requestss) {
-            if (p.id == r.productId) {
-              requests.insert(0, r);
-              if(r.accepted==null) {
-                nrequests++;
-              }
-            }
+      for (Request r in requestss) {
+        for (Product p in productss) {
+          if (p.userId == userId && p.id == r.productId) {
+              requests.add(r);
+            if (r.accepted == null) requestsToAnswer++;
+            break;
+          }else if(((r.fromUserId == FirebaseAuth.instance.currentUser?.uid) && (p.id == r.productId) && (r.accepted != null))){
+              requests.add(r);
+              break;
           }
         }
       }
-        await fillRequestInfo(); // Await the completion of fillRequestInfo()
+      await fillRequestInfo();
     } catch (error) {
         print("Error fetching requests: $error");
     } finally {
       setState(() {
-        isLoadingRequests = false;
+        isLoadingrequestsRequests = false;
       });
     }
   }
 
-  Future<MyUser> getRequesterInfo(Request r) async {
-    try {
-      String uid = r.fromUserId;
-      MyUser user = await FirebaseUserRepo().getUser(uid);
-      return user;
-    } catch (error) {
-      rethrow;
-    }
-  }
 
-  Future<Product> getProductInfo(Request r) async {
+  Future<Pair<MyUser, Product>>getUserNProductInfo(Request r) async {
     try {
       String pid = r.productId;
       Product p = await FirebaseProductRepo().getProduct(pid);
-      return p;
+      MyUser usr;
+      if(r.fromUserId != userId){  //pedido feito por outros aos meus produtos
+        usr = await FirebaseUserRepo().getUser(r.fromUserId); // o tipo que me pediu
+      }else{              //pedido feito por mim aos outros
+        usr = p.user!;  // a pessoa de quem era o produto que pedi?
+      }
+      return Pair(usr, p);
     } catch (error) {
       rethrow;
     }
@@ -669,14 +700,14 @@ List<Widget> buildRequestWidgets(){
   Future<void> fillRequestInfo() async {
     try {
       for (Request r in requests) {
-        requestUsers.add(await getRequesterInfo(r));
-        requestProducts.add(await getProductInfo(r));
+          Pair<MyUser, Product> p = await getUserNProductInfo(r);
+          requestsUsers.add(await p.first);
+          requestsProducts.add(await p.second);
       }
     } catch (error) {
-      print("Error filling request info: $error");
+        print("Error filling request info: $error");
     }
   }
 
-/* -----------------ENDS HERE----------------- */
 
 }

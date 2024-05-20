@@ -39,18 +39,10 @@ class _MyWidgetState extends State<MyWidget> {
 
 class _EditProfileScreenState extends State<EditProfileScreen> {
   late String userId;
-  /* EXTRACT TO REQUEST LOGIC */
-  late List<Request> requests = [];
-  late List<MyUser> requestUsers = [];
-  bool isLoadingRequests = true;
-  /* --------ENDS HERE------------ */
   @override
   void initState() {
     super.initState();
     userId = widget.userId;
-    /* EXTRACT TO REQUEST LOGIC */
-    fetchUnansweredRequests();
-    /* --------ENDS HERE------------ */
   }
 
   final TextEditingController userNameController = TextEditingController();
@@ -92,7 +84,6 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
       child: Scaffold(
         appBar: AppBar(
           title: const Text('Edit Profile'),
-          
         ),
         body: BlocBuilder<EditUserInfoBloc, EditUserInfoState>(
           builder: (context, state) {
@@ -106,24 +97,19 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                       width: 200,
                       child: photo != null
                           ? Image.memory(
-                              photo!,
-                              fit: BoxFit.cover,
-                            )
+                        photo!,
+                        fit: BoxFit.cover,
+                      )
                           : Image.network(widget.user.image, fit: BoxFit.cover),
                     ),
                     const SizedBox(height: 10.0),
                     GestureDetector(
                       onTap: selectImage,
-                      /*(){context.read<EditUserInfoBloc>().add(PickImageUserEvent(ImageSource.gallery));
-                  if(state is EditUserInfoSuccess){
-                    photo = state.photo;
-                  }},*/
                       child: const Text(
                         'Change Photo',
                         style: TextStyle(
                           color: Colors.blue, // Define a cor do texto como azul
-                          decoration: TextDecoration
-                              .underline, // Adiciona uma linha por baixo do texto
+                          decoration: TextDecoration.underline, // Adiciona uma linha por baixo do texto
                         ),
                       ),
                     ),
@@ -257,8 +243,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                                     if (obscurePassword) {
                                       iconPassword = CupertinoIcons.eye_fill;
                                     } else {
-                                      iconPassword =
-                                          CupertinoIcons.eye_slash_fill;
+                                      iconPassword = CupertinoIcons.eye_slash_fill;
                                     }
                                   });
                                 },
@@ -295,8 +280,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                                 hintText: 'Enter new password',
                                 contentPadding: const EdgeInsets.all(10),
                                 border: const OutlineInputBorder(),
-                                prefixIcon:
-                                    const Icon(CupertinoIcons.lock_fill),
+                                prefixIcon: const Icon(CupertinoIcons.lock_fill),
                                 suffixIcon: IconButton(
                                   onPressed: () {
                                     setState(() {
@@ -304,8 +288,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                                       if (obscurePassword) {
                                         iconPassword = CupertinoIcons.eye_fill;
                                       } else {
-                                        iconPassword =
-                                            CupertinoIcons.eye_slash_fill;
+                                        iconPassword = CupertinoIcons.eye_slash_fill;
                                       }
                                     });
                                   },
@@ -366,7 +349,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                                 if (val!.isEmpty) {
                                   return 'Please fill in this field';
                                 } else if (!RegExp(
-                                        r'^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9])(?=.*?[!@#\$&*~`)\%\-(_+=;:,.<>/?"[{\]}\|^]).{8,}$')
+                                    r'^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9])(?=.*?[!@#\$&*~`)\%\-(_+=;:,.<>/?"[{\]}\|^]).{8,}$')
                                     .hasMatch(val)) {
                                   return 'Please enter a valid password';
                                 }
@@ -388,8 +371,8 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                                         color: containsUpperCase
                                             ? Colors.green
                                             : Theme.of(context)
-                                                .colorScheme
-                                                .onBackground),
+                                            .colorScheme
+                                            .onBackground),
                                   ),
                                   Text(
                                     "⚈  1 lowercase",
@@ -397,8 +380,8 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                                         color: containsLowerCase
                                             ? Colors.green
                                             : Theme.of(context)
-                                                .colorScheme
-                                                .onBackground),
+                                            .colorScheme
+                                            .onBackground),
                                   ),
                                   Text(
                                     "⚈  1 number",
@@ -406,8 +389,8 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                                         color: containsNumber
                                             ? Colors.green
                                             : Theme.of(context)
-                                                .colorScheme
-                                                .onBackground),
+                                            .colorScheme
+                                            .onBackground),
                                   ),
                                 ],
                               ),
@@ -420,8 +403,8 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                                         color: containsSpecialChar
                                             ? Colors.green
                                             : Theme.of(context)
-                                                .colorScheme
-                                                .onBackground),
+                                            .colorScheme
+                                            .onBackground),
                                   ),
                                   Text(
                                     "⚈  8 minimum character",
@@ -429,8 +412,8 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                                         color: contains8Length
                                             ? Colors.green
                                             : Theme.of(context)
-                                                .colorScheme
-                                                .onBackground),
+                                            .colorScheme
+                                            .onBackground),
                                   ),
                                 ],
                               ),
@@ -439,13 +422,13 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                           ElevatedButton(
                             onPressed: () async {
                               context.read<EditUserInfoBloc>().add(
-                                    UpdateUserInfoEvent(
-                                      userId,
-                                      userNameController.text,
-                                      userBioController.text,
-                                      photo,
-                                    ),
-                                  );
+                                UpdateUserInfoEvent(
+                                  userId,
+                                  userNameController.text,
+                                  userBioController.text,
+                                  photo,
+                                ),
+                              );
 
                               var success = await changeEmailPassword(
                                   oldEmailController.text,
@@ -480,101 +463,6 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                               ),
                             ),
                           ),
-                          const SizedBox(height: 16.0),
-                          const Padding(
-                            padding: EdgeInsets.all(8.0),
-                          ),
-                          if (isLoadingRequests)
-                            const CircularProgressIndicator()
-                          else if (requests.isEmpty)
-                            Center(
-                              child: Text(
-                                'No Pending Requests',
-                                style: TextStyle(
-                                  fontSize: 25.0,
-                                  fontWeight: FontWeight.bold,
-                                  color: Theme.of(context).primaryColor,
-                                ),
-                                textAlign: TextAlign.left,
-                              ),
-                            )
-                          else
-                            Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                Text(
-                                  'Your Pending Requests',
-                                  style: TextStyle(
-                                    fontSize: 25.0,
-                                    fontWeight: FontWeight.bold,
-                                    color: Theme.of(context).primaryColor,
-                                  ),
-                                  textAlign: TextAlign.left,
-                                ),
-                                for (int i = 0; i < requests.length; i++)
-                                  ListTile(
-                                    leading: CircleAvatar(
-                                      // Display user image
-                                      backgroundImage:
-                                          AssetImage(requestUsers[i].image),
-                                      //RangeError (index): Index out of range: no indices are valid: 0
-                                    ),
-
-                                    title: Text(requestUsers[i]
-                                        .name), // Display user name
-                                    trailing: Row(
-                                      mainAxisSize: MainAxisSize.min,
-                                      children: [
-                                        IconButton(
-                                          icon: const Icon(Icons.check),
-                                          onPressed: () async {
-                                            try {
-                                              // Call rejectRequest function
-                                              await FirebaseRequestRepo()
-                                                  .acceptRequest(
-                                                      requests[i].id);
-                                              setState(() {
-                                                requests.removeAt(i);
-                                              });
-                                            } catch (error) {
-                                              // ignore: use_build_context_synchronously
-                                              ScaffoldMessenger.of(context)
-                                                  .showSnackBar(
-                                                SnackBar(
-                                                    content: Text(
-                                                        "Failed to reject request: $error")),
-                                              );
-                                            }
-                                          },
-                                        ),
-                                        IconButton(
-                                          icon: const Icon(Icons.close),
-                                          onPressed: () async {
-                                            try {
-                                              // Call rejectRequest function
-                                              await FirebaseRequestRepo()
-                                                  .rejectRequest(
-                                                      requests[i].id);
-                                              // Remove the rejected request from the list
-                                              setState(() {
-                                                requests.removeAt(i);
-                                              });
-                                            } catch (error) {
-                                              // ignore: use_build_context_synchronously
-                                              ScaffoldMessenger.of(context)
-                                                  .showSnackBar(
-                                                SnackBar(
-                                                    content: Text(
-                                                        "Failed to reject request: $error")),
-                                              );
-                                            }
-                                          },
-                                        ),
-                                      ],
-                                    ),
-                                  ),
-                              ],
-                            ),
                         ],
                       ),
                     ),
@@ -588,56 +476,6 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
     );
   }
 
-  /* EXTRACT TO REQUEST LOGIC */
-  Future<void> fetchUnansweredRequests() async {
-    try {
-      ProductRepo productRepo = FirebaseProductRepo();
-      List<Product> productss = await productRepo.getProducts();
-      RequestRepo requestRepo = FirebaseRequestRepo();
-      List<Request> requestss = await requestRepo.getRequests();
-
-      for (Product p in productss) {
-        if (p.userId != FirebaseAuth.instance.currentUser?.uid) {
-          continue;
-        } else {
-          for (Request r in requestss) {
-            if (p.id == r.productId && r.accepted == false) {
-              requests.add(r);
-            }
-          }
-        }
-      }
-      await fillRequestUsers();
-    } finally {
-      // Set isLoadingRequests to false once requests are loaded or an error occurs
-      setState(() {
-        isLoadingRequests = false;
-      });
-    }
-  }
-
-  Future<MyUser> getRequesterInfo(Request r) async {
-    try {
-      String uid = r.fromUserId;
-      MyUser user = await FirebaseUserRepo().getUser(uid);
-      return user;
-    } catch (error) {
-      rethrow;
-    }
-  }
-
-  Future<void> fillRequestUsers() async {
-    try {
-      for (Request r in requests) {
-        requestUsers.add(await getRequesterInfo(r));
-      }
-      //print("This is ${requestUsers}"); print("This is ${requests}");
-    } catch (error) {
-      rethrow;
-    }
-  }
-
-  /* -----------------ENDS HERE----------------- */
 
   pickImage(ImageSource source) async {
     final ImagePicker picker = ImagePicker();

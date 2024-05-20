@@ -1,3 +1,5 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
+
 import '../entities/entities.dart';
 
 class Request {
@@ -5,12 +7,15 @@ class Request {
   String fromUserId;
   String productId;
   bool? accepted;
+  Timestamp created_at;
 
   Request({
     required this.id,
     required this.fromUserId,
     required this.productId,
+    required this.created_at,
     this.accepted,
+
   });
 
   RequestEntity toEntity() {
@@ -19,6 +24,7 @@ class Request {
       fromUserId: fromUserId,
       productId: productId,
       accepted: accepted,
+      created_at: created_at,
     );
   }
 
@@ -28,6 +34,8 @@ class Request {
       fromUserId: entity.fromUserId,
       productId: entity.productId,
       accepted: entity.accepted,
+      created_at: entity.created_at,
+
     );
   }
 }

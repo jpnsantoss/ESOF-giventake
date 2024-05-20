@@ -269,7 +269,6 @@ class _DetailsScreenState extends State<DetailsScreen> {
       String id = const Uuid().v4();
 
       if (productId.isNotEmpty || requesterId.isNotEmpty) {
-        print("Condition is True");
 
         await _firestore.collection('requests').add({
           'id': id,
@@ -277,6 +276,7 @@ class _DetailsScreenState extends State<DetailsScreen> {
           'fromUserId': fromUserId,
           'productId': productId,
           'requesterId': requesterId,
+          'created_at': Timestamp.fromDate(DateTime.now()),
         });
 
         res = 'success';
@@ -288,20 +288,16 @@ class _DetailsScreenState extends State<DetailsScreen> {
   }
 
   Future<bool> canRequest(String userId) async {
+    //ver se já pediu
     final currUserRequests = _firestore
         .collection('requests')
         .where("fromUserId", isEqualTo: userId)
         .where("productId", isEqualTo: product.id);
     AggregateQuerySnapshot query = await currUserRequests.count().get();
-
-
-    if (query.count! > 0) {
-      for(int i = 0;i < 10;i++){
-        print("count? ${query.count}");
-      }
-
-      return false;
-    }
+    String usr = product.userId;
+    if (query.count! > 0) return false;
+    //ver se o user não é o próprio
+    if(product.userId == userId) return false;
     return true;
   }
 
