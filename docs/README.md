@@ -89,7 +89,7 @@ Regarding our app´s physical architecture, we feature two distinct identities: 
 
 Regarding technologies, for the frontend we used Flutter (Dart programming language) and Firebase for the backend.
 
-<img width="481" alt="image" src="https://github.com/FEUP-LEIC-ES-2023-24/2LEIC05T2/assets/145434267/0ccafacc-49bb-4b51-9d5c-f850d71c2143">
+<img width="416" alt="image" src="https://github.com/FEUP-LEIC-ES-2023-24/2LEIC05T2/assets/145434267/a57320e0-0f24-438a-8f1d-f0df3db0f41c">
 
 
 ### Vertical prototype
