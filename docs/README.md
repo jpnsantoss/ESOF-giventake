@@ -1,6 +1,6 @@
 # _GiveNTake_ Development Report
 
-Welcome to the documentation pages of _GiveNTake_!
+Welcome to the documentation page of _GiveNTake_!
 
 You can find here details about _GiveNTake_, from a high-level vision to low-level implementation decisions, a kind of Software Development Report, organized by type of activities: 
 
@@ -134,7 +134,10 @@ At the beginning of the second iterations our main goals were to implement the f
 - Request products by users;
 - Check other users information, reviews and products on their profile screen;
 
-  During this sprint, most of the team was more available so we assigned tasks accordingly. This sprint went really well since the bugs from the previous sprint were sucessfully fixed and we implemented almost everything that we expected at the begging of the sprint. However, there is still some work to do on the request and acceptance of products by users and bugs to fix on the users products on their profile.
+  During this sprint, most of the team showed more availability so we assigned tasks accordingly. This sprint went really well since the bugs from the previous sprint were sucessfully fixed and we implemented almost everything that we expected at the begging of the sprint. However, there is still some work to do on the request and acceptance of products by users and bugs to fix on the users products on their profile.
+  We discovered that issues should be more carefully assigned to the sprint, beacuse of how codependency may affect productivity. We also discovered that the atomization of epics needed some more attention. Every one of us, however, managed to work more and more features were implemented.
+  
+  
 
 Before:\
 ![Screenshot from 2024-05-03 18-40-43](https://github.com/FEUP-LEIC-ES-2023-24/2LEIC05T2/assets/131995213/c28ccf36-72f9-4523-abb2-abba05999f61)
@@ -151,7 +154,7 @@ At the beginning of Sprint 3 we intended to:
 - users being able to accept requests of their products;
 - improve product details screen
 
-This sprint were sucessfully completed since all features are now correctly implemented. During the sprint we found some bugs, but we were able to correct them so that the app works properly.
+This sprint was sucessfully completed since all features are now correctly implemented. During the sprint we found some bugs, but we were able to correct them so that the app works properly.
 
 
 Before:\
