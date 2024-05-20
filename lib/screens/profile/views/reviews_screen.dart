@@ -92,8 +92,8 @@ class _ReviewsScreenState extends State<ReviewsScreen> {
                               // ),
                               const SizedBox(width: 8.0),
                               Text(
-                                review.fromUser?.name ??
-                                    'Unknown', // assuming 'name' is the field for the user's name
+                                review.fromUser!
+                                    .name, // assuming 'name' is the field for the user's name
                                 style: const TextStyle(
                                   fontSize: 18.0,
                                   fontWeight: FontWeight.bold,
