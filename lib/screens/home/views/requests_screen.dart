@@ -720,8 +720,5 @@ class _RequestsScreenState extends State<RequestsScreen> {
   }
 }
 
- Future<int> getNReviews(String userId) async {
-    int n = await FirebaseReviewRepo().getReviewCount(userId);
-    return n;
-}
+
 
