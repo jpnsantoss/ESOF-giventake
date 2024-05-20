@@ -2,6 +2,8 @@ import 'dart:typed_data';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:giventake/app_view.dart';
+import 'package:giventake/screens/home/views/home_screen.dart';
 import 'package:giventake/screens/product/blocs/bloc/upload_product_bloc.dart';
 import 'package:image_picker/image_picker.dart';
 
@@ -170,7 +172,13 @@ class _ProductUploadScreenState extends State<ProductUploadScreen> {
                               ),
                             );
 
-                        Navigator.of(context).pop(true);
+                         Navigator.push(
+                    context,
+                    MaterialPageRoute<void>(
+                      builder: (BuildContext context) =>
+                          const MyAppView(),
+                    ),
+                  );
                       },
                       style: ButtonStyle(
                         backgroundColor:

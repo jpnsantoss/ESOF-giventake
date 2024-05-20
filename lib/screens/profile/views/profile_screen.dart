@@ -1,8 +1,13 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:giventake/app_view.dart';
+import 'package:giventake/screens/auth/blocs/sign_in_bloc/sign_in_bloc.dart';
 import 'package:giventake/screens/home/views/details_screen.dart';
+import 'package:giventake/screens/home/views/edit_profile_screen.dart';
 import 'package:giventake/screens/profile/blocs/add_review_bloc/add_review_bloc.dart';
 import 'package:giventake/screens/profile/blocs/get_reviews/get_reviews_bloc.dart';
 import 'package:giventake/screens/profile/blocs/get_user_products/get_user_products_bloc.dart';
@@ -57,7 +62,50 @@ class _ProfileScreenState extends State<ProfileScreen>
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(),
+      appBar: AppBar(
+        actions: [
+          if (widget.user.userId == FirebaseAuth.instance.currentUser?.uid)
+            IconButton(
+              onPressed: () async {
+                final FirebaseAuth auth = FirebaseAuth.instance;
+                final user = auth.currentUser;
+                if (user != null) {
+                  String userId = user.uid;
+                  MyUser currentUser = await FirebaseUserRepo().getUser(userId);
+
+                  await Navigator.of(context).push(MaterialPageRoute(
+                    builder: (context) => EditProfileScreen(
+                      userId: userId,
+                      user: MyUserEntity(
+                        userId: userId,
+                        email: currentUser.email,
+                        name: currentUser.name,
+                        rating: currentUser.rating,
+                        bio: currentUser.bio,
+                        image: currentUser.image,
+                      ),
+                    ),
+                  ));
+                }
+              },
+              icon: Icon(Icons.edit),
+            ),
+
+            IconButton(
+            onPressed: () {
+              context.read<SignInBloc>().add(SignOutRequired());
+               Navigator.push(
+                    context,
+                    MaterialPageRoute<void>(
+                      builder: (BuildContext context) =>
+                          const MyAppView(),
+                    ),
+                  );
+            },
+            icon: const Icon(CupertinoIcons.arrow_right_to_line),
+          ),
+        ],
+      ),
       backgroundColor: Theme.of(context).colorScheme.background,
       body: SingleChildScrollView(
         child: SizedBox(
@@ -263,7 +311,6 @@ class _ProfileScreenState extends State<ProfileScreen>
                                   const SizedBox(height: 20.08),
                                   Container(
                                     width: double.infinity,
-
                                     decoration: const ShapeDecoration(
                                       shape: RoundedRectangleBorder(
                                         side: BorderSide(
@@ -331,7 +378,6 @@ class _ProfileScreenState extends State<ProfileScreen>
                           labelColor:
                               Theme.of(context).colorScheme.onBackground,
                           indicatorSize: TabBarIndicatorSize.label,
-
                           tabs: const [
                             Tab(
                               child: Padding(

@@ -2,6 +2,8 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:giventake/blocs/authentication_bloc/authentication_bloc.dart';
+import 'package:giventake/screens/auth/blocs/sign_in_bloc/sign_in_bloc.dart';
 import 'package:giventake/screens/home/blocs/get_product_bloc/get_product_bloc.dart';
 import 'package:giventake/screens/home/views/details_screen.dart';
 import 'package:giventake/screens/home/views/edit_profile_screen.dart';
@@ -51,7 +53,16 @@ class _HomeScreenState extends State<HomeScreen> {
               MyUser currentUser = await FirebaseUserRepo().getUser(userId);
 
               final result = await Navigator.of(context).push(MaterialPageRoute(
-                  builder: (context) => RequestsScreen(userId: userId, user: MyUserEntity(userId: userId, email: currentUser.email, name: currentUser.name, rating: currentUser.rating, bio: currentUser.bio, image: currentUser.image,)),
+                builder: (context) => RequestsScreen(
+                    userId: userId,
+                    user: MyUserEntity(
+                      userId: userId,
+                      email: currentUser.email,
+                      name: currentUser.name,
+                      rating: currentUser.rating,
+                      bio: currentUser.bio,
+                      image: currentUser.image,
+                    )),
               ));
             },
             icon: const Icon(Icons.mail_outline), // Envelope symbol icon
@@ -64,21 +75,26 @@ class _HomeScreenState extends State<HomeScreen> {
                 String userId = user.uid;
                 MyUser currentUser = await FirebaseUserRepo().getUser(userId);
 
-
-      await Navigator.of(context).push(MaterialPageRoute(
-        builder: (context) => EditProfileScreen(
-          userId: userId,
-          user: MyUserEntity(
-            userId: userId,
-            email: currentUser.email,
-            name: currentUser.name,
-            rating: currentUser.rating,
-            bio: currentUser.bio,
-            image: currentUser.image,
-
+                await Navigator.of(context).push(
+                  MaterialPageRoute(
+                    builder: (context) => BlocProvider(
+                      create: (context) => SignInBloc(
+                        context.read<AuthenticationBloc>().userRepository,
+                      ),
+                      child: ProfileScreen(
+                        user: MyUserEntity(
+                          userId: userId,
+                          email: currentUser.email,
+                          name: currentUser.name,
+                          rating: currentUser.rating,
+                          bio: currentUser.bio,
+                          image: currentUser.image,
+                        ),
+                        productRepo: FirebaseProductRepo(),
+                      ),
                     ),
                   ),
-                ));
+                );
               }
             },
             icon: FutureBuilder<MyUser>(
@@ -110,7 +126,6 @@ class _HomeScreenState extends State<HomeScreen> {
                 }
               },
             ),
-
           ),
         ],
       ),
