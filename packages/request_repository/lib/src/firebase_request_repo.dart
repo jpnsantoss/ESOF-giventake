@@ -34,25 +34,41 @@ class FirebaseRequestRepo implements RequestRepo {
     }
   }
 
-  @override
-  Future<void> acceptRequest(String requestId) async {
-    try {
-      await FirebaseFirestore.instance.collection('requests')
-          .where('id', isEqualTo: requestId)
-          .get()
-          .then((querySnapshot) {
-        if (querySnapshot.docs.isNotEmpty) {
-          DocumentReference docRef = querySnapshot.docs.first.reference;
-
-          return docRef.update({'accepted': true});
-        } else {
-          print("No document found with ID $requestId");
-          throw Exception("No document found with ID $requestId");
-        }
-      });
-    } catch (e) {
-      throw Exception('Failed to accept request: $e');
-    }
+    Future<void> acceptRequest(String requestId) async {
+          try {
+            await FirebaseFirestore.instance.collection('requests')
+                .where('id', isEqualTo: requestId)
+                .get()
+                .then((querySnapshot) async {
+              if (querySnapshot.docs.isNotEmpty) {
+                DocumentReference docRef = querySnapshot.docs.first.reference;
+        
+                String productId = querySnapshot.docs.first.data()['product_id'];
+        
+                await docRef.update({'accepted': true});
+        
+                await FirebaseFirestore.instance.collection('requests')
+                    .where('product_id', isEqualTo: productId)
+                    .get()
+                    .then((snapshot) {
+                  for (var doc in snapshot.docs) {
+                    if (doc.data()['accepted'] == null) {
+                      doc.reference.update({'accepted': false});
+                    }
+                  }
+                });
+        
+                await FirebaseFirestore.instance.collection('products')
+                    .doc(productId)
+                    .update({'sold': true});
+              } else {
+                print("No document found with ID $requestId");
+                throw Exception("No document found with ID $requestId");
+              }
+            });
+          } catch (e) {
+            throw Exception('Failed to accept request: $e');
+          }
   }
 
   @override
