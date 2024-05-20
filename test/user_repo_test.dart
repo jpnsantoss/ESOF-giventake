@@ -1,80 +1,86 @@
+import 'package:fake_cloud_firestore/fake_cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_core/firebase_core.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:user_repository/user_repository.dart';
 import 'package:mockito/mockito.dart';
+import 'package:firebase_auth_mocks/firebase_auth_mocks.dart';
+import 'package:google_sign_in_mocks/google_sign_in_mocks.dart';
+import 'mock.dart';
 
+class MockFirebaseAuth extends Mock implements FirebaseAuth {}
+class MockUser extends Mock implements User {}
 
-class MockFirebaseUserRepo extends Mock implements FirebaseUserRepo {
-  @override
-  Future<MyUser> getUser(String userId) async {
-    return MyUser(
-      userId: 'userId',
-      email: 'email@example.com',
-      name: 'Test User',
-      rating: 4.5,
-      bio: 'Bio',
-      image: 'http://image.url',
-    );
-  }
-}
 
 void main() {
+  setupFirebaseAuthMocks();
+
+
   group('FirebaseUserRepo', () {
-    test('should return user id', () async {
-      final mockFirebaseUserRepo = MockFirebaseUserRepo();
+    setUpAll(() async {
+      // Initialize Firebase
+      await Firebase.initializeApp();
 
-      final result = await mockFirebaseUserRepo.getUser('userId');
 
+
+    });
+
+    test('should return a user', () async {
+
+      final googleSignIn = MockGoogleSignIn();
+      final signinAccount = await googleSignIn.signIn();
+      final googleAuth = await signinAccount?.authentication;
+      final AuthCredential credential = GoogleAuthProvider.credential(
+        accessToken: googleAuth?.accessToken,
+        idToken: googleAuth?.idToken,
+      );
+
+      final firestore = FakeFirebaseFirestore();
+
+      final auth = MockFirebaseAuth();
+
+      FirebaseUserRepo(
+        firebaseAuth:auth,
+      );
+
+      final user = MockUser();
+
+      // Create a user document in the fake Firestore
+      firestore.collection('users').doc('userId').set({
+        'userId': 'userId',
+        'email': 'email@example.com',
+        'name': 'Test User',
+        'rating': 4.5,
+        'bio': 'Bio',
+        'image': 'http://image.url',
+      });
+
+      // Create a user object
+
+      // Stub the currentUser property to return the user object
+      when(auth.currentUser).thenReturn(user);
+
+      // Create an instance of FirebaseUserRepo with the fake FirebaseAuth
+      final repo = FirebaseUserRepo(firebaseAuth: auth);
+
+      // Call the getUser method
+      final result = await repo.getUser('userId');
+
+      // Verify that the method returns the expected MyUser object
       expect(result, isA<MyUser>());
       expect(result.userId, 'userId');
-    });
-
-    test('should return user email', () async {
-      final mockFirebaseUserRepo = MockFirebaseUserRepo();
-
-      final result = await mockFirebaseUserRepo.getUser('email');
-
-      expect(result, isA<MyUser>());
       expect(result.email, 'email@example.com');
-    });
-
-    test('should return user name', () async {
-      final mockFirebaseUserRepo = MockFirebaseUserRepo();
-
-      final result = await mockFirebaseUserRepo.getUser('name');
-
-      expect(result, isA<MyUser>());
       expect(result.name, 'Test User');
-    });
-
-    test('should return user rating', () async {
-      final mockFirebaseUserRepo = MockFirebaseUserRepo();
-
-      final result = await mockFirebaseUserRepo.getUser('rating');
-
-      expect(result, isA<MyUser>());
       expect(result.rating, 4.5);
-    });
-
-    test('should return user bio', () async {
-      final mockFirebaseUserRepo = MockFirebaseUserRepo();
-
-      final result = await mockFirebaseUserRepo.getUser('bio');
-
-      expect(result, isA<MyUser>());
       expect(result.bio, 'Bio');
-    });
-
-    test('should return user image', () async {
-      final mockFirebaseUserRepo = MockFirebaseUserRepo();
-
-      final result = await mockFirebaseUserRepo.getUser('image');
-
-      expect(result, isA<MyUser>());
       expect(result.image, 'http://image.url');
     });
-
   });
 }
+
+
+
 
 
 
