@@ -88,19 +88,17 @@ class _ProfileScreenState extends State<ProfileScreen>
                   ));
                 }
               },
-              icon: Icon(Icons.edit),
+              icon: const Icon(Icons.edit),
             ),
-
-            IconButton(
+          IconButton(
             onPressed: () {
               context.read<SignInBloc>().add(SignOutRequired());
-               Navigator.push(
-                    context,
-                    MaterialPageRoute<void>(
-                      builder: (BuildContext context) =>
-                          const MyAppView(),
-                    ),
-                  );
+              Navigator.push(
+                context,
+                MaterialPageRoute<void>(
+                  builder: (BuildContext context) => const MyAppView(),
+                ),
+              );
             },
             icon: const Icon(CupertinoIcons.arrow_right_to_line),
           ),
@@ -257,7 +255,7 @@ class _ProfileScreenState extends State<ProfileScreen>
                                                   builder: (context, state) {
                                                     if (state
                                                         is GetReviewsCountProcess) {
-                                                      return Text(
+                                                      return const Text(
                                                         'Loading...',
                                                         style: TextStyle(
                                                           color:
@@ -273,7 +271,7 @@ class _ProfileScreenState extends State<ProfileScreen>
                                                         is GetReviewsCountSuccess) {
                                                       return Text(
                                                         '${state.reviews} reviews',
-                                                        style: TextStyle(
+                                                        style: const TextStyle(
                                                           color:
                                                               Color(0xFF818181),
                                                           fontSize: 13.39,
@@ -285,7 +283,7 @@ class _ProfileScreenState extends State<ProfileScreen>
                                                       );
                                                     } else if (state
                                                         is GetReviewsCountFailure) {
-                                                      return Text(
+                                                      return const Text(
                                                         'Error: Failed to load reviews',
                                                         style: TextStyle(
                                                           color:
