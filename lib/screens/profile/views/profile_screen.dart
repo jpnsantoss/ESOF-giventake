@@ -76,11 +76,11 @@ class _ProfileScreenState extends State<ProfileScreen>
                         decoration: ShapeDecoration(
                           color: Colors.white,
                           shape: RoundedRectangleBorder(
-                            side: BorderSide(
+                            side: const BorderSide(
                                 width: 0.84, color: Color(0xFFECEAEB)),
                             borderRadius: BorderRadius.circular(8.37),
                           ),
-                          shadows: [
+                          shadows: const [
                             BoxShadow(
                               color: Color(0x26000000),
                               blurRadius: 8,
@@ -94,7 +94,7 @@ class _ProfileScreenState extends State<ProfileScreen>
                           mainAxisAlignment: MainAxisAlignment.center,
                           crossAxisAlignment: CrossAxisAlignment.center,
                           children: [
-                            Container(
+                            SizedBox(
                               width: 304.37,
                               child: Column(
                                 mainAxisSize: MainAxisSize.min,
@@ -145,7 +145,7 @@ class _ProfileScreenState extends State<ProfileScreen>
                                                   children: [
                                                     Text(
                                                       widget.user.name,
-                                                      style: TextStyle(
+                                                      style: const TextStyle(
                                                         color:
                                                             Color(0xFF212121),
                                                         fontSize: 16.73,
@@ -161,7 +161,7 @@ class _ProfileScreenState extends State<ProfileScreen>
                                             ],
                                           ),
                                         ),
-                                        const SizedBox(width: 66.09),
+                                        const SizedBox(width: 32),
                                         Container(
                                           child: Column(
                                             mainAxisSize: MainAxisSize.min,
@@ -179,16 +179,11 @@ class _ProfileScreenState extends State<ProfileScreen>
                                                   crossAxisAlignment:
                                                       CrossAxisAlignment.center,
                                                   children: [
-                                                    Container(
-                                                      width: 16.73,
-                                                      height: 16.73,
-                                                    ),
-                                                    const SizedBox(width: 3.35),
                                                     Text(
                                                       widget.user.rating == 0.0
                                                           ? 'No ratings yet'
                                                           : 'Rating: ${widget.user.rating}',
-                                                      style: TextStyle(
+                                                      style: const TextStyle(
                                                         color: Colors.black,
                                                         fontSize: 13.39,
                                                         fontFamily: 'Inter',
@@ -268,7 +263,8 @@ class _ProfileScreenState extends State<ProfileScreen>
                                   const SizedBox(height: 20.08),
                                   Container(
                                     width: double.infinity,
-                                    decoration: ShapeDecoration(
+
+                                    decoration: const ShapeDecoration(
                                       shape: RoundedRectangleBorder(
                                         side: BorderSide(
                                           width: 2.51,
@@ -280,7 +276,7 @@ class _ProfileScreenState extends State<ProfileScreen>
                                     ),
                                   ),
                                   const SizedBox(height: 20.08),
-                                  Container(
+                                  SizedBox(
                                     width: double.infinity,
                                     height: 96.23,
                                     child: Stack(
@@ -292,7 +288,7 @@ class _ProfileScreenState extends State<ProfileScreen>
                                             width: 304.37,
                                             height: 101.23,
                                             decoration: ShapeDecoration(
-                                              color: Color(0xFFD9D9D9),
+                                              color: const Color(0xFFD9D9D9),
                                               shape: RoundedRectangleBorder(
                                                 borderRadius:
                                                     BorderRadius.circular(6.69),
@@ -304,8 +300,8 @@ class _ProfileScreenState extends State<ProfileScreen>
                                           left: 12.51,
                                           top: 2.53,
                                           child: Text(
-                                            widget.user.bio,
-                                            style: TextStyle(
+                                            widget.user.bio,=
+                                            style: const TextStyle(
                                               color: Colors.black,
                                               fontSize: 14.04,
                                               fontFamily: 'Inter',
@@ -335,10 +331,11 @@ class _ProfileScreenState extends State<ProfileScreen>
                           labelColor:
                               Theme.of(context).colorScheme.onBackground,
                           indicatorSize: TabBarIndicatorSize.label,
-                          tabs: [
+
+                          tabs: const [
                             Tab(
                               child: Padding(
-                                padding: const EdgeInsets.all(0.0),
+                                padding: EdgeInsets.all(0.0),
                                 child: Text(
                                   'Products',
                                   textAlign: TextAlign.center,
@@ -353,7 +350,7 @@ class _ProfileScreenState extends State<ProfileScreen>
                             ),
                             Tab(
                               child: Padding(
-                                padding: const EdgeInsets.all(0.0),
+                                padding: EdgeInsets.all(0.0),
                                 child: Text(
                                   'Reviews',
                                   textAlign: TextAlign.center,
