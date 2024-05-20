@@ -1,3 +1,5 @@
+import 'dart:html';
+
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:product_repository/product_repository.dart';
@@ -30,11 +32,7 @@ class _RequestsScreenState extends State<RequestsScreen> {
   late List<Request> requests = [];
   late List<MyUser> requestsUsers = [];
   late List<Product> requestsProducts = [];
-/*
-  late List<Request> fromUser = [];
-  late List<MyUser> fromUserUsers = [];
-  late List<Product> fromUserProducts = [];
-  */
+
   late List<Widget> myWidgets = [];
   late int requestsToAnswer = 0;
   bool isLoadingrequestsRequests = true;
@@ -97,7 +95,20 @@ class _RequestsScreenState extends State<RequestsScreen> {
                         child: const CircularProgressIndicator(),
                       )
                     else if (requests.isEmpty)
-                      const SizedBox(height: 24)
+                      SizedBox(
+                        width: 345,
+                        child: Text(
+                          'You have no product requests',
+                          textAlign: TextAlign.right,
+                          style: const TextStyle(
+                            color: Color(0xFF6C8A47),
+                            fontSize: 24,
+                            fontFamily: 'Inter',
+                            fontWeight: FontWeight.w600,
+                            height: 0,
+                          ),
+                        ),
+                      )
                     else
                       SizedBox(
                         width: 345,
@@ -113,7 +124,7 @@ class _RequestsScreenState extends State<RequestsScreen> {
                           ),
                         ),
                       ),
-                    ...myWidgets,
+                      ...myWidgets,
                     const SizedBox(height: 24),
                   ],
                 ),
@@ -661,10 +672,12 @@ class _RequestsScreenState extends State<RequestsScreen> {
       for (Request r in requestss) {
         for (Product p in productss) {
           if (p.userId == userId && p.id == r.productId) {
+              print("added request for mine");
               requests.add(r);
             if (r.accepted == null) requestsToAnswer++;
             break;
           }else if(((r.fromUserId == FirebaseAuth.instance.currentUser?.uid) && (p.id == r.productId) && (r.accepted != null))){
+              print("added my request");
               requests.add(r);
               break;
           }
@@ -689,7 +702,7 @@ class _RequestsScreenState extends State<RequestsScreen> {
       if(r.fromUserId != userId){  //pedido feito por outros aos meus produtos
         usr = await FirebaseUserRepo().getUser(r.fromUserId); // o tipo que me pediu
       }else{              //pedido feito por mim aos outros
-        usr = p.user!;  // a pessoa de quem era o produto que pedi?
+        usr = await FirebaseUserRepo().getUser(p.userId);  // a pessoa de quem era o produto que pedi?
       }
       return Pair(usr, p);
     } catch (error) {
@@ -705,7 +718,7 @@ class _RequestsScreenState extends State<RequestsScreen> {
           requestsProducts.add(await p.second);
       }
     } catch (error) {
-        print("Error filling request info: $error");
+         print("Error filling request info: $error");
     }
   }
 
