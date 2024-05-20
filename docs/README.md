@@ -76,25 +76,21 @@ Image:
 
 In order to provide long-term maintenance of the code and allow easy understanding about, we will divide our project in different sections:
 
-* **Blocs:** each bloc will encapsulate a set of related functionalities. Therefore, each bloc will take an event as input, process them and emits states. An event represents an action that happens in an app usually trigger by user iterations. A state represents the state of the app in each moment. Therefore, when the state changes, the corresponding UI components are rebuilt to reflect the updated state. 
+* **Blocs:** each bloc will encapsulate a set of related functionalities. Therefore, each bloc will take an event as input, process them and emits states. An event represents an action that happens in an app usually trigger by user iterations. A state represents the state of the app in each moment: when the state changes, the corresponding UI components are rebuilt to reflect the updated state. Therefore, blocs ensure the connection between frontend and backend.
 * **Components:** Components created by our team that will be use throughout the development of this project to maintain visual consistency and reducing code duplication.
 * **Screens:** Responsible for drawing the app and allowing interactions between the user and the program.
 * **Packages:** Module that establishes the communications between the app and Firebase.
 
+<img width="469" alt="image" src="https://github.com/FEUP-LEIC-ES-2023-24/2LEIC05T2/assets/145434267/a6709fe6-f940-4327-93cf-d3e4cbf7e4e8">
 
-
-Example of _UML package diagram_ showing a _logical view_ of the Eletronic Ticketing System (to be accompanied by a short description of each package):
-
-![LogicalView](https://user-images.githubusercontent.com/9655877/160585416-b1278ad7-18d7-463c-b8c6-afa4f7ac7639.png)
 
 ### Physical architecture
 Regarding our app´s physical architecture, we feature two distinct identities: the Firebase server and the app itself. This way, the user interacts solely with the app, which is connected to the Firebase server. The server contains the database with all the information required for the app to function properly. 
 
 Regarding technologies, for the frontend we used Flutter (Dart programming language) and Firebase for the backend.
 
-Example of _UML deployment diagram_ showing a _deployment view_ of the Eletronic Ticketing System (please notice that, instead of software components, one should represent their physical/executable manifestations for deployment, called artifacts in UML; the diagram should be accompanied by a short description of each node and artifact):
+<img width="481" alt="image" src="https://github.com/FEUP-LEIC-ES-2023-24/2LEIC05T2/assets/145434267/0ccafacc-49bb-4b51-9d5c-f850d71c2143">
 
-![DeploymentView](https://user-images.githubusercontent.com/9655877/160592491-20e85af9-0758-4e1e-a704-0db1be3ee65d.png)
 
 ### Vertical prototype
 To help on validating all the architectural, design and technological decisions made, we usually implement a vertical prototype, a thin vertical slice of the system integrating as much technologies we can.
