@@ -66,11 +66,12 @@ class _ProductUploadScreenState extends State<ProductUploadScreen> {
                         width: 400,
                         height: 200,
                         decoration: ShapeDecoration(
-                        color: Colors.white,
-                        shape: RoundedRectangleBorder(
-                        side: BorderSide(width: 1.46, color: Color(0x7F818181)),
-                        borderRadius: BorderRadius.circular(14.56),
-                        ),
+                          color: Colors.white,
+                          shape: RoundedRectangleBorder(
+                            side: const BorderSide(
+                                width: 1.46, color: Color(0x7F818181)),
+                            borderRadius: BorderRadius.circular(14.56),
+                          ),
                         ),
                         child: photo != null
                             ? Image.memory(
@@ -87,29 +88,31 @@ class _ProductUploadScreenState extends State<ProductUploadScreen> {
                                   ),
                                   SizedBox(width: 20),
                                   Text(
-                                      'Upload an image',
-                                      style: TextStyle(
-                                          color: Colors.black,
-                                          fontSize: 23.29,
-                                          fontFamily: 'Inter',
-                                          fontWeight: FontWeight.w600,
-                                          height: 0,
-                                      ),
+                                    'Upload an image',
+                                    style: TextStyle(
+                                      color: Colors.black,
+                                      fontSize: 23.29,
+                                      fontFamily: 'Inter',
+                                      fontWeight: FontWeight.w600,
+                                      height: 0,
+                                    ),
                                   ),
-                                  SizedBox(height: 10,),
                                   SizedBox(
-                                  width: 415.89,
-                                  child: Text(
-                                  'Use any proper format: PNG, JPG, WEBP, JPEG up to 4MB',
-                                  textAlign: TextAlign.center,
-                                  style: TextStyle(
-                                  color: Color(0xFF818181),
-                                  fontSize: 14.56,
-                                  fontFamily: 'Inter',
-                                  fontWeight: FontWeight.w400,
-                                  height: 0,
+                                    height: 10,
                                   ),
-                                  ),
+                                  SizedBox(
+                                    width: 415.89,
+                                    child: Text(
+                                      'Use any proper format: PNG, JPG, WEBP, JPEG up to 4MB',
+                                      textAlign: TextAlign.center,
+                                      style: TextStyle(
+                                        color: Color(0xFF818181),
+                                        fontSize: 14.56,
+                                        fontFamily: 'Inter',
+                                        fontWeight: FontWeight.w400,
+                                        height: 0,
+                                      ),
+                                    ),
                                   )
                                 ],
                               ),
@@ -136,16 +139,23 @@ class _ProductUploadScreenState extends State<ProductUploadScreen> {
                       ),
                     ),
                     const SizedBox(height: 16.0),
-                                        TextFormField(
+                    TextFormField(
                       controller: productDescriptionController,
                       decoration: const InputDecoration(
                         labelText: 'Description',
                         hintText: 'Description',
-                        contentPadding: EdgeInsets.only(top: 12, bottom: 10, left: 5, right: 5), // Ajuste os valores conforme necessário
+                        contentPadding: EdgeInsets.only(
+                            top: 12,
+                            bottom: 10,
+                            left: 5,
+                            right: 5), // Ajuste os valores conforme necessário
                         border: OutlineInputBorder(),
-                        alignLabelWithHint: true, // Isso alinha o rótulo com o texto de sugestão
-                        
-                        labelStyle: TextStyle(height: 0), // Isso remove o espaço extra acima do rótulo
+                        alignLabelWithHint:
+                            true, // Isso alinha o rótulo com o texto de sugestão
+
+                        labelStyle: TextStyle(
+                            height:
+                                0), // Isso remove o espaço extra acima do rótulo
                       ),
                     ),
                     const SizedBox(height: 16.0),
@@ -165,11 +175,13 @@ class _ProductUploadScreenState extends State<ProductUploadScreen> {
                       style: ButtonStyle(
                         backgroundColor:
                             MaterialStateProperty.all<Color>(Colors.black),
-                            shape: MaterialStateProperty.all<RoundedRectangleBorder>(
-                        RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(14.5), // Ajuste o valor conforme necessário
+                        shape:
+                            MaterialStateProperty.all<RoundedRectangleBorder>(
+                          RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(
+                                14.5), // Ajuste o valor conforme necessário
+                          ),
                         ),
-                      ),
                       ),
                       child: const Padding(
                         padding: EdgeInsets.symmetric(vertical: 16.0),
@@ -191,20 +203,21 @@ class _ProductUploadScreenState extends State<ProductUploadScreen> {
     );
   }
 
-  pickImage(ImageSource source) async {
+  Future<Uint8List?> pickImage(ImageSource source) async {
     final ImagePicker picker = ImagePicker();
     XFile? file = await picker.pickImage(source: source);
     if (file != null) {
       return await file.readAsBytes();
     }
-
-    const Text('No image selected');
+    return null;
   }
 
   void selectImage() async {
-    Uint8List file = await pickImage(ImageSource.gallery);
-    setState(() {
-      photo = file;
-    });
+    Uint8List? file = await pickImage(ImageSource.gallery);
+    if (file != null) {
+      setState(() {
+        photo = file;
+      });
+    }
   }
 }
