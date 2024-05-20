@@ -300,7 +300,7 @@ class _ProfileScreenState extends State<ProfileScreen>
                                           left: 12.51,
                                           top: 2.53,
                                           child: Text(
-                                            widget.user.bio,=
+                                            widget.user.bio,
                                             style: const TextStyle(
                                               color: Colors.black,
                                               fontSize: 14.04,
