@@ -181,8 +181,7 @@ class _DetailsScreenState extends State<DetailsScreen> {
               padding: const EdgeInsets.all(20.0),
               child: ElevatedButton(
                 onPressed: () async {
-                  String result = await saveRequestToFirestore(
-                      productId: product.id, requesterId: product.userId);
+                  String result = await saveRequestToFirestore(productId: product.id, requesterId: product.userId);
                   // ignore: use_build_context_synchronously
                   ScaffoldMessenger.of(context).showSnackBar(
                     SnackBar(
@@ -258,8 +257,8 @@ class _DetailsScreenState extends State<DetailsScreen> {
 
   final FirebaseFirestore _firestore = FirebaseFirestore.instance;
 
-  Future<String> saveRequestToFirestore(
-      {required String productId, required String requesterId}) async {
+  Future<String> saveRequestToFirestore({required String productId, required String requesterId})
+  async {
     String res = "Some error occurred";
     try {
       String userId = FirebaseAuth.instance.currentUser?.uid ?? '';
@@ -269,17 +268,18 @@ class _DetailsScreenState extends State<DetailsScreen> {
       if (requestRes != 'success') return requestRes;
 
 
-      bool accepted = false;
 
       String id = const Uuid().v4();
 
       if (productId.isNotEmpty || requesterId.isNotEmpty) {
+
         await _firestore.collection('requests').add({
           'id': id,
-          'accepted': accepted,
+          'accepted': null,
           'fromUserId': fromUserId,
           'productId': productId,
           'requesterId': requesterId,
+          'created_at': Timestamp.fromDate(DateTime.now()),
         });
 
         res = 'success';
@@ -290,12 +290,15 @@ class _DetailsScreenState extends State<DetailsScreen> {
     return res;
   }
 
+
   Future<String> canRequest(String userId) async {
     final currUserRequests = _firestore
         .collection('requests')
         .where("fromUserId", isEqualTo: userId)
         .where("productId", isEqualTo: product.id);
     AggregateQuerySnapshot query = await currUserRequests.count().get();
+
+    String usr = product.userId;
 
     if (query.count! > 0) {
       return 'already requested';

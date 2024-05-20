@@ -9,6 +9,7 @@ import 'package:giventake/screens/product/views/upload_product_screen.dart';
 import 'package:giventake/screens/profile/views/profile_screen.dart';
 import 'package:product_repository/product_repository.dart';
 import 'package:user_repository/user_repository.dart';
+import 'package:giventake/screens/home/views/requests_screen.dart';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
@@ -43,8 +44,25 @@ class _HomeScreenState extends State<HomeScreen> {
         ),
         actions: [
           IconButton(
-            onPressed: () {
-              // Handle envelope icon tap
+            onPressed: () async {
+              final FirebaseAuth auth = FirebaseAuth.instance;
+              final user = auth.currentUser;
+              String userId = user!.uid;
+              MyUser currentUser = await FirebaseUserRepo().getUser(userId);
+
+              final result = await Navigator.of(context).push(MaterialPageRoute(
+                builder: (context) => RequestsScreen(
+                    userId: userId,
+                    user: MyUserEntity(
+                      userId: userId,
+                      email: currentUser.email,
+                      name: currentUser.name,
+                      reviews: currentUser.reviews,
+                      rating: currentUser.rating,
+                      bio: currentUser.bio,
+                      image: currentUser.image,
+                    )),
+              ));
             },
             icon: const Icon(Icons.mail_outline), // Envelope symbol icon
           ),
