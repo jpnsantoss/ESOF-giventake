@@ -3,6 +3,7 @@ import 'dart:typed_data';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:giventake/app_view.dart';
+import 'package:giventake/screens/home/blocs/get_product_bloc/get_product_bloc.dart';
 import 'package:giventake/screens/home/views/home_screen.dart';
 import 'package:giventake/screens/product/blocs/bloc/upload_product_bloc.dart';
 import 'package:image_picker/image_picker.dart';
@@ -172,13 +173,16 @@ class _ProductUploadScreenState extends State<ProductUploadScreen> {
                               ),
                             );
 
-                         Navigator.push(
-                    context,
-                    MaterialPageRoute<void>(
-                      builder: (BuildContext context) =>
-                          const MyAppView(),
-                    ),
-                  );
+                           ScaffoldMessenger.of(context)
+                                    .showSnackBar(const SnackBar(
+                                  content: Text('Product uploaded'),
+                                ));
+                        
+                          //Navigator.pop(context); // Navigate back to HomeScreen
+                       
+                        //Navigator.pop(context);
+
+                        
                       },
                       style: ButtonStyle(
                         backgroundColor:
