@@ -4,7 +4,6 @@ class MyUserEntity extends Equatable {
   final String userId;
   final String email;
   final String name;
-  final List<Map<String, String>> reviews;
   final String bio;
   final num rating;
   final String image;
@@ -14,7 +13,6 @@ class MyUserEntity extends Equatable {
     required this.userId,
     required this.email,
     required this.name,
-    required this.reviews,
     required this.bio,
     required this.rating,
     required this.image,
@@ -26,9 +24,7 @@ class MyUserEntity extends Equatable {
       'userId': userId,
       'email': email,
       'name': name,
-      'reviews': reviews,
-
-      'bio': bio,
+       'bio': bio,
       'rating': rating,
       'image': image,
 
@@ -36,24 +32,17 @@ class MyUserEntity extends Equatable {
   }
 
   static MyUserEntity fromDocument(Map<String, dynamic> doc) {
-    final List<Map<String, String>> reviewsList =
-        (doc['reviews'] as List? ?? []).map((review) {
-      return Map<String, String>.from(review);
-    }).toList();
     return MyUserEntity(
-
       userId: doc['userId'] ?? '',
       email: doc['email'] ?? '',
       name: doc['name'] ?? '',
-      reviews: reviewsList,
       bio: doc['bio'] ?? '',
       rating: doc['rating'] ?? 0.0,
       image: doc['image'] ??
           'https://upload.wikimedia.org/wikipedia/commons/thumb/2/2c/Default_pfp.svg/2048px-Default_pfp.svg.png',
     );
-
   }
 
   @override
-  List<Object?> get props => [userId, email, name, reviews, bio, rating, image];
+  List<Object?> get props => [userId, email, name, bio, rating, image];
 }

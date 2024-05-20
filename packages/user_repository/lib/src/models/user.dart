@@ -7,7 +7,6 @@ class MyUser extends Equatable {
   final String email;
   final String name;
   final String bio;
-  final List<Map<String, String>> reviews;
   final num rating;
   final String image;
 
@@ -15,7 +14,6 @@ class MyUser extends Equatable {
     required this.userId,
     required this.email,
     required this.name,
-    required this.reviews,
     required this.bio,
     required this.rating,
     required this.image,
@@ -25,7 +23,6 @@ class MyUser extends Equatable {
       userId: '',
       email: '',
       name: '',
-      reviews: [],
       bio: '',
       rating: 0.0,
       image:
@@ -35,7 +32,6 @@ class MyUser extends Equatable {
       {String? userId,
       String? email,
       String? name,
-      List<Map<String, String>>? reviews,
       String? bio,
       num? rating,
       String? image}) {
@@ -43,7 +39,6 @@ class MyUser extends Equatable {
       userId: userId ?? this.userId,
       email: email ?? this.email,
       name: name ?? this.name,
-      reviews: reviews ?? this.reviews,
       bio: bio ?? this.bio,
       rating: rating ?? this.rating,
       image: image ?? this.image,
@@ -55,7 +50,6 @@ class MyUser extends Equatable {
       userId: userId,
       email: email,
       name: name,
-      reviews: reviews,
       bio: bio,
       rating: rating,
       image: image,
@@ -67,7 +61,6 @@ class MyUser extends Equatable {
         userId: entity.userId,
         email: entity.email,
         name: entity.name,
-        reviews: entity.reviews,
         bio: entity.bio,
         rating: entity.rating,
         image: entity.image);
@@ -75,5 +68,5 @@ class MyUser extends Equatable {
   }
 
   @override
-  List<Object?> get props => [userId, email, name, reviews, bio, rating, image];
+  List<Object?> get props => [userId, email, name, bio, rating, image];
 }

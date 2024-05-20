@@ -4,7 +4,6 @@ import 'package:user_repository/user_repository.dart';
 import '../entities/entities.dart';
 
 class Product {
-
   final String id;
   final String title;
   final String description;
@@ -13,6 +12,7 @@ class Product {
   final String userId;
   MyUser? user;
   final DateTime createdAt;
+  final bool sold;
 
   Product({
     required this.id,
@@ -22,6 +22,7 @@ class Product {
     required this.image,
     required this.userId,
     required this.createdAt,
+    this.sold = false,
   });
 
   Future<void> fetchUser(UserRepository userRepository) async {
@@ -37,6 +38,7 @@ class Product {
       image: image,
       userId: userId,
       createdAt: createdAt,
+      sold: sold,
     );
   }
 
@@ -49,6 +51,7 @@ class Product {
       image: entity.image,
       userId: entity.userId,
       createdAt: entity.createdAt,
+      sold: entity.sold,
     );
   }
 }

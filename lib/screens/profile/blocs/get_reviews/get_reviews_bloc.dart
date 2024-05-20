@@ -14,6 +14,7 @@ class GetReviewsBloc extends Bloc<GetReviewsEvent, GetReviewsState> {
     this._userRepository,
   ) : super(GetReviewsInitial()) {
     on<GetReviews>(getReviews);
+    on<GetReviewsCount>(getReviewsCount);
   }
 
   Future<void> getReviews(
@@ -27,6 +28,17 @@ class GetReviewsBloc extends Bloc<GetReviewsEvent, GetReviewsState> {
       emit(GetReviewsSuccess(reviews));
     } catch (e) {
       emit(GetReviewsFailure());
+    }
+  }
+
+  Future<void> getReviewsCount(
+      GetReviewsCount event, Emitter<GetReviewsState> emit) async {
+    emit(GetReviewsCountProcess());
+    try {
+      final reviews = await _reviewRepo.getReviewCount(event.userId);
+      emit(GetReviewsCountSuccess(reviews));
+    } catch (e) {
+      emit(GetReviewsCountFailure());
     }
   }
 }

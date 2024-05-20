@@ -2,10 +2,14 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:giventake/blocs/authentication_bloc/authentication_bloc.dart';
+import 'package:giventake/screens/auth/blocs/sign_in_bloc/sign_in_bloc.dart';
 import 'package:giventake/screens/home/blocs/get_product_bloc/get_product_bloc.dart';
 import 'package:giventake/screens/home/views/details_screen.dart';
 import 'package:giventake/screens/home/views/edit_profile_screen.dart';
 import 'package:giventake/screens/product/views/upload_product_screen.dart';
+import 'package:giventake/screens/profile/views/profile_screen.dart';
+import 'package:product_repository/product_repository.dart';
 import 'package:user_repository/user_repository.dart';
 import 'package:giventake/screens/home/views/requests_screen.dart';
 import 'package:giventake/screens/auth/blocs/sign_in_bloc/sign_in_bloc.dart';
@@ -17,22 +21,19 @@ class HomeScreen extends StatefulWidget {
   State<HomeScreen> createState() => _HomeScreenState();
 }
 
-
-
 class _HomeScreenState extends State<HomeScreen> {
   @override
   void didChangeDependencies() {
     super.didChangeDependencies();
     // Atualiza a lista de produtos sempre que a tela for exibida
     context.read<GetProductBloc>().add(GetProduct());
-    
   }
 
   @override
   Widget build(BuildContext context) {
     // final authBloc = BlocProvider.of<AuthenticationBloc>(context);
     // String photoURL = authBloc.state.user?.photoURL ?? 'default_url';
-   
+
     return Scaffold(
       appBar: AppBar(
         title: const Text(
@@ -59,67 +60,81 @@ class _HomeScreenState extends State<HomeScreen> {
               String userId = user!.uid;
               MyUser currentUser = await FirebaseUserRepo().getUser(userId);
 
-              final result =await Navigator.of(context).push(MaterialPageRoute(
-              builder: (context) => RequestsScreen(userId: userId, user: MyUserEntity(userId: userId, email: currentUser.email, name: currentUser.name, reviews: currentUser.reviews, rating: currentUser.rating, bio: currentUser.bio, image: currentUser.image,)),
+              final result = await Navigator.of(context).push(MaterialPageRoute(
+                builder: (context) => RequestsScreen(
+                    userId: userId,
+                    user: MyUserEntity(
+                      userId: userId,
+                      email: currentUser.email,
+                      name: currentUser.name,
+                      rating: currentUser.rating,
+                      bio: currentUser.bio,
+                      image: currentUser.image,
+                    )),
               ));
-    },
+            },
             icon: const Icon(Icons.mail_outline), // Envelope symbol icon
           ),
           IconButton(
-  onPressed: () async {
-    final FirebaseAuth auth = FirebaseAuth.instance;
-    final user = auth.currentUser;
-    if (user != null) {
-      String userId = user.uid;
-      MyUser currentUser = await FirebaseUserRepo().getUser(userId);
+            onPressed: () async {
+              final FirebaseAuth auth = FirebaseAuth.instance;
+              final user = auth.currentUser;
+              if (user != null) {
+                String userId = user.uid;
+                MyUser currentUser = await FirebaseUserRepo().getUser(userId);
 
-      await Navigator.of(context).push(MaterialPageRoute(
-        builder: (context) => EditProfileScreen(
-          userId: userId,
-          user: MyUserEntity(
-            userId: userId,
-            email: currentUser.email,
-            name: currentUser.name,
-            reviews: currentUser.reviews,
-            rating: currentUser.rating,
-            bio: currentUser.bio,
-            image: currentUser.image,
+                await Navigator.of(context).push(
+                  MaterialPageRoute(
+                    builder: (context) => BlocProvider(
+                      create: (context) => SignInBloc(
+                        context.read<AuthenticationBloc>().userRepository,
+                      ),
+                      child: ProfileScreen(
+                        user: MyUserEntity(
+                          userId: userId,
+                          email: currentUser.email,
+                          name: currentUser.name,
+                          rating: currentUser.rating,
+                          bio: currentUser.bio,
+                          image: currentUser.image,
+                        ),
+                        productRepo: FirebaseProductRepo(),
+                      ),
+                    ),
+                  ),
+                );
+              }
+            },
+            icon: FutureBuilder<MyUser>(
+              future: FirebaseUserRepo()
+                  .getUser(FirebaseAuth.instance.currentUser!.uid),
+              builder: (context, snapshot) {
+                if (snapshot.connectionState == ConnectionState.waiting) {
+                  return const CircleAvatar(
+                    radius: 15,
+                    backgroundColor: Colors.grey,
+                  );
+                } else if (snapshot.hasError) {
+                  return const CircleAvatar(
+                    radius: 15,
+                    backgroundColor: Colors.red,
+                    child: Icon(Icons.error, color: Colors.white),
+                  );
+                } else if (snapshot.hasData) {
+                  final currentUser = snapshot.data!;
+                  return CircleAvatar(
+                    radius: 15,
+                    backgroundImage: NetworkImage(currentUser.image),
+                  );
+                } else {
+                  return const CircleAvatar(
+                    radius: 15,
+                    backgroundColor: Colors.grey,
+                  );
+                }
+              },
+            ),
           ),
-        ),
-      ));
-    }
-  },
-  icon: FutureBuilder<MyUser>(
-    future: FirebaseUserRepo().getUser(FirebaseAuth.instance.currentUser!.uid),
-    builder: (context, snapshot) {
-      if (snapshot.connectionState == ConnectionState.waiting) {
-        return const CircleAvatar(
-          radius: 15,
-          backgroundColor: Colors.grey,
-        );
-      } else if (snapshot.hasError) {
-        return const CircleAvatar(
-          radius: 15,
-          backgroundColor: Colors.red,
-          child: Icon(Icons.error, color: Colors.white),
-        );
-      } else if (snapshot.hasData) {
-        final currentUser = snapshot.data!;
-        return CircleAvatar(
-          radius: 15,
-          backgroundImage: NetworkImage(currentUser.image),
-        );
-      } else {
-        return const CircleAvatar(
-          radius: 15,
-          backgroundColor: Colors.grey,
-        );
-      }
-    },
-  ),
-),
-
-
         ],
       ),
       body: Padding(
@@ -168,13 +183,13 @@ class _HomeScreenState extends State<HomeScreen> {
                     icon: const Icon(Icons.add, color: Colors.white),
                     onPressed: () async {
                       final result =
-                      await Navigator.of(context).push(MaterialPageRoute(
-                    builder: (context) => const ProductUploadScreen(),
-                  ));
-                  if (result == true) {
-                    // ignore: use_build_context_synchronously
-                    context.read<GetProductBloc>().add(GetProduct());
-                  }
+                          await Navigator.of(context).push(MaterialPageRoute(
+                        builder: (context) => const ProductUploadScreen(),
+                      ));
+                      if (result == true) {
+                        // ignore: use_build_context_synchronously
+                        context.read<GetProductBloc>().add(GetProduct());
+                      }
                     },
                   ),
                 ),

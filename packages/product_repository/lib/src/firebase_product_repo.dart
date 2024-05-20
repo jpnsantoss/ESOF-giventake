@@ -17,6 +17,7 @@ class FirebaseProductRepo implements ProductRepo {
         'description': product.description,
         'image': product.image,
         'createdAt': product.createdAt,
+        'solt': product.sold,
       });
     } catch (e) {
       rethrow;
@@ -26,9 +27,11 @@ class FirebaseProductRepo implements ProductRepo {
   @override
   Future<List<Product>> getProducts() async {
     try {
-      return await productCollection.get().then((value) => value.docs
-          .map((e) => Product.fromEntity(ProductEntity.fromDocument(e.data())))
-          .toList());
+      return await productCollection.where('sold', isEqualTo: false).get().then(
+          (value) => value.docs
+              .map((e) =>
+                  Product.fromEntity(ProductEntity.fromDocument(e.data())))
+              .toList());
     } catch (e) {
       log(e.toString());
       rethrow;
@@ -38,9 +41,11 @@ class FirebaseProductRepo implements ProductRepo {
   @override
   Future<Product> getProduct(String productId) async {
     try {
-      final querySnapshot = await productCollection.where('id', isEqualTo: productId).get();
+      final querySnapshot =
+          await productCollection.where('id', isEqualTo: productId).get();
       if (querySnapshot.docs.isNotEmpty) {
-        final productEntity = ProductEntity.fromDocument(querySnapshot.docs.first.data());
+        final productEntity =
+            ProductEntity.fromDocument(querySnapshot.docs.first.data());
         final product = Product.fromEntity(productEntity);
         return product;
       } else {

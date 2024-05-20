@@ -76,25 +76,21 @@ Image:
 
 In order to provide long-term maintenance of the code and allow easy understanding about, we will divide our project in different sections:
 
-* **Blocs:** each bloc will encapsulate a set of related functionalities. Therefore, each bloc will take an event as input, process them and emits states. An event represents an action that happens in an app usually trigger by user iterations. A state represents the state of the app in each moment. Therefore, when the state changes, the corresponding UI components are rebuilt to reflect the updated state. 
+* **Blocs:** each bloc will encapsulate a set of related functionalities. Therefore, each bloc will take an event as input, process them and emits states. An event represents an action that happens in an app usually trigger by user iterations. A state represents the state of the app in each moment: when the state changes, the corresponding UI components are rebuilt to reflect the updated state. Therefore, blocs ensure the connection between frontend and backend.
 * **Components:** Components created by our team that will be use throughout the development of this project to maintain visual consistency and reducing code duplication.
 * **Screens:** Responsible for drawing the app and allowing interactions between the user and the program.
 * **Packages:** Module that establishes the communications between the app and Firebase.
 
+<img width="469" alt="image" src="https://github.com/FEUP-LEIC-ES-2023-24/2LEIC05T2/assets/145434267/a6709fe6-f940-4327-93cf-d3e4cbf7e4e8">
 
-
-Example of _UML package diagram_ showing a _logical view_ of the Eletronic Ticketing System (to be accompanied by a short description of each package):
-
-![LogicalView](https://user-images.githubusercontent.com/9655877/160585416-b1278ad7-18d7-463c-b8c6-afa4f7ac7639.png)
 
 ### Physical architecture
-The goal of this subsection is to document the high-level physical structure of the software system (machines, connections, software components installed, and their dependencies) using UML deployment diagrams (Deployment View) or component diagrams (Implementation View), separate or integrated, showing the physical structure of the system.
+Regarding our app´s physical architecture, we feature two distinct identities: the Firebase server and the app itself. This way, the user interacts solely with the app, which is connected to the Firebase server. The server contains the database with all the information required for the app to function properly. 
 
-It should describe also the technologies considered and justify the selections made. Examples of technologies relevant for ESOF are, for example, frameworks for mobile applications (such as Flutter).
+Regarding technologies, for the frontend we used Flutter (Dart programming language) and Firebase for the backend.
 
-Example of _UML deployment diagram_ showing a _deployment view_ of the Eletronic Ticketing System (please notice that, instead of software components, one should represent their physical/executable manifestations for deployment, called artifacts in UML; the diagram should be accompanied by a short description of each node and artifact):
+<img width="481" alt="image" src="https://github.com/FEUP-LEIC-ES-2023-24/2LEIC05T2/assets/145434267/0ccafacc-49bb-4b51-9d5c-f850d71c2143">
 
-![DeploymentView](https://user-images.githubusercontent.com/9655877/160592491-20e85af9-0758-4e1e-a704-0db1be3ee65d.png)
 
 ### Vertical prototype
 To help on validating all the architectural, design and technological decisions made, we usually implement a vertical prototype, a thin vertical slice of the system integrating as much technologies we can.
@@ -105,9 +101,66 @@ At this phase, instead of a complete user story, you can simply implement a smal
 
 
 ## Project management
-Software project management is the art and science of planning and leading software projects, in which software projects are planned, implemented, monitored and controlled.
 
-In the context of ESOF, we recommend each team to adopt a set of project management practices and tools capable of registering tasks, assigning tasks to team members, adding estimations to tasks, monitor tasks progress, and therefore being able to track their projects.
+All the management of the project is done using this [Github Project board](https://github.com/orgs/FEUP-LEIC-ES-2023-24/projects/2) where all the issues are organized in Product backlog and Iteration backlog. Therefore, our project has 5 columns: Backlog, Sprint Backlog, In Progress, Done and User Stories. At the end of each iteration, the tasks that weren't finished are passed to the Sprint Backlog, so that the In Progress column appears empty at the end of every iteration.
+
+# Releases
+- [v0](https://github.com/FEUP-LEIC-ES-2023-24/2LEIC05T2/releases/tag/vertical-prototype)
+- [v1](https://github.com/FEUP-LEIC-ES-2023-24/2LEIC05T21/releases/tag/sprint-1)
+- [v2](https://github.com/FEUP-LEIC-ES-2023-24/2LEIC05T2/releases/tag/sprint-2)
+
+## Iteration **#1**
+
+At the beginning of this iteration we intented to focus on product increment consist, most importantly, of:
+-All products listed in main page;
+-Products can be added by users;
+-Users can log in;
+-Product details can be accessed.
+-Request products
+
+At the end of the first iteration we considered the sprint was successful as we managed to implement several challenging things. We implemented almost everything, expect for product request that is still a work in progress and we found a bug when uploading photos of products that will be fixed in the next Sprint. Sprint 0 backlog was updated with improvements on the components that weren't matched/yet done and work was assigned to every member. Even though sprint work was uneven among us, we hope further sprints might balance the workload so as in the release every member has developed around the same. We hope to improve delivery in the next sprint by getting more work done, since we haven't accomplished a third of the App as of the end of the 1st sprint. 
+
+Before:\
+![image](https://github.com/FEUP-LEIC-ES-2023-24/2LEIC05T2/assets/131759998/56bf4c59-7ae3-438c-be11-fc9f1f91d970)
+
+After:\
+![end](https://github.com/FEUP-LEIC-ES-2023-24/2LEIC05T2/assets/131759998/e5961c1f-b683-40d6-9e80-05d0f0408138)
+
+
+## Iteration **#2**
+
+At the beginning of the second iterations our main goals were to implement the following features:
+- Search bar, allowing the user to search any product by name or description;
+- Request products by users;
+- Check other users information, reviews and products on their profile screen;
+
+  During this sprint, most of the team was more available so we assigned tasks accordingly. This sprint went really well since the bugs from the previous sprint were sucessfully fixed and we implemented almost everything that we expected at the begging of the sprint. However, there is still some work to do on the request and acceptance of products by users and bugs to fix on the users products on their profile.
+
+Before:\
+![Screenshot from 2024-05-03 18-40-43](https://github.com/FEUP-LEIC-ES-2023-24/2LEIC05T2/assets/131995213/c28ccf36-72f9-4523-abb2-abba05999f61)
+
+After:\
+![Screenshot from 2024-05-03 18-53-05](https://github.com/FEUP-LEIC-ES-2023-24/2LEIC05T2/assets/131995213/6cb4def4-4451-44a1-a5b9-d04b07b028f2)
+
+
+## Iteration **#3**
+
+At the beginning of Sprint 3 we intended to:
+- users being able to make reviews of other users;
+- users being able to see their profile and edit their informations;
+- users being able to accept requests of their products;
+- improve product details screen
+
+This sprint were sucessfully completed since all features are now correctly implemented. During the sprint we found some bugs, but we were able to correct them so that the app works properly.
+
+
+Before:\
+<img width="920" alt="image" src="https://github.com/FEUP-LEIC-ES-2023-24/2LEIC05T2/assets/145434267/636fac61-6c75-48e2-908a-6de552cced59">
+
+After:\
+<img width="956" alt="image" src="https://github.com/FEUP-LEIC-ES-2023-24/2LEIC05T2/assets/145434267/14603ab2-7b90-4a36-a0cd-96932a7b6d57">
+
+
 
 Common practices of managing iterative software development are: backlog management, release management, estimation, iteration planning, iteration development, acceptance tests, and retrospectives.
 

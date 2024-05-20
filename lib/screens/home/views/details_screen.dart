@@ -96,7 +96,6 @@ class _DetailsScreenState extends State<DetailsScreen> {
                                         userId: product.user!.userId,
                                         email: product.user!.email,
                                         name: product.user!.name,
-                                        reviews: product.user!.reviews,
                                         bio: product.user!.bio,
                                         rating: product.user!.rating,
                                         image: product.user!.image,
@@ -187,7 +186,10 @@ class _DetailsScreenState extends State<DetailsScreen> {
                     SnackBar(
                       content: Text(result == 'success'
                           ? 'Request saved successfully!'
-                          : 'You have already requested this product!'),
+                          : result == 'same user'
+                          ? "You can't request your own products!"
+                          : 'You have already requested this product!'
+                      ),
                     ),
                   );
                 },
@@ -261,9 +263,9 @@ class _DetailsScreenState extends State<DetailsScreen> {
       String userId = FirebaseAuth.instance.currentUser?.uid ?? '';
       String fromUserId = userId;
 
-      if (!await canRequest(fromUserId)) {
-        return 'fail';
-      }
+      String requestRes = await canRequest(fromUserId);
+      if (requestRes != 'success') return requestRes;
+
 
 
       String id = const Uuid().v4();
@@ -287,18 +289,23 @@ class _DetailsScreenState extends State<DetailsScreen> {
     return res;
   }
 
-  Future<bool> canRequest(String userId) async {
-    //ver se já pediu
+
+  Future<String> canRequest(String userId) async {
     final currUserRequests = _firestore
         .collection('requests')
         .where("fromUserId", isEqualTo: userId)
         .where("productId", isEqualTo: product.id);
     AggregateQuerySnapshot query = await currUserRequests.count().get();
+
     String usr = product.userId;
-    if (query.count! > 0) return false;
-    //ver se o user não é o próprio
-    if(product.userId == userId) return false;
-    return true;
+
+    if (query.count! > 0) {
+      return 'already requested';
+    }
+    if (userId == product.userId) {
+      return 'same user';
+    }
+    return 'success';
   }
 
   String timeDiff(DateTime createdAt) {
