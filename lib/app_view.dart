@@ -32,18 +32,13 @@ class MyAppView extends StatelessWidget {
       home: BlocBuilder<AuthenticationBloc, AuthenticationState>(
         builder: ((context, state) {
           if (state.status == AuthenticationStatus.authenticated) {
-            return MultiBlocProvider(providers: [
-              BlocProvider(
-                create: (context) => SignInBloc(
-                    context.read<AuthenticationBloc>().userRepository),
-              ),
-              BlocProvider(
-                create: (context) => GetProductBloc(
-                  FirebaseProductRepo(),
-                  FirebaseUserRepo(),
-                )..add(GetProduct()),
-              ),
-            ], child: const HomeScreen());
+            return BlocProvider(
+              create: (context) => GetProductBloc(
+                FirebaseProductRepo(),
+                FirebaseUserRepo(),
+              )..add(GetProduct()),
+              child: const HomeScreen(),
+            );
           } else {
             return const WelcomeScreen();
           }
