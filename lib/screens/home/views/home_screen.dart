@@ -12,6 +12,7 @@ import 'package:giventake/screens/profile/views/profile_screen.dart';
 import 'package:product_repository/product_repository.dart';
 import 'package:user_repository/user_repository.dart';
 import 'package:giventake/screens/home/views/requests_screen.dart';
+import 'package:giventake/screens/auth/blocs/sign_in_bloc/sign_in_bloc.dart';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
@@ -45,6 +46,13 @@ class _HomeScreenState extends State<HomeScreen> {
           ),
         ),
         actions: [
+          IconButton(
+            onPressed: () {
+              context.read<SignInBloc>().add(SignOutRequired());
+            },
+            icon: const Icon(CupertinoIcons.arrow_right_to_line),
+          ),
+
           IconButton(
             onPressed: () async {
               final FirebaseAuth auth = FirebaseAuth.instance;

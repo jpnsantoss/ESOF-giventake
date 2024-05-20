@@ -1,10 +1,7 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:giventake/screens/profile/blocs/get_reviews/get_reviews_bloc.dart';
 import 'package:product_repository/product_repository.dart';
 import 'package:request_repository/request_repository.dart';
-import 'package:review_repository/review_repository.dart';
 import 'package:user_repository/user_repository.dart';
 
 class Pair<T, U> {
@@ -33,7 +30,7 @@ class _RequestsScreenState extends State<RequestsScreen> {
 
   late List<Widget> myWidgets = [];
   late int requestsToAnswer = 0;
-  bool isLoadingrequestsRequests = true;
+  bool isLoadingRequests = true;
 
   @override
   void initState() {
@@ -44,95 +41,65 @@ class _RequestsScreenState extends State<RequestsScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return Center(
-      child: Container(
-        width: 393,
-        height: 852,
-        padding: const EdgeInsets.only(left: 24, right: 19),
-        clipBehavior: Clip.antiAlias,
-        decoration: ShapeDecoration(
-          color: const Color(0xFFF7F7F7),
-          shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(30),
-          ),
-        ),
-        child: SingleChildScrollView(
-          child: Column(
-            mainAxisSize: MainAxisSize.min,
-            mainAxisAlignment: MainAxisAlignment.center,
-            crossAxisAlignment: CrossAxisAlignment.center,
-            children: [
-              Container(
-                width: 345,
-                padding: const EdgeInsets.symmetric(vertical: 24),
-                child: Row(
-                  mainAxisSize: MainAxisSize.min,
-                  mainAxisAlignment: MainAxisAlignment.start,
-                  crossAxisAlignment: CrossAxisAlignment.center,
-                  children: [
-                    Container(
-                      width: 24,
-                      height: 24,
-                      clipBehavior: Clip.antiAlias,
-                      decoration: const BoxDecoration(),
-                      child: const FlutterLogo(),
-                    ),
-                  ],
-                ),
-              ),
-              SizedBox(
-                width: double.infinity,
-                child: Column(
-                  mainAxisSize: MainAxisSize.min,
-                  mainAxisAlignment: MainAxisAlignment.start,
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    const SizedBox(height: 24),
-                    if (isLoadingrequestsRequests)
-                      const Center(
-                        child: CircularProgressIndicator(),
-                      )
-                    else if (requests.isEmpty)
-                      const SizedBox(
-                        width: 345,
-                        child: Text(
-                          'You have no product requests',
-                          textAlign: TextAlign.right,
-                          style: TextStyle(
-                            color: Color(0xFF6C8A47),
-                            fontSize: 24,
-                            fontFamily: 'Inter',
-                            fontWeight: FontWeight.w600,
-                            height: 0,
-                          ),
-                        ),
-                      )
-                    else
-                      SizedBox(
-                        width: 345,
-                        child: Text(
-                          '$requestsToAnswer new product requests',
-                          textAlign: TextAlign.right,
-                          style: const TextStyle(
-                            color: Color(0xFF6C8A47),
-                            fontSize: 24,
-                            fontFamily: 'Inter',
-                            fontWeight: FontWeight.w600,
-                            height: 0,
-                          ),
-                        ),
+  return isLoadingRequests 
+      ? Center(
+        child: Container(
+          width: 50, 
+          height: 50, 
+          child: CircularProgressIndicator()
+        )
+      ) 
+    : Scaffold(
+    appBar: AppBar(),
+    body: Column(
+      children: [
+        SizedBox(height: 40), // Add space between AppBar and Padding
+        Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 24),
+          child: SingleChildScrollView(
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              mainAxisAlignment: MainAxisAlignment.start,
+              crossAxisAlignment: CrossAxisAlignment.center,
+              children: [
+                if (isLoadingRequests)
+                  CircularProgressIndicator()
+                else if (requests.isEmpty)
+                  Align(
+                    alignment: Alignment.centerRight,
+                    child: Text(
+                      'You have no product requests',
+                      style: const TextStyle(
+                        color: Color(0xFF6C8A47),
+                        fontSize: 24,
+                        fontFamily: 'Inter',
+                        fontWeight: FontWeight.w600,
                       ),
-                    ...myWidgets,
-                    const SizedBox(height: 24),
-                  ],
-                ),
-              ),
-            ],
+                    ),
+                  )
+                else
+                  Align(
+                    alignment: Alignment.centerRight,
+                    child: Text(
+                      '${requestsToAnswer} new product requests',
+                      style: const TextStyle(
+                        color: Color(0xFF6C8A47),
+                        fontSize: 24,
+                        fontFamily: 'Inter',
+                        fontWeight: FontWeight.w600,
+                      ),
+                    ),
+                  ),
+                ...myWidgets,
+                const SizedBox(height: 24),
+              ],
+            ),
           ),
         ),
-      ),
-    );
-  }
+      ],
+    ),
+  );
+}
 
   @override
   void dispose() {
@@ -140,7 +107,7 @@ class _RequestsScreenState extends State<RequestsScreen> {
   }
 
   Widget youDid(int i, bool ans) {
-    return SizedBox(
+    return Container(
       width: 350,
       child: Row(
         mainAxisSize: MainAxisSize.min,
@@ -175,7 +142,7 @@ class _RequestsScreenState extends State<RequestsScreen> {
                       children: [
                         TextSpan(
                           text: 'You ${ans ? 'accepted ' : 'declined '}',
-                          style: const TextStyle(
+                          style: TextStyle(
                             color: Colors.black,
                             fontSize: 14,
                             fontFamily: 'Inter',
@@ -185,7 +152,7 @@ class _RequestsScreenState extends State<RequestsScreen> {
                         ),
                         TextSpan(
                           text: requestsUsers[i].name,
-                          style: const TextStyle(
+                          style: TextStyle(
                             color: Colors.black,
                             fontSize: 14,
                             fontFamily: 'Inter',
@@ -193,7 +160,7 @@ class _RequestsScreenState extends State<RequestsScreen> {
                             height: 1.5,
                           ),
                         ),
-                        const TextSpan(
+                        TextSpan(
                           text: '’s',
                           style: TextStyle(
                             color: Colors.black,
@@ -203,7 +170,7 @@ class _RequestsScreenState extends State<RequestsScreen> {
                             height: 1.5,
                           ),
                         ),
-                        const TextSpan(
+                        TextSpan(
                           text: ' request.',
                           style: TextStyle(
                             color: Colors.black,
@@ -239,7 +206,7 @@ class _RequestsScreenState extends State<RequestsScreen> {
   }
 
   Widget someoneDid(int i, bool ans) {
-    return SizedBox(
+    return Container(
       width: 350,
       child: Row(
         mainAxisSize: MainAxisSize.min,
@@ -274,7 +241,7 @@ class _RequestsScreenState extends State<RequestsScreen> {
                       children: [
                         TextSpan(
                           text: requestsUsers[i].name,
-                          style: const TextStyle(
+                          style: TextStyle(
                             color: Colors.black,
                             fontSize: 14,
                             fontFamily: 'Inter',
@@ -284,8 +251,8 @@ class _RequestsScreenState extends State<RequestsScreen> {
                         ),
                         TextSpan(
                           text:
-                              '${ans ? ' accepted ' : ' declined '} your request.',
-                          style: const TextStyle(
+                              '${ans ? ' accepted ' : ' declined '}your request.',
+                          style: TextStyle(
                             color: Colors.black,
                             fontSize: 14,
                             fontFamily: 'Inter',
@@ -324,10 +291,10 @@ class _RequestsScreenState extends State<RequestsScreen> {
       decoration: ShapeDecoration(
         color: Colors.white,
         shape: RoundedRectangleBorder(
-          side: const BorderSide(width: 0.87, color: Color(0xFFECEAEB)),
+          side: BorderSide(width: 0.87, color: Color(0xFFECEAEB)),
           borderRadius: BorderRadius.circular(8.66),
         ),
-        shadows: const [
+        shadows: [
           BoxShadow(
             color: Color(0x26000000),
             blurRadius: 8,
@@ -347,7 +314,7 @@ class _RequestsScreenState extends State<RequestsScreen> {
               mainAxisAlignment: MainAxisAlignment.start,
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                SizedBox(
+                Container(
                   width: 308.42,
                   child: Row(
                     mainAxisSize: MainAxisSize.min,
@@ -382,7 +349,7 @@ class _RequestsScreenState extends State<RequestsScreen> {
                                 children: [
                                   Text(
                                     requestsUsers[i].name,
-                                    style: const TextStyle(
+                                    style: TextStyle(
                                       color: Color(0xFF212121),
                                       fontSize: 17.33,
                                       fontFamily: 'Inter',
@@ -400,7 +367,7 @@ class _RequestsScreenState extends State<RequestsScreen> {
                                             0
                                         ? 'Today'
                                         : '${DateTime.now().difference(requests[i].created_at.toDate()).inDays} day(s) ago',
-                                    style: const TextStyle(
+                                    style: TextStyle(
                                       color: Color(0xFF818181),
                                       fontSize: 10.40,
                                       fontFamily: 'Inter',
@@ -427,15 +394,19 @@ class _RequestsScreenState extends State<RequestsScreen> {
                                 mainAxisAlignment: MainAxisAlignment.start,
                                 crossAxisAlignment: CrossAxisAlignment.center,
                                 children: [
-                                  const SizedBox(
+                                  Container(
                                     width: 17.33,
                                     height: 17.33,
-                                    child: FlutterLogo(),
+                                    child: Icon(
+                                      Icons.star,
+                                      color: Colors.yellow,
+                                      size: 17.3,
+                                    ),
                                   ),
                                   const SizedBox(width: 3.47),
                                   Text(
                                     requestsUsers[i].rating.toString(),
-                                    style: const TextStyle(
+                                    style: TextStyle(
                                       color: Colors.black,
                                       fontSize: 13.86,
                                       fontFamily: 'Inter',
@@ -447,50 +418,14 @@ class _RequestsScreenState extends State<RequestsScreen> {
                               ),
                             ),
                             const SizedBox(height: 1.73),
-                            BlocProvider(
-                              create: (context) => GetReviewsBloc(
-                                FirebaseReviewRepo(),
-                                FirebaseUserRepo(),
-                              )..add(GetReviewsCount(widget.user.userId)),
-                              child:
-                                  BlocBuilder<GetReviewsBloc, GetReviewsState>(
-                                builder: (context, state) {
-                                  if (state is GetReviewsCountProcess) {
-                                    return const Text(
-                                      'Loading...',
-                                      style: TextStyle(
-                                        color: Color(0xFF818181),
-                                        fontSize: 13.39,
-                                        fontFamily: 'Inter',
-                                        fontWeight: FontWeight.w400,
-                                        height: 0,
-                                      ),
-                                    );
-                                  } else if (state is GetReviewsCountSuccess) {
-                                    return Text(
-                                      '${state.reviews} reviews',
-                                      style: const TextStyle(
-                                        color: Color(0xFF818181),
-                                        fontSize: 13.39,
-                                        fontFamily: 'Inter',
-                                        fontWeight: FontWeight.w400,
-                                        height: 0,
-                                      ),
-                                    );
-                                  } else if (state is GetReviewsCountFailure) {
-                                    return const Text(
-                                      'Error: Failed to load reviews',
-                                      style: TextStyle(
-                                        color: Color(0xFF818181),
-                                        fontSize: 13.39,
-                                        fontFamily: 'Inter',
-                                        fontWeight: FontWeight.w400,
-                                        height: 0,
-                                      ),
-                                    );
-                                  }
-                                  return Container(); // or a default text
-                                },
+                            Text(
+                              '${requestsUsers[i].reviews.length} reviews',
+                              style: TextStyle(
+                                color: Color(0xFF818181),
+                                fontSize: 13.86,
+                                fontFamily: 'Inter',
+                                fontWeight: FontWeight.w400,
+                                height: 0,
                               ),
                             ),
                           ],
@@ -500,7 +435,7 @@ class _RequestsScreenState extends State<RequestsScreen> {
                   ),
                 ),
                 const SizedBox(height: 20.79),
-                SizedBox(
+                Container(
                   width: 308.42,
                   child: Row(
                     mainAxisSize: MainAxisSize.min,
@@ -513,7 +448,7 @@ class _RequestsScreenState extends State<RequestsScreen> {
                           mainAxisAlignment: MainAxisAlignment.start,
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
-                            const Text(
+                            Text(
                               'Product',
                               style: TextStyle(
                                 color: Color(0xFF818181),
@@ -527,7 +462,7 @@ class _RequestsScreenState extends State<RequestsScreen> {
                             const SizedBox(height: 3.47),
                             Text(
                               requestsProducts[i].title,
-                              style: const TextStyle(
+                              style: TextStyle(
                                 color: Colors.black,
                                 fontSize: 17.33,
                                 fontFamily: 'Inter',
@@ -557,7 +492,7 @@ class _RequestsScreenState extends State<RequestsScreen> {
                   ),
                 ),
                 const SizedBox(height: 20.79),
-                SizedBox(
+                Container(
                   width: 308.42,
                   child: Row(
                     mainAxisSize: MainAxisSize.min,
@@ -592,9 +527,9 @@ class _RequestsScreenState extends State<RequestsScreen> {
                           shape: RoundedRectangleBorder(
                             borderRadius: BorderRadius.circular(8.66),
                           ),
-                          backgroundColor: const Color(0xFFECEAEB),
+                          backgroundColor: Color(0xFFECEAEB),
                         ),
-                        child: const Text(
+                        child: Text(
                           'Decline',
                           style: TextStyle(
                             color: Color(0xFF818181),
@@ -606,7 +541,7 @@ class _RequestsScreenState extends State<RequestsScreen> {
                           ),
                         ),
                       ),
-                      const SizedBox(width: 10.40),
+                      SizedBox(width: 10.40),
                       ElevatedButton(
                         onPressed: () async {
                           try {
@@ -636,9 +571,9 @@ class _RequestsScreenState extends State<RequestsScreen> {
                           shape: RoundedRectangleBorder(
                             borderRadius: BorderRadius.circular(8.66),
                           ),
-                          backgroundColor: const Color(0xFF212121),
+                          backgroundColor: Color(0xFF212121),
                         ),
-                        child: const Text(
+                        child: Text(
                           'Accept',
                           style: TextStyle(
                             color: Colors.white,
@@ -711,7 +646,7 @@ class _RequestsScreenState extends State<RequestsScreen> {
       print("Error fetching requests: $error");
     } finally {
       setState(() {
-        isLoadingrequestsRequests = false;
+        isLoadingRequests = false;
       });
     }
   }
@@ -740,8 +675,8 @@ class _RequestsScreenState extends State<RequestsScreen> {
     try {
       for (Request r in requests) {
         Pair<MyUser, Product> p = await getUserNProductInfo(r);
-        requestsUsers.add(p.first);
-        requestsProducts.add(p.second);
+        requestsUsers.add(await p.first);
+        requestsProducts.add(await p.second);
       }
     } catch (error) {
       print("Error filling request info: $error");
