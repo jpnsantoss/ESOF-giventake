@@ -17,7 +17,7 @@ class FirebaseProductRepo implements ProductRepo {
         'description': product.description,
         'image': product.image,
         'createdAt': product.createdAt,
-        'solt': product.sold,
+        'sold': product.sold,
       });
     } catch (e) {
       rethrow;
@@ -73,6 +73,7 @@ class FirebaseProductRepo implements ProductRepo {
           image: doc['image'],
           userId: doc['userId'],
           createdAt: doc['createdAt'],
+          sold: doc['sold'],
         );
       }).toList();
     });

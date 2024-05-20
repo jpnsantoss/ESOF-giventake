@@ -85,11 +85,11 @@ In order to provide long-term maintenance of the code and allow easy understandi
 
 
 ### Physical architecture
-Regarding our app´s physical architecture, we feature two distinct identities: the Firebase server and the app itself. This way, the user interacts solely with the app, which is connected to the Firebase server. The server contains the database with all the information required for the app to function properly. 
+Regarding our app´s physical architecture, we feature two distinct identities: the Firebase server and the app itself. This way, the user interacts solely with the app, which is connected to the Firebase server through our repositories. The server contains the database with all the information required for the app to function properly, the authentication system and our image storage.
 
 Regarding technologies, for the frontend we used Flutter (Dart programming language) and Firebase for the backend.
 
-<img width="481" alt="image" src="https://github.com/FEUP-LEIC-ES-2023-24/2LEIC05T2/assets/145434267/0ccafacc-49bb-4b51-9d5c-f850d71c2143">
+<img width="416" alt="image" src="https://github.com/FEUP-LEIC-ES-2023-24/2LEIC05T2/assets/145434267/a57320e0-0f24-438a-8f1d-f0df3db0f41c">
 
 
 ### Vertical prototype

@@ -22,11 +22,16 @@ class UploadProductBloc extends Bloc<UploadProductEvent, UploadProductState> {
         String location = event.location;
         String description = event.descrition;
         Uint8List? photo = event.photo;
+        DateTime now = DateTime.now();
+        bool sold = false;
+
 
         String resp = await saveProductToFirestore(
             title: title,
             location: location,
             description: description,
+            createdAt: now,
+            sold: sold,
             file: photo!);
         if (resp == 'sucess') {
           emit(UploadProductSuccess());
@@ -41,10 +46,14 @@ class UploadProductBloc extends Bloc<UploadProductEvent, UploadProductState> {
       {required String title,
       required String location,
       required String description,
+      required DateTime createdAt,
+      required bool sold,
       required Uint8List file}) async {
     String res = "Some error occurred";
     try {
       String userId = FirebaseAuth.instance.currentUser?.uid ?? '';
+
+      print(userId);
 
       String id = const Uuid().v4();
       String imageName = 'productImage_$id';
@@ -60,6 +69,8 @@ class UploadProductBloc extends Bloc<UploadProductEvent, UploadProductState> {
           'title': title,
           'location': location,
           'description': description,
+          'createdAt': createdAt,
+          'sold': sold,
           'image': imageUrl,
         });
 
