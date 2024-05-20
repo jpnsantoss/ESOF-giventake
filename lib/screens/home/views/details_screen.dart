@@ -96,7 +96,6 @@ class _DetailsScreenState extends State<DetailsScreen> {
                                         userId: product.user!.userId,
                                         email: product.user!.email,
                                         name: product.user!.name,
-                                        reviews: product.user!.reviews,
                                         bio: product.user!.bio,
                                         rating: product.user!.rating,
                                         image: product.user!.image,

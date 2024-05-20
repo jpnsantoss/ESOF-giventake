@@ -15,3 +15,12 @@ class GetReviews extends GetReviewsEvent {
   @override
   List<Object> get props => [userId];
 }
+
+class GetReviewsCount extends GetReviewsEvent {
+  final String userId;
+
+  const GetReviewsCount(this.userId);
+
+  @override
+  List<Object> get props => [userId];
+}
