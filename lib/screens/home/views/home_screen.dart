@@ -51,10 +51,10 @@ class _HomeScreenState extends State<HomeScreen> {
               String userId = user!.uid;
               MyUser currentUser = await FirebaseUserRepo().getUser(userId);
 
-              final result =await Navigator.of(context).push(MaterialPageRoute(
-              builder: (context) => RequestsScreen(userId: userId, user: MyUserEntity(userId: userId, email: currentUser.email, name: currentUser.name, reviews: currentUser.reviews, rating: currentUser.rating, bio: currentUser.bio, image: currentUser.image,)),
+              final result = await Navigator.of(context).push(MaterialPageRoute(
+                  builder: (context) => RequestsScreen(userId: userId, user: MyUserEntity(userId: userId, email: currentUser.email, name: currentUser.name, reviews: currentUser.reviews, rating: currentUser.rating, bio: currentUser.bio, image: currentUser.image,)),
               ));
-    },
+              },
             icon: const Icon(Icons.mail_outline), // Envelope symbol icon
           ),
           IconButton(
