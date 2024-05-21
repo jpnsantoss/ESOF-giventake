@@ -60,7 +60,7 @@ Making way for reusability and extending everyday objects’ lifespans has never
 
 You can see here a preliminary domain model exploring the main entities and relations of our product.
 The classes include:
-* **User:** Our App exists for them. In the context of our App, the terms of user and account are interchangeable. The **User**, or Account Owner, logs in via a **phone number** and **password** and is identified by a **Name** and a **Picture**. They give and take **Product**s to/from other **User**s. The **User** gets reviewed and writes reviews, makes requests and gets requests.
+* **User:** Our App exists for them. In the context of our App, the terms of user and account are interchangeable. The **User**, or Account Owner, logs in via a **phone number** and **password** and is identified by a **Name** and a *     **Picture**. They give and take **Product**s to/from other **User**s. The **User** gets reviewed and writes reviews, makes requests and gets requests.
 * **Product:** Our App exists because of them. The name **Product** refers, actually to the advertisement of a **Product** owned by a user. They have a required **title** and an optional **description**. So being, each product is uploaded in the app to have a short lifetime and be deleted as soon as possible.
 * **Review:** Reviews are a way of assuring safety and reliability. They are exchanged between **Users**, and are meant to be saved, grouped by target and have its average calculated. They have a mandatory 0 to 5 **star rating** and an optional **Message**.
 * **Request:** Requests are the way of communication. **Users** exchange requests to state that they are interested in a product. They are meant to have an even shorter lifetime than products, ceasing to exist when they are **accepted** or **declined**.
@@ -111,14 +111,20 @@ All the management of the project is done using this [Github Project board](http
 
 ## Iteration **#1**
 
-At the beginning of this iteration we intented to focus on product increment consist, most importantly, of:
+**Sprint Backlog:**
+-At the beginning of this iteration we intented to focus on product increment consisting, most importantly, of:
 -All products listed in main page;
 -Products can be added by users;
 -Users can log in;
 -Product details can be accessed.
 -Request products
 
-At the end of the first iteration we considered the sprint was successful as we managed to implement several challenging things. We implemented almost everything, expect for product request that is still a work in progress and we found a bug when uploading photos of products that will be fixed in the next Sprint. Sprint 0 backlog was updated with improvements on the components that weren't matched/yet done and work was assigned to every member. Even though sprint work was uneven among us, we hope further sprints might balance the workload so as in the release every member has developed around the same. We hope to improve delivery in the next sprint by getting more work done, since we haven't accomplished a third of the App as of the end of the 1st sprint. 
+**Product Increment**
+All of sptint backlog except that there's a problem with the display of products.
+
+
+**Retrospective**
+At the end of the first iteration we considered the sprint was successful as we managed to implement several challenging things. We implemented almost everything, expect for product request that is still a work in progress and we found a bug when uploading photos of products that will be fixed in the next Sprint. Sprint 0 backlog was updated with improvements on the components that weren't matched/yet done and work was assigned to every member. Even though sprint work was uneven among us, we hope further sprints might balance the workload so as in the release every member has developed around the same. We hope to improve delivery in the next sprint by getting more work done, since we haven't accomplished a third of the App as of the end of the 1st sprint.
 
 Before:\
 ![image](https://github.com/FEUP-LEIC-ES-2023-24/2LEIC05T2/assets/131759998/56bf4c59-7ae3-438c-be11-fc9f1f91d970)
@@ -129,11 +135,13 @@ After:\
 
 ## Iteration **#2**
 
-At the beginning of the second iterations our main goals were to implement the following features:
+**Sprint Backlog:**
+- At the beginning of the second iterations our main goals were to implement the following features:
 - Search bar, allowing the user to search any product by name or description;
 - Request products by users;
 - Check other users information, reviews and products on their profile screen;
-
+  
+**Retrospective**
   During this sprint, most of the team showed more availability so we assigned tasks accordingly. This sprint went really well since the bugs from the previous sprint were sucessfully fixed and we implemented almost everything that we expected at the begging of the sprint. However, there is still some work to do on the request and acceptance of products by users and bugs to fix on the users products on their profile.
   We discovered that issues should be more carefully assigned to the sprint, beacuse of how codependency may affect productivity. We also discovered that the atomization of epics needed some more attention. Every one of us, however, managed to work more and more features were implemented.
   
@@ -148,6 +156,7 @@ After:\
 
 ## Iteration **#3**
 
+**Sprint Backlog:**
 At the beginning of Sprint 3 we intended to:
 - users being able to make and see reviews of other users, with the calculation of the rating;
 - users being able to see their profile and edit their informations;
@@ -156,8 +165,14 @@ At the beginning of Sprint 3 we intended to:
 - UI in general matching the vertical prototype;
 - Add unit tests in flutter.
 
+**Product Increment**
+Same as sprint backlog :)
+
+**Retrospective:** 
 This sprint was sucessfully completed since all features are now correctly implemented. During the sprint we found some bugs, but we were able to correct them so that the app works properly. We managed to add the unit and acceptance tests missing, and, overall, all that was intended was achieved. Flow improved much over the course of the last sprint, maybe because we learned to assign issues more cleverly. 
 
+**Review**
+Since this sprint release coincided with the demo we haven't had the work reviewed yet.
 
 Before:\
 <img width="920" alt="image" src="https://github.com/FEUP-LEIC-ES-2023-24/2LEIC05T2/assets/145434267/636fac61-6c75-48e2-908a-6de552cced59">
