@@ -149,12 +149,14 @@ After:\
 ## Iteration **#3**
 
 At the beginning of Sprint 3 we intended to:
-- users being able to make reviews of other users;
+- users being able to make and see reviews of other users, with the calculation of the rating;
 - users being able to see their profile and edit their informations;
 - users being able to accept requests of their products;
-- improve product details screen
+- improve product details screen;
+- UI in general matching the vertical prototype;
+- Add unit tests in flutter.
 
-This sprint was sucessfully completed since all features are now correctly implemented. During the sprint we found some bugs, but we were able to correct them so that the app works properly.
+This sprint was sucessfully completed since all features are now correctly implemented. During the sprint we found some bugs, but we were able to correct them so that the app works properly. We managed to add the unit and acceptance tests missing, and, overall, all that was intended was achieved. Flow improved much over the course of the last sprint, maybe because we learned to assign issues more cleverly. 
 
 
 Before:\
