@@ -663,7 +663,6 @@ class _RequestsScreenState extends State<RequestsScreen> {
       for (Request r in requestss) {
         for (Product p in productss) {
           if (p.userId == userId && p.id == r.productId) {
-            print("added request for mine");
             requests.add(r);
             if (r.accepted == null) requestsToAnswer++;
             break;
@@ -671,7 +670,6 @@ class _RequestsScreenState extends State<RequestsScreen> {
                   FirebaseAuth.instance.currentUser?.uid) &&
               (p.id == r.productId) &&
               (r.accepted != null))) {
-            print("added my request");
             requests.add(r);
             break;
           }
