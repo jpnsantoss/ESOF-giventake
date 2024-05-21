@@ -166,10 +166,12 @@ At the beginning of Sprint 3 we intended to:
 - Add unit tests in flutter.
 
 **Product Increment**
-Same as sprint backlog :)
+We were able to implement everything planned on the sprint backlog.
 
 **Retrospective:** 
-This sprint was sucessfully completed since all features are now correctly implemented. During the sprint we found some bugs, but we were able to correct them so that the app works properly. We managed to add the unit and acceptance tests missing, and, overall, all that was intended was achieved. Flow improved much over the course of the last sprint, maybe because we learned to assign issues more cleverly. 
+This sprint was sucessfully completed since all features are now correctly implemented. During the sprint we found some bugs, but we were able to correct them, and now, the app works properly. We managed to add the unit and acceptance tests missing, and, overall, all that was intended was achieved. Flow improved much over the course of the last sprint, maybe because we learned to assign issues more cleverly. 
+
+Someting we could have done better would be the balance of the workload between sprints, since this last one was a bit heavier than the others. We also miss calculated the difficulty of making unit tests.
 
 **Review**
 Since this sprint release coincided with the demo we haven't had the work reviewed yet.
